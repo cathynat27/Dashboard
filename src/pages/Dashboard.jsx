@@ -1,66 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatisticWidget from "../components/Widget/Statistic.jsx";
 import AchievementWidget from "../components/Widget/Achievment.jsx";
 import DashboardHeader from "../components/Other/DashboardHeader.jsx";
 import ScrolledCard from "../components/Widget/ScrolledCard.jsx";
 import { useOutletContext } from "react-router-dom";
+import Footer from "../components/Footer.jsx";
 
 function Dashboard() {
+  const [monthlyCount, setMonthlyCount] = useState(0);
+  const [weeklyCount, setWeeklyCount] = useState(0);
+  const [dailyCount, setDailyCount] = useState(0);
+  const [error, setError] = useState(null);
+  const [totalPatients, setTotalPatients] = useState(0);
+
+  const [sidebarToggle] = useOutletContext();
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://mk-be-strapi-production.up.railway.app/api/all-patients`
+      );
+      const data = await response.json();
+      setTotalPatients(data.length);
+  
+      // Calculate current month count
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1; // Months are zero-based
+      const monthlyData = data.filter(patient => {
+        const patientDate = new Date(patient.date); // Assuming there's a date property in your patient data
+        return patientDate.getMonth() + 1 === currentMonth;
+      });
+      setMonthlyCount(monthlyData.length);
+  
+      // Calculate weekly count
+      const currentWeekStart = new Date();
+      currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Get start of current week (Sunday)
+      const currentWeekEnd = new Date(currentWeekStart);
+      currentWeekEnd.setDate(currentWeekEnd.getDate() + 6); // Get end of current week (Saturday)
+      const weeklyData = data.filter(patient => {
+        const patientDate = new Date(patient.date); // Assuming there's a date property in your patient data
+        return patientDate >= currentWeekStart && patientDate <= currentWeekEnd;
+      });
+      setWeeklyCount(weeklyData.length);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   const avatar =
     "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
 
   const dataOS = [
     {
-      title: "Kredit Konsumer",
-      date: "12/Mei/2023",
-      os: "23,938",
-      gs: "20,900",
-      percentage: 200.01,
+      title: "Total Enrollments",
+      count: totalPatients,
       color: "cardInfo",
     },
     {
-      title: "Kredit Ritel",
-      date: "12/Mei/2023",
-      os: "3,938",
-      gs: "2,900",
-      percentage: 190.01,
+      title: "Monthly Enrollments",
+      count: monthlyCount,
       color: "cardWarning",
     },
     {
-      title: "Kredit KPR & KKB",
-      date: "12/Mei/2023",
-      os: "190,938",
-      gs: "192,900",
-      percentage: 99.01,
+      title: "Weekly Enrollments",
+      count: weeklyCount,
       color: "cardDanger",
     },
     {
-      title: "Kredit UMKM",
-      date: "12/Mei/2023",
-      os: "2,938",
-      gs: "2,900",
-      percentage: 100.01,
-      color: "cardSuccess",
-    },
-    {
-      title: "Kredit Komersial",
-      date: "12/Mei/2023",
-      os: "23,938",
-      gs: "20,900",
-      percentage: 200.01,
-      color: "cardLime",
-    },
-    {
-      title: "Kredit BPR & LKM",
-      date: "12/Mei/2023",
-      os: "3,938",
-      gs: "10,900",
-      percentage: 210.01,
-      color: "cardDanger",
+      title: "Monthly Enrollments",
+      count: monthlyCount,
+      color: "cardWarning",
     },
   ];
 
-  const [sidebarToggle] = useOutletContext();
 
   return (
     <>
@@ -95,6 +117,7 @@ function Dashboard() {
           <div className="lg:w-full w-[1024px] overflow-hidden flex flex-row justify-between text-slate-700 gap-2 lg:max-h-screen overflow-x-auto whitespace-nowrap"></div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }
