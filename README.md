@@ -2,7 +2,7 @@
 > This Dashboard displays the information about the renal project for Mobiklinic 
 
 ## Live Demo
-[live link](https://renal-dashboard.vercel.app/)
+[live link](https://renal-dashboard-ecru.vercel.app)
 
 
 ## Built With

@@ -6,9 +6,9 @@ import Logo from "../../assets/images/logo.png";
 
 function SidebarLogo({ icon, text, ...props }) {
   return (
-    <div className="relative flex items-center justify-between font-semibold text-3xl text-sky-600 mb-5 p-9">
+    <div className="relative flex items-center justify-between font-semibold text-2xl text-sky-600 mb-5 p-9">
       <Link to="/" className="flex items-center">
-        <img src={Logo} className="w-10 mr-2" alt="Logo" />
+        <img src={Logo} className="w-9 mr-2" alt="Logo" />
         {text}
       </Link>
       <button

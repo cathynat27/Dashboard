@@ -13,23 +13,8 @@ const initMenu = [
     path: "/",
     icon: faTachometer,
   },
-  {
-    label: 'Halaman'
-  },
-  {
-    label: "Blank",
-    path: "/blank",
-    icon: faPage4,
-  },
-  {
-    label: "404",
-    path: "/404",
-    icon: faNotdef,
-  },
-  
-  {
-    label: 'Tabel dan Form'
-  },
+
+
   {
     label: "Form",
     path: "/form",
@@ -42,7 +27,7 @@ const initMenu = [
   },
 
   {
-    label: 'Otentikasi'
+    label: 'Register'
   },
   {
     label: "Login",
