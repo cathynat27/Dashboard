@@ -81,6 +81,11 @@ function Dashboard() {
       count: monthlyCount,
       color: "cardWarning",
     },
+    {
+      title: "Total Enrollments",
+      count: totalPatients,
+      color: "cardInfo",
+    },
   ];
 
 
