@@ -4,24 +4,23 @@ function Achievement() {
   const [totalPatients, setTotalPatients] = useState(0);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const apiUrl = `https://mk-be-strapi-production.up.railway.app/api/patients`;
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://mk-be-strapi-production.up.railway.app/api/all-patients`
+      );
+      const data = await response.json();
+      setTotalPatients(data.length);
 
-    fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const patientsCount = data.data.length;
-        setTotalPatients(patientsCount);
-      })
-      .catch((error) => {
-        setError(error);
-        console.error("Error fetching patient data:", error);
-      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   if (error) {
