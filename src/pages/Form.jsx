@@ -25,7 +25,7 @@ function Form() {
                   type="text"
                   name="defaultInput"
                   // onChange={(e) => setEmail(e.target.value)}
-                  className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                  className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400 mt-1"
                   placeholder="Default Input"
                 />
               </div>
@@ -40,7 +40,7 @@ function Form() {
                   type="text"
                   name="largeInput"
                   // onChange={(e) => setEmail(e.target.value)}
-                  className="text-xl placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                  className="text-xl placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400 mt-1"
                   placeholder="Large Input"
                 />
               </div>
@@ -62,25 +62,25 @@ function Form() {
                   type="text"
                   name="inputWithIcon"
                   // onChange={(e) => setEmail(e.target.value)}
-                  className="text-sm placeholder-gray-500 pl-10 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                  className="text-sm placeholder-gray-500 pl-10 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400 mt-1"
                   placeholder="Input With Icon"
                 />
               </div>
 
               <div className="mt-6 flex flex-row gap-4">
-                <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
+                <button className="bg-sky-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
                   Primary Button
                 </button>
 
-                <button className="text-emerald-600 border border-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
+                <button className="text-sky-600 border border-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
                   Secondary Button
                 </button>
 
-                <button className="text-emerald-600 border border-emerald-300 px-3 py-2 rounded-lg shadow-lg text-sm">
+                <button className="text-sky-600 border border-sky-300 px-3 py-2 rounded-lg shadow-lg text-sm">
                   Outlined Button
                 </button>
 
-                <button className="bg-emerald-600 border-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm flex gap-2 items-center">
+                <button className="bg-sky-600 border-sky-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm flex gap-2 items-center">
                   <div>
                     <FontAwesomeIcon icon={faFloppyDisk} />
                   </div>

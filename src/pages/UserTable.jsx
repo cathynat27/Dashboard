@@ -29,7 +29,7 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
               {row.roles?.map((role, index) => (
                 <span
                   key={index}
-                  className="rounded-full py-1 px-3 text-xs font-semibold bg-emerald-200 text-green-900"
+                  className="rounded-full py-1 px-3 text-xs font-semibold bg-sky-200 text-sky-900"
                 >
                   {role.name}
                 </span>

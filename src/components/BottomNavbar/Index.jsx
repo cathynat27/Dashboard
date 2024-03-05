@@ -63,7 +63,7 @@ function Index() {
       <div className="flex text-gray-600 relative">
         {menus[active] && (
           <span
-            className={`bg-emerald-400 border-8 border-white h-16 w-16 absolute -top-5 rounded-full duration-500 ${menus[active]?.dis}`}
+            className={`bg-sky-400 border-8 border-white h-16 w-16 absolute -top-5 rounded-full duration-500 ${menus[active]?.dis}`}
           ></span>
         )}
         {menus.map((menu, index) => (

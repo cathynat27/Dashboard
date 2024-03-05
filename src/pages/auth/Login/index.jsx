@@ -24,7 +24,7 @@ function LoginIndex() {
       <div className="flex min-h-screen">
         <div className="flex w-full flex-col md:flex-row">
           {/* Image */}
-          <div className="md:bg-emerald-500 md:min-h-screen flex flex-wrap md:w-1/2">
+          <div className="md:bg-sky-500 md:min-h-screen flex flex-wrap md:w-1/2">
             <div className="items-center text-center flex flex-col relative justify-center mx-auto">
               <img
                 src={LoginImage}
@@ -77,7 +77,7 @@ function LoginIndex() {
                         type="text"
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
-                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
+                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400"
                         placeholder="E-Mail Address"
                       />
                     </div>
@@ -100,7 +100,7 @@ function LoginIndex() {
                         type="password"
                         name="password"
                         onChange={(e) => setPassword(e.target.value)}
-                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
+                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400"
                         placeholder="Password"
                       />
                     </div>
@@ -119,7 +119,7 @@ function LoginIndex() {
                         onClick={(e) => {
                           e.preventDefault();
                         }}
-                        className="inline-flex font-semibold text-xs sm:text-sm text-emerald-500 hover:text-emerald-700"
+                        className="inline-flex font-semibold text-xs sm:text-sm text-sky-500 hover:text-sky-700"
                       >
                         Lupa password?
                       </Link>
@@ -131,7 +131,7 @@ function LoginIndex() {
                     <button
                       disabled={loading}
                       type="submit"
-                      className="flex items-center justify-center focus:outline-none text-white text-sm bg-emerald-500 hover:bg-emerald-700 rounded-lg md:rounded md:py-2 py-3 w-full transition duration-150 ease-in"
+                      className="flex items-center justify-center focus:outline-none text-white text-sm bg-sky-500 hover:bg-sky-700 rounded-lg md:rounded md:py-2 py-3 w-full transition duration-150 ease-in"
                     >
                       <span className="mr-2 md:uppercase">
                         {loading ? "Processing...." : "Login"}
@@ -177,7 +177,7 @@ function LoginIndex() {
               <div className="flex justify-center items-center  my-6 md:mb-0">
                 <Link
                   to="/auth/register"
-                  className="inline-flex items-center font-bold text-emerald-500 hover:text-emerald-700 text-xs text-center"
+                  className="inline-flex items-center font-bold text-sky-500 hover:text-sky-700 text-xs text-center"
                 >
                   <span>
                     <svg
