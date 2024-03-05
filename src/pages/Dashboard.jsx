@@ -69,7 +69,7 @@ function Dashboard() {
         <DashboardHeader
           toggle={sidebarToggle}
           avatar={avatar}
-          user={{ name: "Hoki Teguh Oktian" }}
+          user={{ name: "Doctor Ibra" }}
         />
 
         {/* Laba */}
@@ -83,7 +83,7 @@ function Dashboard() {
         {/* OS Kredit */}
         <div className="px-2 mx-auto mainCard">
           <h1 className="text-slate-500 pb-3 text-base md:text-lg">
-            Pencapaian OS Kredit
+            Critical Patients
           </h1>
 
           <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
