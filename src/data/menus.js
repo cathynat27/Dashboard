@@ -4,8 +4,11 @@ import {
   faTable,
   faLock,
   faNoteSticky,
-  faNotdef
+  faCog,
+  faUsers,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { FiSettings } from "react-icons/fi";
 
 const initMenu = [
   {
@@ -14,20 +17,27 @@ const initMenu = [
     icon: faTachometer,
   },
 
+  { label: "Reports" },
 
   {
-    label: "Form",
+    label: "Community Health Provider",
+    path: "/table",
+    icon: faUser,
+  },
+
+  {
+    label: "Patients",
+    path: "/table",
+    icon: faUsers,
+  },
+  {
+    label: "Reports",
     path: "/form",
     icon: faWindows,
   },
-  {
-    label: "Tabel",
-    path: "/table",
-    icon: faTable,
-  },
 
   {
-    label: 'Register'
+    label: "Register",
   },
   {
     label: "Login",
@@ -39,6 +49,11 @@ const initMenu = [
     path: "/auth/register",
     icon: faNoteSticky,
   },
+  {
+    label: "Settings",
+    path: "/form",
+    icon: faCog,
+  },
 ];
 
-export default initMenu
+export default initMenu;
