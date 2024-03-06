@@ -22,24 +22,26 @@ function Dashboard() {
       );
       const data = await response.json();
       setTotalPatients(data.length);
-  
-      // Calculate current month count
       const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1; // Months are zero-based
-      const monthlyData = data.filter(patient => {
-        const patientDate = new Date(patient.date); // Assuming there's a date property in your patient data
+      const currentMonth = currentDate.getMonth() + 1;
+      const monthlyData = data.filter((patient) => {
+        const patientDate = new Date(patient.date);
         return patientDate.getMonth() + 1 === currentMonth;
       });
       setMonthlyCount(monthlyData.length);
-  
+
       // Calculate weekly count
-      const currentWeekStart = new Date();
-      currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Get start of current week (Sunday)
-      const currentWeekEnd = new Date(currentWeekStart);
-      currentWeekEnd.setDate(currentWeekEnd.getDate() + 6); // Get end of current week (Saturday)
-      const weeklyData = data.filter(patient => {
-        const patientDate = new Date(patient.date); // Assuming there's a date property in your patient data
-        return patientDate >= currentWeekStart && patientDate <= currentWeekEnd;
+      const currentWeekStart = new Date(currentDate);
+      currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
+      currentWeekStart.setHours(0, 0, 0);
+
+      const endOfWeek = new Date(currentWeekStart);
+      endOfWeek.setDate(currentWeekStart.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59);
+
+      const weeklyData = data.filter((patient) => {
+        const patientDate = new Date(patient.createdAt);
+        return patientDate >= currentWeekStart && patientDate <= endOfWeek;
       });
       setWeeklyCount(weeklyData.length);
     } catch (error) {
@@ -47,7 +49,6 @@ function Dashboard() {
       setError(error);
     }
   };
-  
 
   useEffect(() => {
     fetchData();
@@ -87,7 +88,6 @@ function Dashboard() {
       color: "cardInfo",
     },
   ];
-
 
   return (
     <>
