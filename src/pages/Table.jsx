@@ -1,12 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import UserTable from "./UserTable";
 
 function Table() {
   const [sidebarToggle] = useOutletContext();
+  const [patients, setPatients] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [loading] = useState(false);
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch(
+          "https://mk-be-strapi-production.up.railway.app/api/all-patients"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setPatients(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
   const dataHeader = [
     {
@@ -18,87 +41,17 @@ function Table() {
       label: "Email",
     },
     {
-      key: "username",
-      label: "Username",
-    },
-    {
-      key: "role",
-      label: "Role",
+      key: "phone",
+      label: "Phone",
     },
     {
       key: "action",
-      label: "Aksi",
+      label: "Action",
     },
   ];
 
   const handleDelete = () => {};
-  const data = [
-    {
-      id: 1,
-      name: "Indah Sari Devi",
-      email: "mamahdedeh34@gmail.com",
-      username: "indahsdev01",
-      roles: [{ name: "Admin" }, { name: "Writer" }],
-    },
-    {
-      id: 2,
-      name: "Mahindra Putra",
-      email: "maheend@gmail.com",
-      username: "maheeend01",
-      roles: [{ name: "Editor" }],
-    },
-    {
-      id: 3,
-      name: "Ujang Ilman",
-      email: "ujangil03@gmail.com",
-      username: "uujang44",
-      roles: [{ name: "Writer" }],
-    },
 
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-    {
-      id: 1,
-      name: "Indah Sari Devi",
-      email: "mamahdedeh34@gmail.com",
-      username: "indahsdev01",
-      roles: [{ name: "Admin" }, { name: "Writer" }],
-    },
-    {
-      id: 2,
-      name: "Mahindra Putra",
-      email: "maheend@gmail.com",
-      username: "maheeend01",
-      roles: [{ name: "Editor" }],
-    },
-    {
-      id: 3,
-      name: "Ujang Ilman",
-      email: "ujangil03@gmail.com",
-      username: "uujang44",
-      roles: [{ name: "Writer" }],
-    },
-
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-  ];
   return (
     <>
       <main className="h-full">
@@ -106,13 +59,18 @@ function Table() {
 
         {/* Main Content */}
         <div className="mainCard">
-          <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-            <UserTable
-              loading={loading}
-              dataHeader={dataHeader}
-              data={data}
-              handleDelete={handleDelete}
-            />
+          <div className="border border-gray-200 bg-white p-4 rounded-md">
+            {loading ? (
+              <div className="text-center text-gray-600">Loading...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">{error.message}</div>
+            ) : (
+              <UserTable
+                dataHeader={dataHeader}
+                data={patients}
+                handleDelete={handleDelete}
+              />
+            )}
           </div>
         </div>
       </main>
