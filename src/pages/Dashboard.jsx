@@ -12,6 +12,8 @@ function Dashboard() {
   const [dailyCount, setDailyCount] = useState(0);
   const [error, setError] = useState(null);
   const [totalPatients, setTotalPatients] = useState(0);
+  const [maleCount, setMaleCount] = useState(0);
+  const [femaleCount, setFemaleCount] = useState(0);
 
   const [sidebarToggle] = useOutletContext();
 
@@ -40,7 +42,6 @@ function Dashboard() {
       const currentWeekStart = new Date(currentDate);
       currentWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
       currentWeekStart.setHours(0, 0, 0);
-
       const endOfWeek = new Date(currentWeekStart);
       endOfWeek.setDate(currentWeekStart.getDate() + 6);
       endOfWeek.setHours(23, 59, 59);
@@ -51,7 +52,6 @@ function Dashboard() {
       });
       setWeeklyCount(weeklyData.length);
 
-      // daily count
       // Calculate daily count
       const startOfDay = new Date(currentDate);
       startOfDay.setHours(0, 0, 0);
@@ -64,6 +64,17 @@ function Dashboard() {
         return patientDate >= startOfDay && patientDate <= endOfDay;
       });
       setDailyCount(dailyData.length);
+
+      // Gender Count
+      const malePatients = allPatients.filter(
+        (patient) => patient.sex === "Male"
+      );
+      setMaleCount(malePatients.length);
+
+      const femalePatients = allPatients.filter(
+        (patient) => patient.sex === "Female"
+      );
+      setFemaleCount(femalePatients.length);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
@@ -85,7 +96,7 @@ function Dashboard() {
     {
       title: "Daily Enrollments",
       count: dailyCount,
-      color: "cardInfo",
+      color: "cardSuccess",
     },
     {
       title: "Monthly Enrollments",
@@ -95,16 +106,16 @@ function Dashboard() {
     {
       title: "Weekly Enrollments",
       count: weeklyCount,
+      color: "cardLime",
+    },
+    {
+      title: "Female Patients",
+      count: femaleCount,
       color: "cardDanger",
     },
     {
-      title: "Monthly Enrollments",
-      count: monthlyCount,
-      color: "cardWarning",
-    },
-    {
-      title: "Total Enrollments",
-      count: totalPatients,
+      title: "Male Patients",
+      count: maleCount,
       color: "cardInfo",
     },
   ];
