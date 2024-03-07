@@ -33,16 +33,17 @@ function Table() {
 
   const dataHeader = [
     {
-      key: "name",
+      key: "Name",
       label: "Name",
     },
-    {
-      key: "email",
-      label: "Email",
-    },
+
     {
       key: "phone",
       label: "Phone",
+    },
+    {
+      key: "gender",
+      label: "Gender",
     },
     {
       key: "action",
@@ -65,11 +66,18 @@ function Table() {
             ) : error ? (
               <div className="text-center text-red-500">{error.message}</div>
             ) : (
-              <UserTable
-                dataHeader={dataHeader}
-                data={patients}
-                handleDelete={handleDelete}
-              />
+              <div>
+                <article>
+                  <h1 className="text-2xl font-bold p-8 text-center font-extrabold underline underline-offset-1">
+                    Patient Table
+                  </h1>
+                </article>
+                <UserTable
+                  dataHeader={dataHeader}
+                  data={patients}
+                  handleDelete={handleDelete}
+                />
+              </div>
             )}
           </div>
         </div>

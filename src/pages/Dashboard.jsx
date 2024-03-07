@@ -21,11 +21,17 @@ function Dashboard() {
         `https://mk-be-strapi-production.up.railway.app/api/all-patients`
       );
       const data = await response.json();
-      setTotalPatients(data.length);
+
+      // Assuming 'data' contains an array of user objects
+      // Iterate over each user object and extract the patients array
+      const allPatients = data.map((user) => user.patients).flat();
+
+      setTotalPatients(allPatients.length);
+
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
-      const monthlyData = data.filter((patient) => {
-        const patientDate = new Date(patient.date);
+      const monthlyData = allPatients.filter((patient) => {
+        const patientDate = new Date(patient.createdAt);
         return patientDate.getMonth() + 1 === currentMonth;
       });
       setMonthlyCount(monthlyData.length);
@@ -39,7 +45,7 @@ function Dashboard() {
       endOfWeek.setDate(currentWeekStart.getDate() + 6);
       endOfWeek.setHours(23, 59, 59);
 
-      const weeklyData = data.filter((patient) => {
+      const weeklyData = allPatients.filter((patient) => {
         const patientDate = new Date(patient.createdAt);
         return patientDate >= currentWeekStart && patientDate <= endOfWeek;
       });
