@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
-import UserTable from "./ScreeningUserTable";
+import RenalScreening from "./ScreeningUserTable";
 
 function Table() {
   const [sidebarToggle] = useOutletContext();
@@ -73,10 +73,10 @@ function Table() {
               <div>
                 <article>
                   <h1 className="text-2xl font-bold p-8 text-center font-extrabold underline underline-offset-1">
-                    Renal Screening Tests
+                    Renal Screening Beneficaries
                   </h1>
                 </article>
-                <UserTable
+                <RenalScreening
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}

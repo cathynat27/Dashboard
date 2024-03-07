@@ -10,7 +10,7 @@ import Blank from "./pages/Blank";
 import NotFound from "./pages/NotFound";
 import Form from "./pages/Form";
 import RegisterIndex from "./pages/auth/Register";
-import RenalTable from "./pages/AppServices/ScreeningTable";
+import RenalTable from "./pages/AppServices/RFTTable";
 import RenalScreening from "./pages/AppServices/ScreeningTable";
 
 function App() {

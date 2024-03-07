@@ -35,29 +35,17 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
               return (
                 <tr key={patient.id}>
                   <td>{patient.id}</td>
-                  <td>{patient.sex}</td>
                   <td>
                     <ul>
-                      {patient.rfts.map((rft, index) => (
+                      {patient.renal_histories.map((renalHistory, index) => (
                         <li key={index}>
                           <div>
-                            <strong>Weight:</strong> {rft.inspectionData.weight}{" "}
-                            kgs
+                            <strong>UTI History:</strong>{" "}
+                            {renalHistory.historyData.uti}
                           </div>
                           <div>
-                            <strong>BMI:</strong> {rft.inspectionData.bmi}
-                          </div>
-                          <div>
-                            <strong>Systolic Pressure:</strong>
-                            {`${rft.inspectionData.bloodPressure.systolicPressure} mmHg`}
-                          </div>
-                          <div>
-                            <strong>Diastolic Pressure:</strong>
-                            {`${rft.inspectionData.bloodPressure.diastolicPressure} mmHg`}
-                          </div>
-                          <div>
-                            <strong>Heart Pluse:</strong>
-                            {`${rft.inspectionData.bloodPressure.heartPulse} beats/min`}
+                            <strong>Current Medication:</strong>{" "}
+                            {renalHistory.historyData.currentMedication}
                           </div>
                         </li>
                       ))}
@@ -65,32 +53,21 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
                   </td>
                   <td>
                     <ul>
-                      {patient.rfts.map((rft, index) => (
+                      {patient.renal_histories.map((renalHistory, index) => (
                         <li key={index}>
-                          {rft.rftData && (
-                            <div>
-                              <div>
-                                <strong>eGFR:</strong> {rft.rftData.eGFR}
-                              </div>
-                              <div>
-                                <strong>Urea:</strong> {rft.rftData.urea} mmol/L
-                              </div>
-                              <div>
-                                <strong>Sodium:</strong> {rft.rftData.sodium} mmol/L
-                              </div>
-                              <div>
-                                <strong>Creatinine:</strong> {rft.rftData.creatinine} mmol/L
-                              </div>
-                              <div>
-                                <strong>CKDStage:</strong> {rft.rftData.ckdStage} mmol/L
-                              </div>
-                              
-                            </div>
-                          )}
+                          <div>
+                            <strong>Signs and Symptoms:</strong>{" "}
+                            {renalHistory.inspectionData.signsAndSymptoms}
+                          </div>
+                          <div>
+                            <strong>BMI:</strong>{" "}
+                            {renalHistory.inspectionData.bmi}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </td>
+                  {/* Render other columns as needed */}
                   <td>
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
