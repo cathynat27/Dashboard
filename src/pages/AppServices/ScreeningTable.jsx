@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
-import UserTable from "./RFT";
+import UserTable from "./ScreeningUserTable";
 
 function Table() {
   const [sidebarToggle] = useOutletContext();
@@ -34,20 +34,20 @@ function Table() {
   const dataHeader = [
     {
       key: "id",
-      label: "Beneficiary ID"
+      label: "Beneficiary ID",
     },
 
     {
-      key: "gender",
-      label: "Gender",
+      key: "history",
+      label: "Patient History",
     },
     {
       key: "inspection",
       label: "Inspection Data",
     },
     {
-      key: "RFT",
-      label: "Renal Functional Tests",
+      key: "urinalysis",
+      label: "Urinalysis - Macrosopy",
     },
     {
       key: "action",
@@ -73,7 +73,7 @@ function Table() {
               <div>
                 <article>
                   <h1 className="text-2xl font-bold p-8 text-center font-extrabold underline underline-offset-1">
-                    Renal Functional Tests Beneficaries
+                    Renal Screening Tests
                   </h1>
                 </article>
                 <UserTable
