@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function UserTable({ loading, dataHeader, data, handleDelete }) {
+function RenalTable({ loading, dataHeader, data, handleDelete }) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -26,7 +26,7 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((user) =>
+          {visibleData.map((user) =>
             user.patients.map((patient) => {
               const rftDataAvailable = patient.rfts.length > 0;
               if (!rftDataAvailable) {
@@ -47,7 +47,6 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
                           <div>
                             <strong>BMI:</strong> {rft.inspectionData.bmi}
                           </div>
-
                           <div>
                             <strong>Systolic Pressure:</strong>
                             {`${rft.inspectionData.bloodPressure.systolicPressure} mmHg`}
@@ -77,25 +76,21 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
                                 <strong>Urea:</strong> {rft.rftData.urea} mmol/L
                               </div>
                               <div>
-                                <strong>Creatinine:</strong>
-                                {rft.rftData.creatinine} mmol/L
+                                <strong>Sodium:</strong> {rft.rftData.sodium} mmol/L
                               </div>
                               <div>
-                                <strong>Sodium:</strong> {rft.rftData.sodium}
-                                mmol/L
+                                <strong>Creatinine:</strong> {rft.rftData.creatinine} mmol/L
                               </div>
                               <div>
-                                <strong>CKD Stage:</strong>{" "}
-                                {rft.rftData.ckdStage}
-                                mmol/L
+                                <strong>CKDStage:</strong> {rft.rftData.ckdStage} mmol/L
                               </div>
+                              
                             </div>
                           )}
                         </li>
                       ))}
                     </ul>
                   </td>
-
                   <td>
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
@@ -138,4 +133,4 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
   );
 }
 
-export default UserTable;
+export default RenalTable;
