@@ -50,6 +50,20 @@ function Dashboard() {
         return patientDate >= currentWeekStart && patientDate <= endOfWeek;
       });
       setWeeklyCount(weeklyData.length);
+
+      // daily count
+      // Calculate daily count
+      const startOfDay = new Date(currentDate);
+      startOfDay.setHours(0, 0, 0);
+
+      const endOfDay = new Date(currentDate);
+      endOfDay.setHours(23, 59, 59);
+
+      const dailyData = allPatients.filter((patient) => {
+        const patientDate = new Date(patient.createdAt);
+        return patientDate >= startOfDay && patientDate <= endOfDay;
+      });
+      setDailyCount(dailyData.length);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
@@ -69,8 +83,8 @@ function Dashboard() {
 
   const dataOS = [
     {
-      title: "Total Enrollments",
-      count: totalPatients,
+      title: "Daily Enrollments",
+      count: dailyCount,
       color: "cardInfo",
     },
     {
@@ -116,7 +130,7 @@ function Dashboard() {
         {/* OS Kredit */}
         <div className="px-2 mx-auto mainCard">
           <h1 className="text-slate-500 pb-3 text-base md:text-lg">
-            Critical Patients
+            Renal Beneficiaries
           </h1>
 
           <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
