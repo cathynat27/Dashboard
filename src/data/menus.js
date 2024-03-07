@@ -26,7 +26,7 @@ const initMenu = [
 
   {
     label: "Renal Functional Tests",
-    path: "/table",
+    path: "/renal",
     icon: faUsers,
   },
   {

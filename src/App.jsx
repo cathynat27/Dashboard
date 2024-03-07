@@ -10,6 +10,7 @@ import Blank from "./pages/Blank";
 import NotFound from "./pages/NotFound";
 import Form from "./pages/Form";
 import RegisterIndex from "./pages/auth/Register";
+import RenalTable from "./pages/AppServices/Table";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/" element={<AuthLayout />}>
         <Route path="/" element={<Dashboard />}></Route>
         <Route path="/table" element={<Table />}></Route>
+        <Route path="/renal" element={<RenalTable />}></Route>
         <Route path="/blank" element={<Blank />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
         <Route path="/form" element={<Form />}></Route>
