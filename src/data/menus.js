@@ -31,7 +31,7 @@ const initMenu = [
   },
   {
     label: "Renal Screenings",
-    path: "/form",
+    path: "/screening",
     icon: faWindows,
   },
   {
