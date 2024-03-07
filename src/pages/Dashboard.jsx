@@ -14,6 +14,11 @@ function Dashboard() {
   const [totalPatients, setTotalPatients] = useState(0);
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
+  const [monitoringCount, setMonitoringCount] = useState(0);
+  const [screeningCount, setScreeningCount] = useState(0);
+  const [rftCount, setRftCount] = useState(0);
+  const [vaccinationsCount, setVaccinationsCount] = useState(0);
+  const [diagnosesCount, setDiagnosesCount] = useState(0);
 
   const [sidebarToggle] = useOutletContext();
 
@@ -75,6 +80,27 @@ function Dashboard() {
         (patient) => patient.sex === "Female"
       );
       setFemaleCount(femalePatients.length);
+
+      // Calculate patients under monitoring, screening, and RFT
+      let monitoring = 0;
+      let screening = 0;
+      let rft = 0;
+      let vaccination = 0;
+      let diagnosis = 0;
+      allPatients.forEach((patient) => {
+        monitoring += patient.monitorings ? patient.monitorings.length : 0;
+        screening += patient.renal_histories
+          ? patient.renal_histories.length
+          : 0;
+        rft += patient.rfts ? patient.rfts.length : 0;
+        vaccination += patient.vaccinations ? patient.vaccinations.length : 0;
+        diagnosis += patient.diagnoses ? patient.diagnoses.length : 0;
+      });
+      setMonitoringCount(monitoring);
+      setScreeningCount(screening);
+      setRftCount(rft);
+      setVaccinationsCount(vaccination);
+      setDiagnosesCount(diagnosis);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
@@ -120,6 +146,34 @@ function Dashboard() {
     },
   ];
 
+  const servicesOs = [
+    {
+      title: "Number of Monitorings",
+      count: monitoringCount,
+      color: "cardLime",
+    },
+    {
+      title: "Renal Functional Tests",
+      count: rftCount,
+      color: "cardDanger",
+    },
+    {
+      title: "Number of Screenings",
+      count: screeningCount,
+      color: "cardSuccess",
+    },
+    {
+      title: "Number of Vaccinations",
+      count: vaccinationsCount,
+      color: "cardInfo",
+    },
+    {
+      title: "Number of Diagnoses",
+      count: diagnosesCount,
+      color: "cardWarning",
+    },
+  ];
+
   return (
     <>
       <main className="h-full">
@@ -146,6 +200,12 @@ function Dashboard() {
 
           <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
             {dataOS?.map((data, index) => (
+              <ScrolledCard key={index} data={data} />
+            ))}
+          </div>
+
+          <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar mt-10">
+            {servicesOs?.map((data, index) => (
               <ScrolledCard key={index} data={data} />
             ))}
           </div>
