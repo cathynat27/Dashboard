@@ -17,10 +17,42 @@ const initMenu = [
     icon: faTachometer,
   },
 
+  { label: "Services" },
+  {
+    label: "Renal Monitorings",
+    path: "/table",
+    icon: faUser,
+  },
+
+  {
+    label: "Renal Functional Tests",
+    path: "/table",
+    icon: faUsers,
+  },
+  {
+    label: "Renal Screenings",
+    path: "/form",
+    icon: faWindows,
+  },
+  {
+    label: "Vaccinations",
+    path: "/table",
+    icon: faUser,
+  },
+  {
+    label: "Diagnoses",
+    path: "/table",
+    icon: faUser,
+  },
+  {
+    label: "Antenatals",
+    path: "/table",
+    icon: faUser,
+  },
   { label: "Reports" },
 
   {
-    label: "Community Health Provider",
+    label: "CHP Activity",
     path: "/table",
     icon: faUser,
   },
@@ -35,7 +67,6 @@ const initMenu = [
     path: "/form",
     icon: faWindows,
   },
-
   {
     label: "Register",
   },
