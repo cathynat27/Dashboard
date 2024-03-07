@@ -20,7 +20,7 @@ const initMenu = [
   { label: "Services" },
   {
     label: "Renal Monitorings",
-    path: "/table",
+    path: "/monitoring",
     icon: faUser,
   },
 
