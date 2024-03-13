@@ -213,7 +213,6 @@ function Dashboard() {
           <div className="lg:w-full w-[1024px] overflow-hidden flex flex-row justify-between text-slate-700 gap-2 lg:max-h-screen overflow-x-auto whitespace-nowrap"></div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

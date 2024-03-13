@@ -13,31 +13,33 @@ import RegisterIndex from "./pages/auth/Register";
 import RenalTable from "./pages/AppServices/RFTTable";
 import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
-import AntenantalTable from './pages/AppServices/AntenantalTable'
+import AntenantalTable from "./pages/AppServices/AntenantalTable";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AuthLayout />}>
-        <Route path="/" element={<Dashboard />}></Route>
-        <Route path="/table" element={<Table />}></Route>
-        <Route path="/renal" element={<RenalTable />}></Route>
-        <Route path="/vaccination" element={<VaccinationTable />}></Route>
-        <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
-        <Route path="/antenantal" element={<AntenantalTable />}></Route>
+    <div>
+      <Routes>
+        <Route path="/" element={<AuthLayout />}>
+          <Route path="/" element={<Dashboard />}></Route>
+          <Route path="/table" element={<Table />}></Route>
+          <Route path="/renal" element={<RenalTable />}></Route>
+          <Route path="/vaccination" element={<VaccinationTable />}></Route>
+          <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
+          <Route path="/antenantal" element={<AntenantalTable />}></Route>
 
-
-
-        <Route path="/blank" element={<Blank />}></Route>
-        <Route path="/404" element={<NotFound />}></Route>
-        <Route path="/form" element={<Form />}></Route>
-        <Route path="/profile" element={<Blank />}></Route>
-      </Route>
-      <Route path="/auth" element={<GuestLayout />}>
-        <Route path="/auth/login" element={<Login />}></Route>
-        <Route path="/auth/register" element={<RegisterIndex />}></Route>
-      </Route>
-    </Routes>
+          <Route path="/blank" element={<Blank />}></Route>
+          <Route path="/404" element={<NotFound />}></Route>
+          <Route path="/form" element={<Form />}></Route>
+          <Route path="/profile" element={<Blank />}></Route>
+        </Route>
+        <Route path="/auth" element={<GuestLayout />}>
+          <Route path="/auth/login" element={<Login />}></Route>
+          <Route path="/auth/register" element={<RegisterIndex />}></Route>
+        </Route>
+      </Routes>
+      <Footer />
+    </div>
   );
 }
 
