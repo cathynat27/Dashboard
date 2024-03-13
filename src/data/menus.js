@@ -46,7 +46,7 @@ const initMenu = [
   },
   {
     label: "Antenatals",
-    path: "/table",
+    path: "/antenantal",
     icon: faUser,
   },
   { label: "Reports" },

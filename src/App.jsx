@@ -13,6 +13,7 @@ import RegisterIndex from "./pages/auth/Register";
 import RenalTable from "./pages/AppServices/RFTTable";
 import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
+import AntenantalTable from './pages/AppServices/AntenantalTable'
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/renal" element={<RenalTable />}></Route>
         <Route path="/vaccination" element={<VaccinationTable />}></Route>
         <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
+        <Route path="/antenantal" element={<AntenantalTable />}></Route>
+
 
 
         <Route path="/blank" element={<Blank />}></Route>

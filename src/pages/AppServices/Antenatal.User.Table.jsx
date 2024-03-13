@@ -7,34 +7,36 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter patients with diagnoses data
-  const patientsWithDiagnoses = data.flatMap((user) =>
-    user.patients.filter((patient) => patient.diagnoses.length > 0)
+  // Filter patients with antenatal data
+  const patientsWithAntenatals = data.flatMap((user) =>
+    user.patients.filter((patient) => patient.antenantals.length > 0)
   );
 
-  const pageCount = Math.ceil(patientsWithDiagnoses.length / pageSize);
+  const pageCount = Math.ceil(patientsWithAntenatals.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const visibleData = patientsWithDiagnoses.slice(startIndex, startIndex + pageSize);
+  const visibleData = patientsWithAntenatals.slice(startIndex, startIndex + pageSize);
 
   const navigateToPage = (page) => {
     setCurrentPage(page);
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
+    <div>
+      {/* Table Header */}
+      <table className="table-fixed w-full">
         <thead>
           <tr>
             {dataHeader.map((header) => (
               <th
-                key={header.key}
                 className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                key={header.key}
               >
                 {header.label}
               </th>
             ))}
           </tr>
         </thead>
+        {/* Table Body */}
         <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((patient) => (
             <tr key={patient.id}>
@@ -43,42 +45,37 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                   {patient.firstName} {patient.lastName}
                 </div>
               </td>
+              {/* Render antenatal data */}
               <td className="px-6 py-4 whitespace-nowrap">
-                <ul className="divide-y divide-gray-200">
-                  {patient.diagnoses.map((diagnosis, index) => (
-                    <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.condition}</div>
+                <ul>
+                  {patient.antenantals.map((antenatal, index) => (
+                    <li key={index}>
+                      <div className="text-sm text-gray-900">{antenatal.pregnancyStatus}</div>
                     </li>
                   ))}
                 </ul>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <ul className="divide-y divide-gray-200">
-                  {patient.diagnoses.map((diagnosis, index) => (
-                    <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.impression}</div>
-                    </li>
-                  ))}
-                </ul>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <ul className="divide-y divide-gray-200">
-                  {patient.diagnoses.map((diagnosis, index) => (
-                    <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.dateOfDiagnosis}</div>
+                <ul>
+                  {patient.antenantals.map((antenatal, index) => (
+                    <li key={index}>
+                      <div className="text-sm text-gray-900">
+                        {new Date(antenatal.expectedDateOfDelivery).toLocaleDateString()}
+                      </div>
                     </li>
                   ))}
                 </ul>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                {/* Edit and Delete buttons */}
                 <Link
                   to={`/auth/master/user/${patient.id}/edit`}
-                  className="text-sky-600 hover:text-sky-900 mr-4"
+                  className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
                 >
                   <FontAwesomeIcon icon={faPencil} />
                 </Link>
                 <button
-                  className="text-red-600 hover:text-red-900"
+                  className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
                   onClick={() => {
                     handleDelete(patient.id);
                   }}
