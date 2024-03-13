@@ -41,7 +41,7 @@ const initMenu = [
   },
   {
     label: "Diagnoses",
-    path: "/table",
+    path: "/diagnosis",
     icon: faUser,
   },
   {

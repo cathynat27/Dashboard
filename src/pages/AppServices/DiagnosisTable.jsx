@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
-import VaccinationUserTable from "./Vaccination.User.Table";
-
-function VaccinationTable() {
+import DiagnosisUserTable from "./Diagnosis.User.Table";
+function DiagnosisTable() {
   const [sidebarToggle] = useOutletContext();
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
@@ -38,17 +37,18 @@ function VaccinationTable() {
     },
 
     {
-      key: "name",
-      label: "Vaccination Name",
+      key: "condition",
+      label: "Condition",
     },
     {
-      key: "dosage",
-      label: "Dosage",
+      key: "signs",
+      label: "Signs and Symptoms",
     },
     {
       key: "date",
-      label: "Date for Vaccination",
+      label: "Date of Diagnosis",
     },
+
     {
       key: "action",
       label: "Action",
@@ -73,10 +73,10 @@ function VaccinationTable() {
               <div>
                 <article>
                   <h1 className="text-2xl font-bold p-8 text-center font-extrabold underline underline-offset-1">
-                    Vaccination Beneficaries
+                    Diagnosis Beneficaries
                   </h1>
                 </article>
-                <VaccinationUserTable
+                <DiagnosisUserTable
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
@@ -90,4 +90,4 @@ function VaccinationTable() {
   );
 }
 
-export default VaccinationTable;
+export default DiagnosisTable;
