@@ -28,7 +28,7 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                 {header.label}
               </th>
             ))}
-            <th className="px-6 py-3 bg-gray-50"></th>
+            {/* <th className="px-6 py-3 bg-gray-50"></th> */}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -41,13 +41,17 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
               return (
                 <tr key={patient.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {patient.firstName} {patient.lastName}
+                    <div className="text-sm text-gray-900">
+                      {patient.firstName} {patient.lastName}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <ul className="divide-y divide-gray-200">
                       {patient.diagnoses.map((rft, index) => (
                         <li key={index} className="py-1">
-                          <div className="text-sm text-gray-900">{rft.condition}</div>
+                          <div className="text-sm text-gray-900">
+                            {rft.condition}
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -56,7 +60,9 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                     <ul className="divide-y divide-gray-200">
                       {patient.diagnoses.map((rft, index) => (
                         <li key={index} className="py-1">
-                          <div className="text-sm text-gray-900">{rft.impression}</div>
+                          <div className="text-sm text-gray-900">
+                            {rft.impression}
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -66,12 +72,14 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                     <ul className="divide-y divide-gray-200">
                       {patient.diagnoses.map((rft, index) => (
                         <li key={index} className="py-1">
-                          <div className="text-sm text-gray-900">{rft.dateOfDiagnosis}</div>
+                          <div className="text-sm text-gray-900">
+                            {rft.dateOfDiagnosis}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </td>
-                 
+
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
