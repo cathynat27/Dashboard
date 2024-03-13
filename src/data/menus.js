@@ -18,25 +18,25 @@ const initMenu = [
   },
 
   { label: "Services" },
-  {
-    label: "Renal Monitorings",
-    path: "/monitoring",
-    icon: faUser,
-  },
+  // {
+  //   label: "Renal Monitorings",
+  //   path: "/monitoring",
+  //   icon: faUser,
+  // },
 
   {
     label: "Renal Functional Tests",
     path: "/renal",
     icon: faUsers,
   },
-  {
-    label: "Renal Screenings",
-    path: "/screening",
-    icon: faWindows,
-  },
+  // {
+  //   label: "Renal Screenings",
+  //   path: "/screening",
+  //   icon: faWindows,
+  // },
   {
     label: "Vaccinations",
-    path: "/table",
+    path: "/vaccination",
     icon: faUser,
   },
   {
