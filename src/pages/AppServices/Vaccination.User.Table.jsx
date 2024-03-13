@@ -16,16 +16,21 @@ function VaccinationTable({ loading, dataHeader, data, handleDelete }) {
   };
 
   return (
-    <div>
-      <table className="table-fixed w-full">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             {dataHeader.map((header) => (
-              <th key={header.key}>{header.label}</th>
+              <th
+                className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                key={header.key}
+              >
+                {header.label}
+              </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((user) =>
             user.patients.map((patient) => {
               const rftDataAvailable = patient.vaccinations.length > 0;
@@ -34,36 +39,48 @@ function VaccinationTable({ loading, dataHeader, data, handleDelete }) {
               }
               return (
                 <tr key={patient.id}>
-                  <td>{patient.firstName} {patient.lastName}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {patient.firstName} {patient.lastName}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.vaccinations.map((rft, index) => (
                         <li key={index}>
-                          <div>{rft.vaccineName}</div>
+                          <div className="text-sm text-gray-900">
+                            {rft.vaccineName}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.vaccinations.map((rft, index) => (
                         <li key={index}>
-                          <div>{rft.dose}</div>
+                          <div className="text-sm text-gray-900">
+                            {rft.dose}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.vaccinations.map((rft, index) => (
                         <li key={index}>
-                          <div>{new Date(rft.dateOfVaccination).toLocaleDateString()}</div>
+                          <div className="text-sm text-gray-900">
+                            {new Date(
+                              rft.dateOfVaccination
+                            ).toLocaleDateString()}
+                          </div>
                         </li>
                       ))}
                     </ul>
                   </td>
-                 
-                  <td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
                       className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
