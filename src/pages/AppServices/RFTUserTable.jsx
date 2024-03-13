@@ -16,16 +16,21 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
   };
 
   return (
-    <div>
-      <table className="table-fixed w-full">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             {dataHeader.map((header) => (
-              <th key={header.key}>{header.label}</th>
+              <th
+                key={header.key}
+                className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                {header.label}
+              </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((user) =>
             user.patients.map((patient) => {
               const rftDataAvailable = patient.rfts.length > 0;
@@ -34,28 +39,31 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
               }
               return (
                 <tr key={patient.id}>
-                  <td>{patient.id}</td>
-                  <td>{patient.sex}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {patient.firstName} {patient.lastName}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{patient.sex}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.rfts.map((rft, index) => (
                         <li key={index}>
-                          <div>
-                            <strong>Weight:</strong> {rft.inspectionData.weight}{" "}
-                            kgs
-                          </div>
-                          <div>
+                         
+                          <div className="text-sm text-gray-900">
                             <strong>BMI:</strong> {rft.inspectionData.bmi}
                           </div>
-                          <div>
+                          <div className="text-sm text-gray-900">
                             <strong>Systolic Pressure:</strong>
                             {`${rft.inspectionData.bloodPressure.systolicPressure} mmHg`}
                           </div>
-                          <div>
+                          <div className="text-sm text-gray-900">
                             <strong>Diastolic Pressure:</strong>
                             {`${rft.inspectionData.bloodPressure.diastolicPressure} mmHg`}
                           </div>
-                          <div>
+                          <div className="text-sm text-gray-900">
                             <strong>Heart Pluse:</strong>
                             {`${rft.inspectionData.bloodPressure.heartPulse} beats/min`}
                           </div>
@@ -63,38 +71,30 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                       ))}
                     </ul>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.rfts.map((rft, index) => (
                         <li key={index}>
                           {rft.rftData && (
                             <div>
-                              <div>
-                                <strong>eGFR:</strong> {rft.rftData.eGFR}
+                              <div className="text-sm text-gray-900">
+                                <strong>Creatinine:</strong>{" "}
+                                {rft.rftData.creatinine} mmol/L
                               </div>
-                              <div>
-                                <strong>Urea:</strong> {rft.rftData.urea} mmol/L
+                              <div className="text-sm text-gray-900">
+                                <strong>CKDStage:</strong>{" "}
+                                {rft.rftData.ckdStage} mmol/L
                               </div>
-                              <div>
-                                <strong>Sodium:</strong> {rft.rftData.sodium} mmol/L
-                              </div>
-                              <div>
-                                <strong>Creatinine:</strong> {rft.rftData.creatinine} mmol/L
-                              </div>
-                              <div>
-                                <strong>CKDStage:</strong> {rft.rftData.ckdStage} mmol/L
-                              </div>
-                              
                             </div>
                           )}
                         </li>
                       ))}
                     </ul>
                   </td>
-                  <td>
+                  <td  className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
-                      className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
+                      className="text-sky-600 hover:text-sky-900 mr-4"
                     >
                       <FontAwesomeIcon icon={faPencil} />
                     </Link>
