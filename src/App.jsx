@@ -16,6 +16,7 @@ import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
 import AntenantalTable from "./pages/AppServices/AntenantalTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/AppServices/ScreeningTable";
+import RenalMonitoring from "./pages/AppServices/MonitoringTable";
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
           <Route path="/antenantal" element={<AntenantalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
+          <Route path="/monitoring" element={<RenalMonitoring />}></Route>
+
 
 
           <Route path="/blank" element={<Blank />}></Route>

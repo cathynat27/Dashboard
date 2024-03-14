@@ -35,6 +35,11 @@ const initMenu = [
     icon: faWindows,
   },
   {
+    label: "Renal Monitoring",
+    path: "/monitoring",
+    icon: faWindows,
+  },
+  {
     label: "Vaccinations",
     path: "/vaccination",
     icon: faUser,

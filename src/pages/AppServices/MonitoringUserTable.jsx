@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function RenalScreening({ loading, dataHeader, data, handleDelete }) {
+function MonitoringUserTable({ loading, dataHeader, data, handleDelete }) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,63 +15,102 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
     setCurrentPage(page);
   };
 
+  const renderPagination = () => {
+    const totalPagesToShow = 5; // Adjust the number of pages to show here
+    const pages = [];
+    const halfTotalPagesToShow = Math.floor(totalPagesToShow / 2);
+    let startPage = Math.max(1, currentPage - halfTotalPagesToShow);
+    let endPage = Math.min(pageCount, startPage + totalPagesToShow - 1);
+
+    if (pageCount <= totalPagesToShow) {
+      startPage = 1;
+      endPage = pageCount;
+    } else if (currentPage <= halfTotalPagesToShow) {
+      endPage = totalPagesToShow;
+    } else if (currentPage + halfTotalPagesToShow >= pageCount) {
+      startPage = pageCount - totalPagesToShow + 1;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => navigateToPage(i)}
+          className={`mx-1 py-2 px-4 rounded ${
+            currentPage === i ? "bg-gray-300" : "bg-gray-200"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
+  };
+
   return (
-    <div>
-      <table className="table-fixed w-full">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             {dataHeader.map((header) => (
-              <th key={header.key}>{header.label}</th>
+              <th
+                key={header.key}
+                className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                {header.label}
+              </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((user) =>
             user.patients.map((patient) => {
-              const rftDataAvailable = patient.rfts.length > 0;
+              const rftDataAvailable = patient.renal_histories.length > 0;
               if (!rftDataAvailable) {
                 return null; // Skip patients without RFT data
               }
               return (
                 <tr key={patient.id}>
-                  <td>{patient.id}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {patient.firstName} {patient.lastName}
+                    </div>
+                    <div className="text-sm text-gray-900">{patient.sex}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{patient.sex}</div>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
-                      {patient.monitorings.map((renalHistory, index) => (
+                      {patient.monitorings.map((rft, index) => (
                         <li key={index}>
-                          <div>
-                            <strong>UTI History:</strong>{" "}
-                            {renalHistory.historyData.uti}
-                          </div>
-                          <div>
-                            <strong>Current Medication:</strong>{" "}
-                            {renalHistory.historyData.currentMedication}
-                          </div>
+                          {rft.monitoringData &&
+                            rft.monitoringData.length > 0 && (
+                              <div>
+                                {/* Chemistry */}
+                                <p>Chemistry:</p>
+                                <div>
+                                  {rft.monitoringData[0].chemistry &&
+                                    Object.entries(
+                                      rft.monitoringData[0].chemistry
+                                    ).map(([key, value]) => (
+                                      <p key={key}>
+                                        {key}: {value}
+                                      </p>
+                                    ))}
+                                </div>
+                              </div>
+                            )}
                         </li>
                       ))}
                     </ul>
                   </td>
-                  <td>
-                    <ul>
-                      {patient.monitorings.map((renalHistory, index) => (
-                        <li key={index}>
-                          <div>
-                            <strong>Signs and Symptoms:</strong>{" "}
-                            {renalHistory.inspectionData.signsAndSymptoms}
-                          </div>
-                          <div>
-                            <strong>BMI:</strong>{" "}
-                            {renalHistory.inspectionData.bmi}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                  {/* Render other columns as needed */}
-                  <td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
-                      className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
+                      className="text-sky-600 hover:text-sky-900 mr-4"
                     >
                       <FontAwesomeIcon icon={faPencil} />
                     </Link>
@@ -92,22 +131,10 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
       </table>
       {/* Pagination */}
       {pageCount > 1 && (
-        <div className="flex justify-center mt-4">
-          {[...Array(pageCount)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => navigateToPage(index + 1)}
-              className={`mx-1 py-2 px-4 rounded ${
-                currentPage === index + 1 ? "bg-gray-300" : "bg-gray-200"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+        <div className="flex justify-center mt-4">{renderPagination()}</div>
       )}
     </div>
   );
 }
 
-export default RenalScreening;
+export default MonitoringUserTable;
