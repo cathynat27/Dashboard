@@ -7,6 +7,13 @@ import {
   faCog,
   faUsers,
   faUser,
+  faHeartbeat,
+  faUserMd,
+  faVial,
+  faClipboardList,
+  faSyringe,
+  faBaby,
+  faStethoscope,
 } from "@fortawesome/free-solid-svg-icons";
 import { FiSettings } from "react-icons/fi";
 
@@ -27,39 +34,39 @@ const initMenu = [
   {
     label: "Renal Functional Tests",
     path: "/renal",
-    icon: faUsers,
+    icon: faVial,
   },
   {
     label: "Renal Screenings",
     path: "/screening",
-    icon: faWindows,
+    icon: faClipboardList,
   },
   {
     label: "Renal Monitoring",
     path: "/monitoring",
-    icon: faWindows,
+    icon: faHeartbeat,
   },
   {
     label: "Vaccinations",
     path: "/vaccination",
-    icon: faUser,
+    icon: faSyringe,
   },
   {
     label: "Diagnoses",
     path: "/diagnosis",
-    icon: faUser,
+    icon: faStethoscope,
   },
   {
     label: "Antenatals",
     path: "/antenantal",
-    icon: faUser,
+    icon: faBaby,
   },
   { label: "Reports" },
 
   {
     label: "CHP Activity",
     path: "/table",
-    icon: faUser,
+    icon: faUserMd,
   },
 
   {
