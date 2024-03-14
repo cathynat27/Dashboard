@@ -15,6 +15,7 @@ import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
 import AntenantalTable from "./pages/AppServices/AntenantalTable";
 import Footer from "./components/Footer";
+import RenalScreening from "./pages/AppServices/ScreeningTable";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
           <Route path="/vaccination" element={<VaccinationTable />}></Route>
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
           <Route path="/antenantal" element={<AntenantalTable />}></Route>
+          <Route path="/screening" element={<RenalScreening />}></Route>
+
 
           <Route path="/blank" element={<Blank />}></Route>
           <Route path="/404" element={<NotFound />}></Route>

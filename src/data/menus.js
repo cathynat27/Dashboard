@@ -29,11 +29,11 @@ const initMenu = [
     path: "/renal",
     icon: faUsers,
   },
-  // {
-  //   label: "Renal Screenings",
-  //   path: "/screening",
-  //   icon: faWindows,
-  // },
+  {
+    label: "Renal Screenings",
+    path: "/screening",
+    icon: faWindows,
+  },
   {
     label: "Vaccinations",
     path: "/vaccination",
