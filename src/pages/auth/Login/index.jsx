@@ -1,5 +1,11 @@
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faLock,
+  faUser,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +16,7 @@ function LoginIndex() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setUserRole, updateUserNames } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
   const [loginCredentials, setLoginCredentials] = useState({
     identifier: "",
     password: "",
@@ -37,9 +44,9 @@ function LoginIndex() {
       if (response.ok) {
         const fullName = `${data.user.firstName} ${data.user.lastName}`;
         updateUserNames(fullName);
-        console.log('====================================');
+        console.log("====================================");
         console.log(updateUserNames);
-        console.log('====================================');
+        console.log("====================================");
         setUserRole(data.role);
         navigate("/");
       } else {
@@ -53,6 +60,9 @@ function LoginIndex() {
     setLoading(false);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const LoginImage =
     "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
   return (
@@ -117,7 +127,7 @@ function LoginIndex() {
                           })
                         }
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400"
-                        placeholder="Username"
+                        placeholder="Enter Username"
                       />
                     </div>
                     {error?.username && (
@@ -136,7 +146,7 @@ function LoginIndex() {
 
                       <input
                         id="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         name="password"
                         value={loginCredentials.password}
                         onChange={(e) =>
@@ -146,7 +156,12 @@ function LoginIndex() {
                           })
                         }
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-sky-400"
-                        placeholder="Password"
+                        placeholder="Enter Password"
+                      />
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        className="absolute top-0 right-0 mt-2 mr-4 text-gray-500 cursor-pointer"
+                        onClick={togglePasswordVisibility}
                       />
                     </div>
                     {error?.password && (
