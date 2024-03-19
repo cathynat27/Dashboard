@@ -17,6 +17,7 @@ import AntenantalTable from "./pages/AppServices/AntenantalTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/AppServices/ScreeningTable";
 import RenalMonitoring from "./pages/AppServices/MonitoringTable";
+import UserActivity from "./pages/ChpActivity/user.activity";
 
 function App() {
   return (
@@ -31,9 +32,7 @@ function App() {
           <Route path="/antenantal" element={<AntenantalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
-
-
-
+          <Route path="/chpactivity" element={<UserActivity />}></Route>
           <Route path="/blank" element={<Blank />}></Route>
           <Route path="/404" element={<NotFound />}></Route>
           <Route path="/form" element={<Form />}></Route>

@@ -65,7 +65,7 @@ const initMenu = [
 
   {
     label: "CHP Activity",
-    path: "/table",
+    path: "/chpactivity",
     icon: faUserMd,
   },
 
