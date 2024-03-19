@@ -5,6 +5,7 @@ import DashboardHeader from "../components/Other/DashboardHeader.jsx";
 import ScrolledCard from "../components/Widget/ScrolledCard.jsx";
 import { useOutletContext } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
+import { useAuth } from "../context/AuthContext.js";
 
 function Dashboard() {
   const [monthlyCount, setMonthlyCount] = useState(0);
@@ -19,6 +20,7 @@ function Dashboard() {
   const [rftCount, setRftCount] = useState(0);
   const [vaccinationsCount, setVaccinationsCount] = useState(0);
   const [diagnosesCount, setDiagnosesCount] = useState(0);
+  const { userNames } = useAuth();
 
   const [sidebarToggle] = useOutletContext();
 
@@ -181,7 +183,7 @@ function Dashboard() {
         <DashboardHeader
           toggle={sidebarToggle}
           avatar={avatar}
-          user={{ name: "Doctor Ibra" }}
+          user={{ name: userNames }}
         />
 
         {/* Laba */}

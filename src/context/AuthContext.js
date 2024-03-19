@@ -7,11 +7,13 @@ const AuthContext = createContext();
 // Create AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [userRole, setUserRole] = useState(null);
-  const [userNames, updateUserNames] = useState("");
-
+  const [userNames, setUserNames] = useState('');
+  const updateUserNames = newUserNames => {
+    setUserNames(newUserNames);
+  };
   return (
     <AuthContext.Provider
-      value={{ userRole, setUserRole, userNames, updateUserNames }}
+      value={{ userRole, setUserRole, userNames, updateUserNames,setUserNames }}
     >
       {children}
     </AuthContext.Provider>

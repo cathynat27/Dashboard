@@ -37,6 +37,9 @@ function LoginIndex() {
       if (response.ok) {
         const fullName = `${data.user.firstName} ${data.user.lastName}`;
         updateUserNames(fullName);
+        console.log('====================================');
+        console.log(updateUserNames);
+        console.log('====================================');
         setUserRole(data.role);
         navigate("/");
       } else {
