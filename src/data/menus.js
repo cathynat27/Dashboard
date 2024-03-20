@@ -79,19 +79,19 @@ const initMenu = [
     path: "/form",
     icon: faWindows,
   },
-  {
-    label: "Register",
-  },
-  {
-    label: "Login",
-    path: "/auth/login",
-    icon: faLock,
-  },
-  {
-    label: "Register",
-    path: "/auth/register",
-    icon: faNoteSticky,
-  },
+  // {
+  //   label: "Register",
+  // },
+  // {
+  //   label: "Login",
+  //   path: "/auth/login",
+  //   icon: faLock,
+  // },
+  // {
+  //   label: "Register",
+  //   path: "/auth/register",
+  //   icon: faNoteSticky,
+  // },
   {
     label: "Settings",
     path: "/form",
