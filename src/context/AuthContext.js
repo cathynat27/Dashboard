@@ -7,13 +7,26 @@ const AuthContext = createContext();
 // Create AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [userRole, setUserRole] = useState(null);
-  const [userNames, setUserNames] = useState('');
-  const updateUserNames = newUserNames => {
+  const [userNames, setUserNames] = useState("");
+  const updateUserNames = (newUserNames) => {
     setUserNames(newUserNames);
   };
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Initial login state
+  const handleLogin = () => setIsLoggedIn(true);
+  const handleLogout = () => setIsLoggedIn(false);
   return (
     <AuthContext.Provider
-      value={{ userRole, setUserRole, userNames, updateUserNames,setUserNames }}
+      value={{
+        userRole,
+        setUserRole,
+        userNames,
+        updateUserNames,
+        setUserNames,
+        isLoggedIn,
+        handleLogin,
+        handleLogout,
+      }}
     >
       {children}
     </AuthContext.Provider>
