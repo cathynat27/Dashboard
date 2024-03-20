@@ -6,8 +6,11 @@ import ScrolledCard from "../components/Widget/ScrolledCard.jsx";
 import { useOutletContext } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 import { useAuth } from "../context/AuthContext.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
+  const [loading, setLoading] = useState(true); // Add loading state
   const [monthlyCount, setMonthlyCount] = useState(0);
   const [weeklyCount, setWeeklyCount] = useState(0);
   const [dailyCount, setDailyCount] = useState(0);
@@ -103,15 +106,26 @@ function Dashboard() {
       setRftCount(rft);
       setVaccinationsCount(vaccination);
       setDiagnosesCount(diagnosis);
+
+      setLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </div>
+    );
+  }
 
   if (error) {
     return <div>Error: {error.message}</div>;
