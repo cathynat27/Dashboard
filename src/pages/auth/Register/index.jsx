@@ -45,7 +45,8 @@ function RegisterIndex() {
       const data = await response.json();
 
       if (response.ok) {
-        setUserRole(data.role);
+        const usersRole = `${data.user.role.name}`;
+        setUserRole(usersRole);
         navigate("/auth/login");
       } else {
         setError("Invalid username or password");

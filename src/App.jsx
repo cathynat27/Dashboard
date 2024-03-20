@@ -20,8 +20,21 @@ import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn,userRole } = useAuth();
 
+  const renderDashboardRoute = () => {
+    // Check if user is logged in and their role is not "Authenticated"
+    if (isLoggedIn && userRole !== "Authenticated") {
+      return <Route path="/dashboard" element={<Dashboard />} />;
+    } else {
+      return (
+        <Route
+          path="/dashboard"
+          element={<Navigate to="/need-access" replace />}
+        />
+      );
+    }
+  };
   return (
     <div>
       <Routes>
