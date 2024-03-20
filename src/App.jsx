@@ -13,7 +13,6 @@ import RegisterIndex from "./pages/auth/Register";
 import RenalTable from "./pages/AppServices/RFTTable";
 import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
-// import AntenantalTable from "./pages/AppServices/AntenantalTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/AppServices/ScreeningTable";
 import RenalMonitoring from "./pages/AppServices/MonitoringTable";
@@ -30,15 +29,14 @@ function App() {
           <Route path="/auth/login" element={<Login />}></Route>
           <Route path="/auth/register" element={<RegisterIndex />}></Route>
         </Route>
-
-        {/* Protected Routes (redirect to login if not logged in) */}
         <Route
           path="/"
           element={
             isLoggedIn ? <AuthLayout /> : <Navigate replace to="/auth/login" />
           }
         >
-          <Route path="/" element={<Dashboard />}></Route>
+          <Route path="/" element={<Navigate to="/auth/login" />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/table" element={<Table />}></Route>
           <Route path="/renal" element={<RenalTable />}></Route>
           <Route path="/vaccination" element={<VaccinationTable />}></Route>

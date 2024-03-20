@@ -8,14 +8,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 function LoginIndex() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { setUserRole, updateUserNames } = useAuth();
+  const { setUserRole, updateUserNames, handleLoginIndex } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loginCredentials, setLoginCredentials] = useState({
     identifier: "",
@@ -40,15 +40,13 @@ function LoginIndex() {
       );
 
       const data = await response.json();
+      handleLoginIndex();
 
       if (response.ok) {
         const fullName = `${data.user.firstName} ${data.user.lastName}`;
         updateUserNames(fullName);
-        console.log("====================================");
-        console.log(updateUserNames);
-        console.log("====================================");
         setUserRole(data.role);
-        navigate("/");
+        navigate("/dashboard");
       } else {
         setError("Invalid username or password");
       }

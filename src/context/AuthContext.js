@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
     setUserNames(newUserNames);
   };
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Initial login state
-  const handleLogin = () => setIsLoggedIn(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const handleLoginIndex = () => setIsLoggedIn(true);
   const handleLogout = () => setIsLoggedIn(false);
   return (
     <AuthContext.Provider
@@ -24,7 +24,8 @@ export const AuthProvider = ({ children }) => {
         updateUserNames,
         setUserNames,
         isLoggedIn,
-        handleLogin,
+        setIsLoggedIn,
+        handleLoginIndex,
         handleLogout,
       }}
     >
