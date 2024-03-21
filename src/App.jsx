@@ -18,6 +18,7 @@ import RenalScreening from "./pages/AppServices/ScreeningTable";
 import RenalMonitoring from "./pages/AppServices/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
+import AntenatalTable from "./pages/AppServices/AntenantalTable"
 
 function App() {
   const { isLoggedIn,userRole } = useAuth();
@@ -54,7 +55,7 @@ function App() {
           <Route path="/renal" element={<RenalTable />}></Route>
           <Route path="/vaccination" element={<VaccinationTable />}></Route>
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
-          {/* <Route path="/antenantal" element={<AntenatalTable />}></Route> */}
+          <Route path="/antenantal" element={<AntenatalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
