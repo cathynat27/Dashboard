@@ -41,10 +41,7 @@ function Table() {
       key: "gender",
       label: "Gender",
     },
-    {
-      key: "inspection",
-      label: "Inspection Data",
-    },
+
     {
       key: "RFT",
       label: "Renal Functional Tests",

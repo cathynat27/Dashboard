@@ -1,3 +1,4 @@
+import Pagination from "./Pagination";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +13,21 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
   const visibleData = data.slice(startIndex, startIndex + pageSize);
 
   const navigateToPage = (page) => {
-    setCurrentPage(page);
+    if (page >= 1 && page <= pageCount) {
+      setCurrentPage(page);
+    }
   };
+
+  function getCKDStageColor(eGFR) {
+    if (eGFR >= 90) {
+      return "green";
+    } else if (eGFR >= 60) {
+      return "orange";
+    } else {
+      return "red";
+    }
+  }
+
 
   return (
     <div className="overflow-x-auto">
@@ -35,8 +49,9 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
             user.patients.map((patient) => {
               const rftDataAvailable = patient.rfts.length > 0;
               if (!rftDataAvailable) {
-                return null; // Skip patients without RFT data
+                return null;
               }
+
               return (
                 <tr key={patient.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -47,30 +62,7 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <ul>
-                      {patient.rfts.map((rft, index) => (
-                        <li key={index}>
-                         
-                          <div className="text-sm text-gray-900">
-                            <strong>BMI:</strong> {rft.inspectionData.bmi}
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            <strong>Systolic Pressure:</strong>
-                            {`${rft.inspectionData.bloodPressure.systolicPressure} mmHg`}
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            <strong>Diastolic Pressure:</strong>
-                            {`${rft.inspectionData.bloodPressure.diastolicPressure} mmHg`}
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            <strong>Heart Pluse:</strong>
-                            {`${rft.inspectionData.bloodPressure.heartPulse} beats/min`}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.rfts.map((rft, index) => (
@@ -78,12 +70,14 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                           {rft.rftData && (
                             <div>
                               <div className="text-sm text-gray-900">
-                                <strong>Creatinine:</strong>{" "}
-                                {rft.rftData.creatinine} mmol/L
-                              </div>
-                              <div className="text-sm text-gray-900">
                                 <strong>CKDStage:</strong>{" "}
-                                {rft.rftData.ckdStage} mmol/L
+                                <span
+                                  style={{
+                                    color: getCKDStageColor(rft.rftData.eGFR),
+                                  }}
+                                >
+                                  {rft.rftData.ckdStage} mmol/L
+                                </span>
                               </div>
                             </div>
                           )}
@@ -91,44 +85,39 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                       ))}
                     </ul>
                   </td>
-                  <td  className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
-                      className="text-sky-600 hover:text-sky-900 mr-4"
+                      className="text-sky-600 hover:text-sky-900"
                     >
-                      <FontAwesomeIcon icon={faPencil} />
+                      <div className="text-sm text-text-sky-600 underline">
+                        Details
+                      </div>
                     </Link>
                     <button
-                      className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
-                      onClick={() => {
-                        handleDelete(patient.id);
-                      }}
+                      className="text-sm text-text-sky-600 underline"
                     >
-                      <FontAwesomeIcon icon={faTrashAlt} />
+                      Details
                     </button>
                   </td>
                 </tr>
               );
+
+              {
+                /* Modal for patient details (conditionally rendered) */
+              }
+            
             })
           )}
         </tbody>
       </table>
       {/* Pagination */}
-      {pageCount > 1 && (
-        <div className="flex justify-center mt-4">
-          {[...Array(pageCount)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => navigateToPage(index + 1)}
-              className={`mx-1 py-2 px-4 rounded ${
-                currentPage === index + 1 ? "bg-gray-300" : "bg-gray-200"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      <Pagination
+        data={data}
+        pageSize={pageSize}
+        currentPage={currentPage}
+        navigateToPage={navigateToPage}
+      />
     </div>
   );
 }
