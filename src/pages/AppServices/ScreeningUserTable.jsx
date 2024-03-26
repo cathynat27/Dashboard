@@ -81,7 +81,7 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
                     <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.renal_histories.map(
                         (rft, index) =>
@@ -95,9 +95,9 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
                           )
                       )}
                     </ul>
-                  </td>
+                  </td> */}
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     <ul>
                       {patient.renal_histories.map((rft, index) => (
                         <li key={index}>
@@ -112,7 +112,7 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
                         </li>
                       ))}
                     </ul>
-                  </td>
+                  </td> */}
 
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link

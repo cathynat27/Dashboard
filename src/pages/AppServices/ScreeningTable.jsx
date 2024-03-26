@@ -41,14 +41,7 @@ function ScreeningTable() {
       key: "gender",
       label: "Gender",
     },
-    {
-      key: "history",
-      label: "History Data",
-    },
-    {
-      key: "urineMascopy",
-      label: "Urine Mascopy",
-    },
+ 
     {
       key: "action",
       label: "Action",
