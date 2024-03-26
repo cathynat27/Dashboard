@@ -9,7 +9,7 @@ import Login from "./pages/auth/Login";
 import Blank from "./pages/Blank";
 import NotFound from "./pages/NotFound";
 import Form from "./pages/Form";
-import RegisterIndex from "./pages/auth/Register";
+// import RegisterIndex from "./pages/auth/Register";
 import RenalTable from "./pages/AppServices/RFTTable";
 import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
@@ -19,7 +19,7 @@ import RenalMonitoring from "./pages/AppServices/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/AppServices/AntenantalTable"
-
+import PatientDetails from "./pages/AppServices/Patient.Details";
 function App() {
   const { isLoggedIn,userRole } = useAuth();
 
@@ -41,7 +41,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<GuestLayout />}>
           <Route path="/auth/login" element={<Login />}></Route>
-          <Route path="/auth/register" element={<RegisterIndex />}></Route>
+          {/* <Route path="/auth/register" element={<RegisterIndex />}></Route> */}
         </Route>
         <Route
           path="/"
@@ -63,6 +63,8 @@ function App() {
           <Route path="/404" element={<NotFound />}></Route>
           <Route path="/form" element={<Form />}></Route>
           <Route path="/profile" element={<Blank />}></Route>
+          <Route path="/patient/:id" element={<PatientDetails />}></Route>
+
         </Route>
       </Routes>
       <Footer />

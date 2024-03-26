@@ -21,6 +21,14 @@ function LoginIndex() {
     identifier: "",
     password: "",
   });
+  const [showModal, setShowModal] = useState(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const handleForgotPassword = () => {
+    toggleModal();
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -176,6 +184,7 @@ function LoginIndex() {
                         to=""
                         onClick={(e) => {
                           e.preventDefault();
+                          handleForgotPassword();
                         }}
                         className="inline-flex font-semibold text-xs sm:text-sm text-sky-500 hover:text-sky-700"
                       >
@@ -199,29 +208,33 @@ function LoginIndex() {
                 </form>
               </div>
 
-              {/* Register Link */}
-              <div className="flex justify-center items-center  my-6 md:mb-0">
-                <Link
-                  to="/auth/register"
-                  className="inline-flex items-center font-bold text-sky-500 hover:text-sky-700 text-xs text-center"
-                >
-                  <span>
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                  </span>
-                  <span className="ml-2">Don't have an account?</span>
-                </Link>
-              </div>
-              {/* End Register Link */}
+              {showModal && (
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                  <div className="flex items-center justify-center min-h-screen">
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                    <div className="relative bg-white rounded-lg p-8 max-w-md w-full">
+                      <div className="text-xl font-semibold mb-4">
+                        Forgot Password
+                      </div>
+                      <div className="text-gray-700 mb-4">
+                        If you've forgotten your password, please contact
+                        Mobiklinic technical team for assistance.
+                        <a href="mailto:info@mobiklinic.com">
+                          info@mobiklinic.com
+                        </a>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          onClick={toggleModal}
+                          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
