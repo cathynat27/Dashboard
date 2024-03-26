@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import ScreeningUserTable from "./ScreeningUserTable";
+import { useNavigate } from "react-router-dom";
 
 function ScreeningTable() {
   const [sidebarToggle] = useOutletContext();
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -27,9 +29,10 @@ function ScreeningTable() {
         setLoading(false);
       }
     };
-
+  
     fetchPatients();
   }, []);
+  
 
   const dataHeader = [
     {
@@ -41,7 +44,7 @@ function ScreeningTable() {
       key: "gender",
       label: "Gender",
     },
- 
+
     {
       key: "action",
       label: "Action",
@@ -49,6 +52,16 @@ function ScreeningTable() {
   ];
 
   const handleDelete = () => {};
+
+// Previous Component (e.g., ScreeningUserTable)
+const handleViewDetails = (patient) => {
+  navigate(`/screening/${patient.id}`, {
+    state: { patient, fetchPatientDetails: async () => { } }, // Pass async function for fetching data
+  });
+};
+
+  
+  
 
   return (
     <>
@@ -66,13 +79,14 @@ function ScreeningTable() {
               <div>
                 <article>
                   <h1 className="text-2xl font-bold p-8 text-center font-extrabold underline underline-offset-1">
-                     Renal Screening Tests
+                    Renal Screening Tests
                   </h1>
                 </article>
                 <ScreeningUserTable
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
+                  handleViewDetails={handleViewDetails}
                 />
               </div>
             )}

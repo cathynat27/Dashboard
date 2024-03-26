@@ -1,4 +1,4 @@
-import Pagination from "./Pagination";
+// import Pagination from "./Pagination";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,7 +27,6 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
       return "red";
     }
   }
-
 
   return (
     <div className="overflow-x-auto">
@@ -94,30 +93,16 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                         Details
                       </div>
                     </Link>
-                    <button
-                      className="text-sm text-text-sky-600 underline"
-                    >
+                    <button className="text-sm text-text-sky-600 underline">
                       Details
                     </button>
                   </td>
                 </tr>
               );
-
-              {
-                /* Modal for patient details (conditionally rendered) */
-              }
-            
             })
           )}
         </tbody>
       </table>
-      {/* Pagination */}
-      <Pagination
-        data={data}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        navigateToPage={navigateToPage}
-      />
     </div>
   );
 }

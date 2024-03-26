@@ -8,6 +8,7 @@ function Table() {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedPatient, setSelectedPatient] = useState(null);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -34,7 +35,7 @@ function Table() {
   const dataHeader = [
     {
       key: "id",
-      label: "Beneficiary ID"
+      label: "Beneficiary ID",
     },
 
     {
@@ -78,6 +79,8 @@ function Table() {
                   data={patients}
                   handleDelete={handleDelete}
                 />
+
+             
               </div>
             )}
           </div>

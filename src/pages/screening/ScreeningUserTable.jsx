@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function RenalScreening({ loading, dataHeader, data, handleDelete }) {
+function RenalScreening({
+  loading,
+  dataHeader,
+  data,
+  handleDelete,
+  handleViewDetails,
+}) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -116,12 +122,11 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
 
                   <td className=" py-4 whitespace-nowrap text-sm font-medium">
                     <Link
-                      to={`/auth/master/user/${patient.id}/edit`}
-                      className="text-sky-600 hover:text-sky-900 mr-4"
+                      to={`/screening/${patient.id}`}
+                      onClick={() => handleViewDetails(patient)} 
                     >
-                      View  Details
+                      View Details
                     </Link>
-                   
                   </td>
                 </tr>
               );

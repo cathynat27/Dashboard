@@ -14,13 +14,14 @@ import VaccinationTable from "./pages/AppServices/VaccinationTable";
 import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/screening/ScreeningTable";
+import ScreeningDetails from "./pages/screening/patient.details";
 import RenalMonitoring from "./pages/AppServices/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
-import AntenatalTable from "./pages/AppServices/AntenantalTable"
+import AntenatalTable from "./pages/AppServices/AntenantalTable";
 import PatientDetails from "./pages/AppServices/Patient.Details";
 function App() {
-  const { isLoggedIn,userRole } = useAuth();
+  const { isLoggedIn, userRole } = useAuth();
 
   const renderDashboardRoute = () => {
     // Check if user is logged in and their role is not "Authenticated"
@@ -56,6 +57,7 @@ function App() {
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
           <Route path="/antenantal" element={<AntenatalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
+          <Route path="/screening/:patientId" element={<ScreeningDetails />}></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
           <Route path="/blank" element={<Blank />}></Route>
@@ -63,7 +65,6 @@ function App() {
           <Route path="/form" element={<Form />}></Route>
           <Route path="/profile" element={<Blank />}></Route>
           <Route path="/patient/:id" element={<PatientDetails />}></Route>
-
         </Route>
       </Routes>
       <Footer />
