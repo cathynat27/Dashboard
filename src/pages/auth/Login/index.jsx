@@ -219,7 +219,11 @@ function LoginIndex() {
                       <div className="text-gray-700 mb-4">
                         If you've forgotten your password, please contact
                         Mobiklinic technical team for assistance.
-                        <a href="mailto:info@mobiklinic.com">
+                        <br />
+                        <a
+                          href="mailto:info@mobiklinic.com"
+                          className="inline-flex font-semibold text-xs sm:text-sm text-sky-500 hover:text-sky-700"
+                        >
                           info@mobiklinic.com
                         </a>
                       </div>
