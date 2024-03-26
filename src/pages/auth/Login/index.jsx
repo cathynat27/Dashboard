@@ -85,7 +85,7 @@ function LoginIndex() {
               />
               <div className="md:block hidden text-slate-100">
                 <h1 className="font-semibold text-2xl pb-2">
-                  Login to Access Dashboard
+                  Mobiklinic Renal Feature Dashboard{" "}
                 </h1>
               </div>
             </div>

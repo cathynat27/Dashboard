@@ -114,21 +114,14 @@ function RenalScreening({ loading, dataHeader, data, handleDelete }) {
                     </ul>
                   </td> */}
 
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className=" py-4 whitespace-nowrap text-sm font-medium">
                     <Link
                       to={`/auth/master/user/${patient.id}/edit`}
                       className="text-sky-600 hover:text-sky-900 mr-4"
                     >
-                      <FontAwesomeIcon icon={faPencil} />
+                      View  Details
                     </Link>
-                    <button
-                      className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
-                      onClick={() => {
-                        handleDelete(patient.id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
+                   
                   </td>
                 </tr>
               );
