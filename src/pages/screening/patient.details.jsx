@@ -743,7 +743,7 @@ function Accordion({ title, children }) {
   return (
     <div className="border-b border-gray-200">
       <button
-        className="w-full py-4 text-left text-base font-semibold focus:outline-none uppercase tracking-wider"
+        className="w-full py-4 text-left text-lg font-semibold focus:outline-none uppercase tracking-wider"
         onClick={toggleAccordion}
       >
         {title}
