@@ -53,13 +53,10 @@ function ScreeningTable() {
 
   const handleDelete = () => {};
 
-// Previous Component (e.g., ScreeningUserTable)
-const handleViewDetails = (patient) => {
-  navigate(`/screening/${patient.id}`, {
-    state: { patient, fetchPatientDetails: async () => { } }, // Pass async function for fetching data
-  });
-};
-
+  const handleViewDetails = (patient) => {
+    console.log("View Details - Patient:", patient); // Log patient object
+    navigate(`/screening/${patient.id}`, { state: { patient } }); 
+  };
   
   
 
