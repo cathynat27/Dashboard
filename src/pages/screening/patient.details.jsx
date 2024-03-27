@@ -339,22 +339,39 @@ function PatientDetails() {
                           <h3 className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize">
                             Monitoring {index + 1}
                           </h3>
-                          <p className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                            Chemistry:
-                          </p>
-                          <div className="grid grid-cols-2 gap-4 mt-2">
-                            {Object.entries(
-                              monitoring.monitoringData[0].chemistry
-                            ).map(([key, value]) => (
-                              <React.Fragment key={key}>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  {key}:
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {value}
-                                </div>
-                              </React.Fragment>
-                            ))}
+
+                          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                              <p className="px-6 py-3  text-left text-base font-bold text-gray-500 uppercase tracking-wider">
+                                Chemistry:
+                              </p>
+                              {Object.entries(
+                                monitoring.monitoringData[0].chemistry
+                              ).map(([key, value]) => (
+                                <React.Fragment key={key}>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    {key}: {value}
+                                  </div>
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                              <p className="px-6 py-3  text-left text-base font-bold text-gray-500 uppercase tracking-wider">
+                                Appearance:
+                              </p>
+                              {Object.entries(
+                                monitoring.monitoringData[0].appearance
+                              ).map(([key, value]) => (
+                                <React.Fragment key={key}>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    {key}: {value}
+                                  </div>
+                                </React.Fragment>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -364,111 +381,129 @@ function PatientDetails() {
             </section>
           </Accordion>
 
-          <Accordion title="Renal Histories">
+          <Accordion title="Renal Screening">
             <section className="mt-8">
-              <h2 className="px-6 py-3  text-left text-xl font-bold text-black-900 capitalize tracking-wider">
-                Renal Histories
-              </h2>
-              <ul className="mt-4">
+              <ul className="mt-2">
                 {patient.renal_histories.map((renalHistory, index) => (
                   <li key={index} className="mb-4">
                     <h3 className="text-lg font-semibold underline underline-offset-1">
-                      Renal History {index + 1}
+                      Renal Screening {index + 1}
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        <p className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                          Appearance Color:
-                        </p>
-                        <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                          {renalHistory.appearance.color}
-                        </div>
-                        <p className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                          Appearance Clarity:
-                        </p>
-                        <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                          {renalHistory.appearance.clarity}
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
                       <div className="grid grid-cols-2 gap-2 mt-2">
-                        <h4>Urine Chemistry:</h4>
+                        <h4 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+                          Patient History:
+                        </h4>
                         <ul className="grid grid-cols-2 gap-2 mt-2">
-                          {Object.entries(renalHistory.chemistry).map(
-                            ([key, value]) => (
-                              <li key={key}>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  {key}
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {value}
-                                </div>
-                              </li>
-                            )
+                          {Object.entries(renalHistory.historyData).map(
+                            ([key, value]) =>
+                              value !== "" && ( // Check if the value is not an empty string
+                                <li key={key}>
+                                  <div className="px-6 py-3 text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    {key}: {value}
+                                  </div>
+                                </li>
+                              )
                           )}
                         </ul>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
                       <div className="grid grid-cols-2 gap-2 mt-2">
-                        <h4 className="text-md font-semibold mt-4">
+                        <p className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+                          Urine Apperance:
+                        </p>
+                        <p className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          CLARITY: {renalHistory.appearance.clarity}
+                          <br />
+                          COLOR: {renalHistory.appearance.color}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <h4 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+                          Urine Chemistry:
+                        </h4>
+                        <ul className="grid grid-cols-2 gap-2 mt-2">
+                          {Object.entries(renalHistory.chemistry).map(
+                            ([key, value]) =>
+                              value !== "" && ( // Check if the value is not an empty string
+                                <li key={key}>
+                                  <div className="px-6 py-3 text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    {key}: {value}
+                                  </div>
+                                </li>
+                              )
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-2">
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <h4 className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
                           Inspection Data
                         </h4>
 
                         {renalHistory.inspectionData && (
-                          <div className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+                          <div>
                             <ul>
-                              <li>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  Heart Pulse:
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {
-                                    renalHistory.inspectionData.bloodPressure
-                                      .heartPulse
-                                  }{" "}
-                                  beats /minute
-                                </div>
-                              </li>
-                              <li>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  Systolic Pressure:
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {
-                                    renalHistory.inspectionData.bloodPressure
-                                      .systolicPressure
-                                  }
-                                </div>
-                              </li>
-                              <li>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  Diastolic Pressure:
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {
-                                    renalHistory.inspectionData.bloodPressure
-                                      .diastolicPressure
-                                  }
-                                </div>
-                              </li>
-
-                              <li>
-                                <div className="px-6 py-3  text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  Signs And Symptoms:
-                                </div>
-                                <div className="px-6 py-3  text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                                  {renalHistory.inspectionData.signsAndSymptoms}
-                                </div>
-                              </li>
-
-                              <li>
-                                <div className="px-6 py-3  text-sm font-bold text-gray-500 uppercase tracking-wider">
-                                  BMI
-                                </div><div className="px-6 py-3 text-base font-bold text-gray-900 capitalize tracking-wider">{renalHistory.inspectionData.bmi}</div>
-                              </li>
+                              {renalHistory.inspectionData.bloodPressure && (
+                                <li>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    Heart Pulse:{" "}
+                                    {
+                                      renalHistory.inspectionData.bloodPressure
+                                        .heartPulse
+                                    }{" "}
+                                    beats /minute
+                                  </div>
+                                </li>
+                              )}
+                              {renalHistory.inspectionData.bloodPressure && (
+                                <li>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    Systolic Pressure:{" "}
+                                    {
+                                      renalHistory.inspectionData.bloodPressure
+                                        .systolicPressure
+                                    }
+                                  </div>
+                                </li>
+                              )}
+                              {renalHistory.inspectionData.bloodPressure && (
+                                <li>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    Diastolic Pressure:{" "}
+                                    {
+                                      renalHistory.inspectionData.bloodPressure
+                                        .diastolicPressure
+                                    }
+                                  </div>
+                                </li>
+                              )}
+                              {renalHistory.inspectionData.signsAndSymptoms && (
+                                <li>
+                                  <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    Signs And Symptoms:{" "}
+                                    {
+                                      renalHistory.inspectionData
+                                        .signsAndSymptoms
+                                    }
+                                  </div>
+                                </li>
+                              )}
+                              {renalHistory.inspectionData.bmi && (
+                                <li>
+                                  <div className="px-6 py-3  text-sm font-bold text-black-500 uppercase tracking-wider">
+                                    BMI: {renalHistory.inspectionData.bmi}
+                                  </div>
+                                </li>
+                              )}
                             </ul>
                           </div>
                         )}
@@ -482,30 +517,66 @@ function PatientDetails() {
 
           <Accordion title="Renal Functional Tests">
             <section className="mt-8">
-              <h2 className="text-lg font-semibold">
-                RFTs (Renal Function Tests)
-              </h2>
               <ul className="mt-4">
                 {patient.rfts.map((rft, index) => (
                   <li key={index} className="mb-4">
-                    <h3 className="text-md font-semibold">RFT {index + 1}</h3>
-                    <p>Created At: {rft.createdAt}</p>
-                    <p>Updated At: {rft.updatedAt}</p>
-                    <p className="mt-2">Inspection Data:</p>
-                    <ul className="ml-4">
-                      <li>BMI: {rft.inspectionData.bmi}</li>
-                      <li>Height: {rft.inspectionData.height}</li>
-                      <li>Weight: {rft.inspectionData.weight}</li>
-                      {/* Add more inspection data fields as needed */}
-                    </ul>
-                    <p className="mt-2">RFT Data:</p>
-                    <ul className="ml-4">
-                      <li>eGFR: {rft.rftData.eGFR}</li>
-                      <li>Urea: {rft.rftData.urea}</li>
-                      <li>Sodium: {rft.rftData.sodium}</li>
-                      <li>CKD Stage: {rft.rftData.ckdStage}</li>
-                      {/* Add more RFT data fields as needed */}
-                    </ul>
+                    <h3 className=" text-left text-lg font-bold text-black-500 uppercase tracking-wider underline underline-offset-1">
+                      Renal Function Test - {index + 1}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <p className=" py-3  text-left text-base font-bold text-gray-500 uppercase tracking-wider">
+                        Inspection Data:
+                      </p>
+
+                      <ul>
+                        <li>
+                          <div className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                            BMI: {rft.inspectionData.bmi}
+                          </div>
+                        </li>
+                        <li className=" py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Dialostic Pressure:
+                          {rft.inspectionData.bloodPressure.diastolicPressure}
+                        </li>
+                        <li className=" py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Systolic Pressure:
+                          {rft.inspectionData.bloodPressure.systolicPressure}
+                        </li>
+                        <li className=" py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Heart Pluse:
+                          {rft.inspectionData.bloodPressure.heartPulse} beats
+                          per minute
+                        </li>
+                        <li className=" py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Signs and Symptoms:
+                          {rft.inspectionData.signsAndSymptoms}
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <p className=" py-3  text-left text-base font-bold text-gray-500 uppercase tracking-wider">
+                        RFT Data:
+                      </p>
+                      <ul>
+                        <li className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          eGFR: {rft.rftData.eGFR}
+                        </li>
+
+                        <li className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Urea: {rft.rftData.urea}
+                        </li>
+                        <li className="px-6 py-3  text-left text-sm font-bold text-black-500 uppercase tracking-wider">
+                          Sodium: {rft.rftData.sodium}
+                        </li>
+                        <li className="px-6 py-3  text-left text-sm font-bold text-red-500 uppercase tracking-wider">
+                          Creatinine : {rft.rftData.creatinine}
+                        </li>
+                        <li className="px-6 py-3  text-left text-sm font-bold text-red-500 uppercase tracking-wider">
+                          CKD Stage: {rft.rftData.ckdStage}
+                        </li>
+                      </ul>
+                    </div>
                   </li>
                 ))}
               </ul>
