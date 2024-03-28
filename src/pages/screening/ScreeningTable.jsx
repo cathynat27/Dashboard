@@ -55,7 +55,7 @@ function ScreeningTable() {
 
   const handleViewDetails = (patient) => {
     console.log("View Details - Patient:", patient); // Log patient object
-    navigate(`/screening/${patient.id}`, { state: { patient } }); 
+    navigate(`/patient/${patient.id}`, { state: { patient } }); 
   };
   
   

@@ -122,7 +122,7 @@ function RenalScreening({
 
                   <td className=" py-4 whitespace-nowrap text-sm font-medium">
                     <Link
-                      to={`/screening/${patient.id}`}
+                      to={`/patient/${patient.id}`}
                       onClick={() => handleViewDetails(patient)} 
                     >
                       View Details
