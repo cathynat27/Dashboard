@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function RenalTable({ loading, dataHeader, data, handleDelete }) {
+function RenalTable({ loading, dataHeader, data, handleViewDetails }) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -84,18 +84,13 @@ function RenalTable({ loading, dataHeader, data, handleDelete }) {
                       ))}
                     </ul>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                     <Link
-                      to={`/auth/master/user/${patient.id}/edit`}
-                      className="text-sky-600 hover:text-sky-900"
+                      to={`/patient/${patient.id}`}
+                      onClick={() => handleViewDetails(patient)}
                     >
-                      <div className="text-sm text-text-sky-600 underline">
-                        Details
-                      </div>
+                      View Details
                     </Link>
-                    <button className="text-sm text-text-sky-600 underline">
-                      Details
-                    </button>
                   </td>
                 </tr>
               );

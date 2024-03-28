@@ -81,49 +81,15 @@ function RenalScreening({
                     <div className="text-sm text-gray-900">
                       {patient.firstName} {patient.lastName}
                     </div>
-                    <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
 
-                  {/* <td className="px-6 py-4 whitespace-nowrap">
-                    <ul>
-                      {patient.renal_histories.map(
-                        (rft, index) =>
-                          rft.historyData && (
-                            <li key={index}>
-                              <div className="text-sm text-gray-900">
-                                <strong>UTI HISTORY:</strong>{" "}
-                                {rft.historyData.uti}
-                              </div>
-                            </li>
-                          )
-                      )}
-                    </ul>
-                  </td> */}
-
-                  {/* <td className="px-6 py-4 whitespace-nowrap">
-                    <ul>
-                      {patient.renal_histories.map((rft, index) => (
-                        <li key={index}>
-                          <div className="text-sm text-gray-900">
-                            <strong>Urine Appearance</strong>{" "}
-                            {rft.appearance.color}
-                          </div>
-                          <div className="text-sm text-gray-900">
-                            <strong>Urine Appearance</strong>{" "}
-                            {rft.appearance.clarity}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </td> */}
-
-                  <td className=" py-4 whitespace-nowrap text-sm font-medium">
+                  <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                     <Link
                       to={`/patient/${patient.id}`}
-                      onClick={() => handleViewDetails(patient)} 
+                      onClick={() => handleViewDetails(patient)}
                     >
                       View Details
                     </Link>

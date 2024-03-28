@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import RenalTable from "./RFTUserTable";
+import { useNavigate } from "react-router-dom";
 
 function Table() {
   const [sidebarToggle] = useOutletContext();
@@ -9,6 +10,8 @@ function Table() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -55,6 +58,11 @@ function Table() {
 
   const handleDelete = () => {};
 
+  const handleViewDetails = (patient) => {
+    console.log("View Details - Patient:", patient); // Log patient object
+    navigate(`/patient/${patient.id}`, { state: { patient } });
+  };
+
   return (
     <>
       <main className="h-full">
@@ -78,9 +86,8 @@ function Table() {
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
+                  handleViewDetails={handleViewDetails}
                 />
-
-             
               </div>
             )}
           </div>
