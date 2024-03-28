@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import AntenatalUserTable from "./Antenatal.User.Table";
+import { useNavigate } from "react-router-dom";
 
 function VaccinationTable() {
   const [sidebarToggle] = useOutletContext();
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -45,7 +47,11 @@ function VaccinationTable() {
       key: "date",
       label: "Expected Date of Delivery",
     },
- 
+    {
+      key: "chp",
+      label: "Reviewed By",
+    },
+
     {
       key: "action",
       label: "Action",
@@ -53,6 +59,11 @@ function VaccinationTable() {
   ];
 
   const handleDelete = () => {};
+
+  const handleViewDetails = (patient) => {
+    console.log("View Details - Patient:", patient);
+    navigate(`/patient/${patient.id}`, { state: { patient } });
+  };
 
   return (
     <>
@@ -77,6 +88,7 @@ function VaccinationTable() {
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
+                  handleViewDetails={handleViewDetails}
                 />
               </div>
             )}

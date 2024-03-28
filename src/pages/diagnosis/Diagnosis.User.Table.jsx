@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
+function DiagnosisUserTable({
+  loading,
+  dataHeader,
+  data,
+  handleDelete,
+  handleViewDetails,
+}) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -14,7 +20,10 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
 
   const pageCount = Math.ceil(patientsWithDiagnoses.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const visibleData = patientsWithDiagnoses.slice(startIndex, startIndex + pageSize);
+  const visibleData = patientsWithDiagnoses.slice(
+    startIndex,
+    startIndex + pageSize
+  );
 
   const navigateToPage = (page) => {
     setCurrentPage(page);
@@ -47,7 +56,9 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                 <ul className="divide-y divide-gray-200">
                   {patient.diagnoses.map((diagnosis, index) => (
                     <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.condition}</div>
+                      <div className="text-sm text-gray-900">
+                        {diagnosis.condition}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -56,7 +67,9 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                 <ul className="divide-y divide-gray-200">
                   {patient.diagnoses.map((diagnosis, index) => (
                     <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.impression}</div>
+                      <div className="text-sm text-gray-900">
+                        {diagnosis.impression}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -65,26 +78,22 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                 <ul className="divide-y divide-gray-200">
                   {patient.diagnoses.map((diagnosis, index) => (
                     <li key={index} className="py-1">
-                      <div className="text-sm text-gray-900">{diagnosis.dateOfDiagnosis}</div>
+                      <div className="text-sm text-gray-900">
+                        {diagnosis.dateOfDiagnosis}
+                      </div>
                     </li>
                   ))}
                 </ul>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+
+              
+              <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                 <Link
-                  to={`/auth/master/user/${patient.id}/edit`}
-                  className="text-sky-600 hover:text-sky-900 mr-4"
+                  to={`/patient/${patient.id}`}
+                  onClick={() => handleViewDetails(patient)}
                 >
-                  <FontAwesomeIcon icon={faPencil} />
+                  View Details
                 </Link>
-                <button
-                  className="text-red-600 hover:text-red-900"
-                  onClick={() => {
-                    handleDelete(patient.id);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </button>
               </td>
             </tr>
           ))}

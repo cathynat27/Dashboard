@@ -301,7 +301,7 @@ function PatientDetails() {
                             Weight:
                           </div>
                           <div className="px-6 py-3 text-left text-base font-bold text-gray-900 capitalize tracking-wider">
-                            {antenatal.weight}
+                            {antenatal.weight} kgs
                           </div>
                         </>
                       )}

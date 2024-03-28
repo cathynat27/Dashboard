@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import DiagnosisUserTable from "./Diagnosis.User.Table";
+import { useNavigate } from "react-router-dom";
+
 function DiagnosisTable() {
   const [sidebarToggle] = useOutletContext();
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -57,6 +60,11 @@ function DiagnosisTable() {
 
   const handleDelete = () => {};
 
+  const handleViewDetails = (patient) => {
+    console.log("View Details - Patient:", patient);
+    navigate(`/patient/${patient.id}`, { state: { patient } });
+  };
+
   return (
     <>
       <main className="h-full">
@@ -80,6 +88,8 @@ function DiagnosisTable() {
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
+                  handleViewDetails={handleViewDetails}
+
                 />
               </div>
             )}

@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
+function DiagnosisUserTable({
+  loading,
+  dataHeader,
+  data,
+  handleDelete,
+  handleViewDetails,
+}) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -14,7 +20,10 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
 
   const pageCount = Math.ceil(patientsWithAntenatals.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const visibleData = patientsWithAntenatals.slice(startIndex, startIndex + pageSize);
+  const visibleData = patientsWithAntenatals.slice(
+    startIndex,
+    startIndex + pageSize
+  );
 
   const navigateToPage = (page) => {
     setCurrentPage(page);
@@ -50,7 +59,9 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                 <ul>
                   {patient.antenantals.map((antenatal, index) => (
                     <li key={index}>
-                      <div className="text-sm text-gray-900">{antenatal.pregnancyStatus}</div>
+                      <div className="text-sm text-gray-900">
+                        {antenatal.pregnancyStatus}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -60,28 +71,33 @@ function DiagnosisUserTable({ loading, dataHeader, data, handleDelete }) {
                   {patient.antenantals.map((antenatal, index) => (
                     <li key={index}>
                       <div className="text-sm text-gray-900">
-                        {new Date(antenatal.expectedDateOfDelivery).toLocaleDateString()}
+                        {new Date(
+                          antenatal.expectedDateOfDelivery
+                        ).toLocaleDateString()}
                       </div>
                     </li>
                   ))}
                 </ul>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                {/* Edit and Delete buttons */}
+
+              <td className="px-6 py-4 whitespace-nowrap">
+                <ul className="divide-y divide-gray-200">
+                  {patient.antenantals.map((antenatal, index) => (
+                    <li key={index} className="py-1">
+                      <div className="text-sm text-gray-900">
+                        {antenatal.reviewedBy}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </td>
+              <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                 <Link
-                  to={`/auth/master/user/${patient.id}/edit`}
-                  className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
+                  to={`/patient/${patient.id}`}
+                  onClick={() => handleViewDetails(patient)}
                 >
-                  <FontAwesomeIcon icon={faPencil} />
+                  View Details
                 </Link>
-                <button
-                  className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
-                  onClick={() => {
-                    handleDelete(patient.id);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </button>
               </td>
             </tr>
           ))}
