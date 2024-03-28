@@ -9,17 +9,16 @@ import Login from "./pages/auth/Login";
 import Blank from "./pages/Blank";
 import NotFound from "./pages/NotFound";
 import Form from "./pages/Form";
-import RenalTable from "./pages/AppServices/RFTTable";
-import VaccinationTable from "./pages/AppServices/VaccinationTable";
-import DiagnosisTable from "./pages/AppServices/DiagnosisTable";
+import RenalTable from "./pages/rft/RFTTable";
+import VaccinationTable from "./pages/vaccinations/VaccinationTable";
+import DiagnosisTable from "./pages/diagnosis/DiagnosisTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/screening/ScreeningTable";
-import ScreeningDetails from "./pages/screening/patient.details";
-import RenalMonitoring from "./pages/AppServices/MonitoringTable";
+import ScreeningDetails from "./pages/AppServices/patient.details";
+import RenalMonitoring from "./pages/monitoring/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
-import AntenatalTable from "./pages/AppServices/AntenantalTable";
-import PatientDetails from "./pages/AppServices/Patient.Details";
+import AntenatalTable from "./pages/antenatal/AntenantalTable";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
@@ -57,14 +56,13 @@ function App() {
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
           <Route path="/antenantal" element={<AntenatalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
-          <Route path="/screening/:patientId" element={<ScreeningDetails />}></Route>
+          <Route path="/patient/:patientId" element={<ScreeningDetails />}></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
           <Route path="/blank" element={<Blank />}></Route>
           <Route path="/404" element={<NotFound />}></Route>
           <Route path="/form" element={<Form />}></Route>
           <Route path="/profile" element={<Blank />}></Route>
-          <Route path="/patient/:id" element={<PatientDetails />}></Route>
         </Route>
       </Routes>
       <Footer />
