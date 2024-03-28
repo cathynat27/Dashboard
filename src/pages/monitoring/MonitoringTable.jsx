@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import MonitoringUserTable from "./MonitoringUserTable";
+import { useNavigate } from "react-router-dom";
 
 function MonitoringTable() {
   const [sidebarToggle] = useOutletContext();
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -39,13 +41,13 @@ function MonitoringTable() {
 
     {
       key: "name",
-      label: "Vaccination Name",
+      label: "Gender",
+    },
+    {
+      key: "phone",
+      label: "Phone Number",
     },
 
-    {
-      key: "urineMascopy",
-      label: "Urine Mascopy",
-    },
     {
       key: "action",
       label: "Action",
@@ -53,7 +55,10 @@ function MonitoringTable() {
   ];
 
   const handleDelete = () => {};
-
+  const handleViewDetails = (patient) => {
+    console.log("View Details - Patient:", patient);
+    navigate(`/patient/${patient.id}`, { state: { patient } });
+  };
   return (
     <>
       <main className="h-full">
@@ -77,6 +82,7 @@ function MonitoringTable() {
                   dataHeader={dataHeader}
                   data={patients}
                   handleDelete={handleDelete}
+                  handleViewDetails={handleViewDetails}
                 />
               </div>
             )}

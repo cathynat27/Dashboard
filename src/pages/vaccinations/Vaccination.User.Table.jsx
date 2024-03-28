@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function VaccinationTable({ loading, dataHeader, data, handleDelete }) {
+function VaccinationTable({
+  loading,
+  dataHeader,
+  data,
+  handleDelete,
+  handleViewDetails,
+}) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -80,21 +86,13 @@ function VaccinationTable({ loading, dataHeader, data, handleDelete }) {
                     </ul>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                     <Link
-                      to={`/auth/master/user/${patient.id}/edit`}
-                      className="user-table-button user-table-edit-button inline-flex py-2 px-2 rounded text-sm w-4/12"
+                      to={`/patient/${patient.id}`}
+                      onClick={() => handleViewDetails(patient)}
                     >
-                      <FontAwesomeIcon icon={faPencil} />
+                      View Details
                     </Link>
-                    <button
-                      className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
-                      onClick={() => {
-                        handleDelete(patient.id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
                   </td>
                 </tr>
               );

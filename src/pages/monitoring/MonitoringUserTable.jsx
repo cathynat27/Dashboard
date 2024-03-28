@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function MonitoringUserTable({ loading, dataHeader, data, handleDelete }) {
+function MonitoringUserTable({
+  loading,
+  dataHeader,
+  data,
+  handleDelete,
+  handleViewDetails,
+}) {
   const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -65,9 +71,9 @@ function MonitoringUserTable({ loading, dataHeader, data, handleDelete }) {
         <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((user) =>
             user.patients.map((patient) => {
-              const rftDataAvailable = patient.renal_histories.length > 0;
+              const rftDataAvailable = patient.monitorings.length > 0;
               if (!rftDataAvailable) {
-                return null; // Skip patients without RFT data
+                return null;
               }
               return (
                 <tr key={patient.id}>
@@ -75,53 +81,23 @@ function MonitoringUserTable({ loading, dataHeader, data, handleDelete }) {
                     <div className="text-sm text-gray-900">
                       {patient.firstName} {patient.lastName}
                     </div>
-                    <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{patient.sex}</div>
                   </td>
-
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <ul>
-                      {patient.monitorings.map((rft, index) => (
-                        <li key={index}>
-                          {rft.monitoringData &&
-                            rft.monitoringData.length > 0 && (
-                              <div>
-                                {/* Chemistry */}
-                                <p>Chemistry:</p>
-                                <div>
-                                  {rft.monitoringData[0].chemistry &&
-                                    Object.entries(
-                                      rft.monitoringData[0].chemistry
-                                    ).map(([key, value]) => (
-                                      <p key={key}>
-                                        {key}: {value}
-                                      </p>
-                                    ))}
-                                </div>
-                              </div>
-                            )}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="text-sm text-gray-900">
+                      {patient.phoneNumber}
+                    </div>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
                     <Link
-                      to={`/auth/master/user/${patient.id}/edit`}
-                      className="text-sky-600 hover:text-sky-900 mr-4"
+                      to={`/patient/${patient.id}`}
+                      onClick={() => handleViewDetails(patient)}
                     >
-                      <FontAwesomeIcon icon={faPencil} />
+                      View Details
                     </Link>
-                    <button
-                      className="user-table-delete-button inline-flex py-2 px-2 rounded text-sm w-4/12"
-                      onClick={() => {
-                        handleDelete(patient.id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
                   </td>
                 </tr>
               );
