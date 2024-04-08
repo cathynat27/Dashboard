@@ -61,7 +61,7 @@ const initMenu = [
     path: "/antenantal",
     icon: faBaby,
   },
-  { label: "Reports" },
+  { label: "Records" },
 
   {
     label: "CHP Activity",

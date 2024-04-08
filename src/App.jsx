@@ -14,11 +14,12 @@ import VaccinationTable from "./pages/vaccinations/VaccinationTable";
 import DiagnosisTable from "./pages/diagnosis/DiagnosisTable";
 import Footer from "./components/Footer";
 import RenalScreening from "./pages/screening/ScreeningTable";
-import ScreeningDetails from "./pages/AppServices/patient.details";
+import ScreeningDetails from "./pages/AppServices/Patient.Details";
 import RenalMonitoring from "./pages/monitoring/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/antenatal/AntenantalTable";
+import Chat from "./components/Other/ChatFeature";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
@@ -50,13 +51,17 @@ function App() {
         >
           <Route path="/" element={<Navigate to="/auth/login" />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
           <Route path="/table" element={<Table />}></Route>
           <Route path="/renal" element={<RenalTable />}></Route>
           <Route path="/vaccination" element={<VaccinationTable />}></Route>
           <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
           <Route path="/antenantal" element={<AntenatalTable />}></Route>
           <Route path="/screening" element={<RenalScreening />}></Route>
-          <Route path="/patient/:patientId" element={<ScreeningDetails />}></Route>
+          <Route
+            path="/patient/:patientId"
+            element={<ScreeningDetails />}
+          ></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
           <Route path="/blank" element={<Blank />}></Route>

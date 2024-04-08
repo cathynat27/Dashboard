@@ -22,17 +22,16 @@ function ScreeningTable() {
         }
         const data = await response.json();
         setPatients(data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error);
+      } finally {
         setLoading(false);
       }
     };
-  
+
     fetchPatients();
   }, []);
-  
 
   const dataHeader = [
     {
@@ -53,12 +52,10 @@ function ScreeningTable() {
 
   const handleDelete = () => {};
 
-  const handleViewDetails = (patient) => {
-    console.log("View Details - Patient:", patient); // Log patient object
-    navigate(`/patient/${patient.id}`, { state: { patient } }); 
+  const handleViewDetails = async (patient) => {
+    console.log("View Details - Patient:", patient);
+    navigate(`/patient/${patient.id}`, { state: { patient } });
   };
-  
-  
 
   return (
     <>

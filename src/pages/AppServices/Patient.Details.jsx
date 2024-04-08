@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 function PatientDetails() {
   const location = useLocation();
-  const { patient } = location.state || {};
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Initial state is loading
+  const { state } = location;
 
-  if (!patient ) {
+  useEffect(() => {
+    if (state && state.patient) {
+      setIsLoading(false); // Data loaded, set loading to false
+    }
+  }, [state]); // Re-run effect when state changes
+
+  console.log(state);
+  if (isLoading) {
+    return <div>Loading patient data...</div>;
+  } else if (!state || !state.patient) {
     return <div>No patient data found</div>;
+  } else {
+    // Render patient data here
   }
 
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  };
+  const { patient } = state;
 
   return (
     <div className="container mx-auto py-8 h-full">
