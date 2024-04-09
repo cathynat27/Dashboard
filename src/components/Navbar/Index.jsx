@@ -28,9 +28,11 @@ function Index({ toggle }) {
                   </Link>
                 </li>
                 <li>
-                  <span className="h-9 w-9 cursor-pointer text-gray-600">
-                    <FontAwesomeIcon icon={faBell} />
-                  </span>
+                  <Link to="/notifcations">
+                    <span className="h-9 w-9 cursor-pointer text-gray-600">
+                      <FontAwesomeIcon icon={faBell} />
+                    </span>
+                  </Link>
                 </li>
                 <li>
                   <span>

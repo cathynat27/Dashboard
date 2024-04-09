@@ -20,6 +20,7 @@ import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/antenatal/AntenantalTable";
 import Chat from "./components/Other/ChatFeature";
+import Notifications from "./components/Other/Notifications";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
@@ -52,6 +53,7 @@ function App() {
           <Route path="/" element={<Navigate to="/auth/login" />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/chat" element={<Chat />}></Route>
+          <Route path="/notifcations" element={<Notifications />}></Route>
           <Route path="/table" element={<Table />}></Route>
           <Route path="/renal" element={<RenalTable />}></Route>
           <Route path="/vaccination" element={<VaccinationTable />}></Route>

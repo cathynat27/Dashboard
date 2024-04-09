@@ -31,7 +31,7 @@ function DashboardHeader({ user, avatar, toggle }) {
           <Link to="/">
             <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
           </Link>
-          <Link to="/">
+          <Link to="/notifcations">
             <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>
           </Link>
           <Link to="/chat">
