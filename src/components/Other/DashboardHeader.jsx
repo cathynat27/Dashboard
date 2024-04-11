@@ -14,31 +14,47 @@ function DashboardHeader({ user, avatar, toggle }) {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [monitoringCount, setMonitoringCount] = useState(0);
+  const [screeningCount, setScreeningCount] = useState(0);
+  const [rftCount, setRftCount] = useState(0);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://mk-be-strapi-production.up.railway.app/api/all-patients`
+      );
+      const data = await response.json();
+      const allPatients = data.map((user) => user.patients).flat();
+
+      // Calculate patients under monitoring, screening, and RFT
+      let monitoring = 0;
+      let screening = 0;
+      let rft = 0;
+
+      allPatients.forEach((patient) => {
+        monitoring += patient.monitorings ? patient.monitorings.length : 0;
+        screening += patient.renal_histories
+          ? patient.renal_histories.length
+          : 0;
+        rft += patient.rfts ? patient.rfts.length : 0;
+      });
+      setMonitoringCount(monitoring);
+      setScreeningCount(screening);
+      setRftCount(rft);
+
+      setLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false); // Set loading to false in case of error
+    }
+  };
 
   useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const response = await fetch(
-          "https://mk-be-strapi-production.up.railway.app/api/all-patients"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setPatients(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPatients();
+    fetchData();
   }, []);
 
-  const renalPatientsCount = patients.length;
-  updateNotificationCount(renalPatientsCount);
+  const totalTestsCount = screeningCount + monitoringCount + rftCount;
   return (
     <div className="px-3 sm:px-8 pt-9 pb-4 flex flex-wrap w-full justify-between items-center">
       <div className="flex flex-row gap-3">
@@ -61,12 +77,12 @@ function DashboardHeader({ user, avatar, toggle }) {
           <Link to="/">
             <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
           </Link>
-          <Link to="/notifications">
+          <Link to="/notifcations">
             <span className="relative h-9 w-9 cursor-pointer text-gray-600">
-              <FontAwesomeIcon  icon={faBell} />
-              {notificationCount > 0 && (
+              <FontAwesomeIcon className="text-2xl" icon={faBell} />
+              {totalTestsCount > 0 && (
                 <span className="absolute top-0 right-0 rounded-full bg-red-500 text-white px-1 text-xs">
-                  {notificationCount}
+                  {totalTestsCount}
                 </span>
               )}
             </span>

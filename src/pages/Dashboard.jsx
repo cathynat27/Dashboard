@@ -8,6 +8,7 @@ import Footer from "../components/Footer.jsx";
 import { useAuth } from "../context/AuthContext.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Avatar from "../assets/images/avatar.jpg";
 
 function Dashboard() {
   const [loading, setLoading] = useState(true); // Add loading state
@@ -196,7 +197,7 @@ function Dashboard() {
         {/* Welcome Header */}
         <DashboardHeader
           toggle={sidebarToggle}
-          avatar={avatar}
+          avatar={Avatar}
           user={{ name: userNames }}
         />
 
