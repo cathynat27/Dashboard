@@ -5,10 +5,40 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 function DashboardHeader({ user, avatar, toggle }) {
+  const { notificationCount, updateNotificationCount } = useAuth();
+  const [patients, setPatients] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch(
+          "https://mk-be-strapi-production.up.railway.app/api/all-patients"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setPatients(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, []);
+
+  const renalPatientsCount = patients.length;
+  updateNotificationCount(renalPatientsCount);
   return (
     <div className="px-3 sm:px-8 pt-9 pb-4 flex flex-wrap w-full justify-between items-center">
       <div className="flex flex-row gap-3">
@@ -31,8 +61,15 @@ function DashboardHeader({ user, avatar, toggle }) {
           <Link to="/">
             <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
           </Link>
-          <Link to="/notifcations">
-            <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>
+          <Link to="/notifications">
+            <span className="relative h-9 w-9 cursor-pointer text-gray-600">
+              <FontAwesomeIcon  icon={faBell} />
+              {notificationCount > 0 && (
+                <span className="absolute top-0 right-0 rounded-full bg-red-500 text-white px-1 text-xs">
+                  {notificationCount}
+                </span>
+              )}
+            </span>
           </Link>
           <Link to="/chat">
             <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>

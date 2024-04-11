@@ -20,7 +20,7 @@ import UserActivity from "./pages/ChpActivity/user.activity";
 import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/antenatal/AntenantalTable";
 import Chat from "./components/Other/ChatFeature";
-import Notifications from "./components/Other/Notifications";
+import Notifications from "./components/Other/Notification.Table";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 

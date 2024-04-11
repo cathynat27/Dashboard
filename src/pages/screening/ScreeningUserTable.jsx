@@ -71,31 +71,45 @@ function RenalScreening({
         <tbody className="bg-white divide-y divide-gray-200">
           {visibleData.map((user) =>
             user.patients.map((patient) => {
-              const rftDataAvailable = patient.renal_histories.length > 0;
-              if (!rftDataAvailable) {
-                return null; // Skip patients without RFT data
-              }
-              return (
-                <tr key={patient.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {patient.firstName} {patient.lastName}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{patient.sex}</div>
-                  </td>
-
-                  <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
-                    <Link
-                      to={`/patient/${patient.id}`}
-                      onClick={() => handleViewDetails(patient)}
-                    >
-                      View Details
-                    </Link>
-                  </td>
-                </tr>
+              const hasAbnormalRenalHistory = patient.renal_histories.some(
+                (history) =>
+                  history.chemistry.protein !== "negative" ||
+                  history.chemistry.bilirubin !== "negative" ||
+                  history.chemistry.glucose !== "negative" ||
+                  history.chemistry.glucose !== "trace" ||
+                  history.chemistry.protein !== "trace" ||
+                  history.chemistry.bloodInUrine !== "negative" ||
+                  history.chemistry.nitrite !== "negative" ||
+                  history.chemistry.ketone !== "negative" ||
+                  history.chemistry.ketone !== "trace(0.5mmol)" ||
+                  history.chemistry.specificGravity !== "1.005" ||
+                  history.chemistry.leokcytes !== "negative"
               );
+
+              if (hasAbnormalRenalHistory) {
+                return (
+                  <tr key={patient.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {patient.firstName} {patient.lastName}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{patient.sex}</div>
+                    </td>
+
+                    <td className=" py-4 whitespace-nowrap text-sm font-medium text-sky-600 underline underline-offset-1">
+                      <Link
+                        to={`/patient/${patient.id}`}
+                        onClick={() => handleViewDetails(patient)}
+                      >
+                        View Details
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+              return null;
             })
           )}
         </tbody>

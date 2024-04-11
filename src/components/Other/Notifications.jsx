@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const Notifications = () => {
+const Notifications = ({ renalPatientsCount }) => {
   return (
-    <h2>Notifications</h2>
-  )
-}
+    <div>
+      <h2>Notifications</h2>
+      <p>Number of renal patients: {renalPatientsCount}</p>
+    </div>
+  );
+};
 
-export default Notifications
+export default Notifications;
