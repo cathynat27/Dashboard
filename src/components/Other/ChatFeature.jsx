@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PubNub from "pubnub";
 import Navbar from "../Navbar/Index";
+import { useOutletContext } from "react-router-dom";
 
 const ChatFeature = () => {
-  // Replace with your own PubNub keys and user ID
+  const [sidebarToggle] = useOutletContext();
   const publishKey = "pub-c-c9eab6f5-0232-4d25-88f2-8c6de320d091";
   const subscribeKey = "sub-c-547e7070-2c74-406e-834d-5fcdf72324ab";
   const userId = "Dr Ibrahim";
-
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
 
@@ -16,7 +16,6 @@ const ChatFeature = () => {
     subscribeKey: subscribeKey,
     uuid: userId,
   });
-
   useEffect(() => {
     pubnub.addListener({
       message: function (message) {
@@ -59,10 +58,9 @@ const ChatFeature = () => {
 
   return (
     <div>
-      <Navbar />
-
-      <div className="flex items-center justify-center h-screen ">
-        <div className="w-9/12 border border-gray-300 rounded-lg p-4 bg-white">
+      <Navbar toggle={sidebarToggle} />
+      <div className="mainCard">
+        <div  className="border border-gray-200 bg-white p-4 rounded-md">
           <h3 className="font-semibold text-2xl items-center text-sky-500 px-4 py-6">
             CHAT WITH USER{" "}
           </h3>

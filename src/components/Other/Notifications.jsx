@@ -16,13 +16,13 @@ const Notifications = ({
 
       <Link to="/renal">
         <p className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-          Number of Renal patients: {rftPatientCount}
+          Renal Functional Tests: {rftPatientCount}
         </p>
       </Link>
 
       <Link to="/screening">
         <p className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-          Number of Renal patients: {screeningPatientCount}
+          Number of Screened patients: {screeningPatientCount}
         </p>
       </Link>
 
