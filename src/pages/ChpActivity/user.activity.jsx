@@ -47,7 +47,7 @@ const UserActivity = () => {
       <h3 className="flex justify-center font-semibold text-2xl items-center text-sky-500 px-4 py-6">
         USER ACTIVITY
       </h3>
-      <div className="grid grid-cols-3 gap-4 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
         {usersData.map((user) => (
           <div
             key={user.id}
