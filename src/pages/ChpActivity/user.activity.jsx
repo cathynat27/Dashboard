@@ -44,12 +44,15 @@ const UserActivity = () => {
   return (
     <div>
       <Navbar toggle={sidebarToggle} />
-      <h3 className=" flex justify-center font-semibold text-2xl items-center text-sky-500 px-4 py-6">
-        USER ACTIVITY{" "}
+      <h3 className="flex justify-center font-semibold text-2xl items-center text-sky-500 px-4 py-6">
+        USER ACTIVITY
       </h3>
-      {usersData.map((user) => (
-        <div key={user.id} className="mainCard">
-          <div className="border border-gray-200 bg-white p-4 rounded-md">
+      <div className="grid grid-cols-3 gap-4 px-4">
+        {usersData.map((user) => (
+          <div
+            key={user.id}
+            className="border border-gray-200 bg-white p-4 rounded-lg drop-shadow-xl"
+          >
             <h2 className="px-6 py-3 text-left text-base font-bold text-black-500 uppercase tracking-wider">
               {user.firstName} {user.lastName}
             </h2>
@@ -67,8 +70,8 @@ const UserActivity = () => {
               ))}
             </ul> */}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
