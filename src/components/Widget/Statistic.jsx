@@ -13,13 +13,15 @@ function Statistic({ ...props }) {
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        // Extract the number of patients enrolled in each month
-        const patientsByMonth = data.data.reduce((acc, patient) => {
+        // Initialize an array to store patient counts for each month
+        const patientCounts = Array.from({ length: 12 }, () => 0);
+
+        // Calculate the number of patients enrolled in each month
+        data.data.forEach((patient) => {
           const month = new Date(patient.attributes.createdAt).getMonth();
-          acc[month] = (acc[month] || 0) + 1;
-          return acc;
-        }, {});
-        const patientCounts = Array.from({ length: 12 }, (_, index) => patientsByMonth[index] || 0);
+          patientCounts[month]++;
+        });
+
         setPatientData(patientCounts);
       })
       .catch((error) => {
@@ -46,7 +48,7 @@ function Statistic({ ...props }) {
     aspectRatio: 2,
     scales: {
       y: {
-        suggestedMax: 50, 
+        suggestedMax: Math.max(...patientData) + 10, // Adjust the suggested max based on the maximum patient count
       },
     },
   };
