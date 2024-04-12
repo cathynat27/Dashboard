@@ -74,11 +74,11 @@ const initMenu = [
     path: "/table",
     icon: faUsers,
   },
-  {
-    label: "Reports",
-    path: "/form",
-    icon: faWindows,
-  },
+  // {
+  //   label: "Reports",
+  //   path: "/form",
+  //   icon: faWindows,
+  // },
   // {
   //   label: "Register",
   // },
@@ -92,11 +92,11 @@ const initMenu = [
   //   path: "/auth/register",
   //   icon: faNoteSticky,
   // },
-  {
-    label: "Settings",
-    path: "/form",
-    icon: faCog,
-  },
+  // {
+  //   label: "Settings",
+  //   path: "/form",
+  //   icon: faCog,
+  // },
 ];
 
 export default initMenu;
