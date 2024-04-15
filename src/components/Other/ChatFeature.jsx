@@ -25,26 +25,20 @@ const ChatFeature = () => {
     // Fetch channels when component mounts
     fetchChannels();
 
-    // Subscribe to selected channel
-    if (selectedChannel) {
-      subscribeToChannel(selectedChannel);
-    }
-
-    // Load messages from local storage
-    const storedMessages = localStorage.getItem(selectedChannel);
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    }
-
     // Clean up
     return () => {
       pubnub.unsubscribeAll();
     };
+  }, []);
+
+  useEffect(() => {
+    // Subscribe to selected channel
+    if (selectedChannel) {
+      subscribeToChannel(selectedChannel);
+    }
   }, [selectedChannel]);
 
-  // Function to fetch channels
   const fetchChannels = () => {
-    // Logic to fetch channels, maybe from an API or some other source
     const fetchedChannels = ["Mr Arafat", "Jane Doe", "Dr Smith"];
     setChannels(
       fetchedChannels.map((channel) => ({
@@ -56,13 +50,24 @@ const ChatFeature = () => {
 
   // Function to subscribe to a channel
   const subscribeToChannel = (channelName) => {
+    pubnub.addListener({
+      message: function (message) {
+        console.log("Received message:", message);
+        if (message.channel === `${userId}-${channelName}`) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { user: message.publisher, text: message.message.text },
+          ]);
+        }
+      },
+    });
+
     pubnub.subscribe({
       channels: [`${userId}-${channelName}`],
       withPresence: true,
     });
   };
 
-  // Function to get the count of messages for a channel
   const getMessagesCount = (channelName) => {
     const storedMessages = localStorage.getItem(channelName);
     return storedMessages ? JSON.parse(storedMessages).length : 0;
@@ -70,10 +75,6 @@ const ChatFeature = () => {
 
   const sendMessage = () => {
     if (messageInput.trim() !== "") {
-      console.log(
-        "Publishing message to channel:",
-        `${userId}-${selectedChannel}`
-      );
       const newMessage = { user: userId, text: messageInput };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       const storedMessages = localStorage.getItem(selectedChannel);
@@ -81,8 +82,6 @@ const ChatFeature = () => {
         ? [...JSON.parse(storedMessages), newMessage]
         : [newMessage];
       localStorage.setItem(selectedChannel, JSON.stringify(updatedMessages));
-
-      // Publish message via PubNub
       pubnub.publish({
         channel: `${userId}-${selectedChannel}`,
         message: newMessage,
@@ -109,7 +108,7 @@ const ChatFeature = () => {
               >
                 {channel.name}{" "}
                 <span className="text-red-500 px-1 text-base">
-                ({channel.count})
+                  ({channel.count})
                 </span>
               </li>
             ))}
