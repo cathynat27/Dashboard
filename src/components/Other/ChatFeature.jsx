@@ -119,12 +119,12 @@ const ChatFeature = () => {
                 key={index}
                 onClick={() => setSelectedChannel(channel.name)}
                 className={`cursor-pointer px-2 py-1 rounded ${
-                  selectedChannel === channel.name ? "bg-blue-200" : ""
+                  selectedChannel === channel.name ? "bg-sky-400 text-white" : ""
                 }`}
               >
                 {channel.name}{" "}
                 <span className="text-red-500 px-1 text-base">
-                  ({channel.count})
+                  {channel.count}
                 </span>
               </li>
             ))}
@@ -137,8 +137,8 @@ const ChatFeature = () => {
               key={index}
               className={`mb-2 px-4 py-2 rounded-lg ${
                 message.user === userId
-                  ? "bg-blue-200 text-white clear-end"
-                  : "bg-green-100 text-black clear-start"
+                  ? "bg-sky-400 text-white clear-end"
+                  : "bg-red-400 text-white clear-start"
               }`}
               style={{
                 textAlign: message.user === userId ? "right" : "left",
@@ -149,7 +149,7 @@ const ChatFeature = () => {
                 wordWrap: "break-word",
               }}
             >
-              <p className="m-0">{`${message.user}: ${message.text}`}</p>
+              <p className="m-0">{`${message.text}`}</p>
             </div>
           ))}
           <div className="flex items-center mt-4">
@@ -162,7 +162,7 @@ const ChatFeature = () => {
             />
             <button
               onClick={sendMessage}
-              className="hover:bg-blue-600 focus:outline-none bg-blue-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm"
+              className="hover:bg-sky-600 focus:outline-none bg-sky-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm"
             >
               Send
             </button>
