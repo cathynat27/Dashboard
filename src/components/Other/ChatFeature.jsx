@@ -46,7 +46,12 @@ const ChatFeature = () => {
   const fetchChannels = () => {
     // Logic to fetch channels, maybe from an API or some other source
     const fetchedChannels = ["Mr Arafat", "Jane Doe", "Dr Smith"];
-    setChannels(fetchedChannels);
+    setChannels(
+      fetchedChannels.map((channel) => ({
+        name: channel,
+        count: getMessagesCount(channel),
+      }))
+    );
   };
 
   // Function to subscribe to a channel
@@ -57,6 +62,12 @@ const ChatFeature = () => {
     });
   };
 
+  // Function to get the count of messages for a channel
+  const getMessagesCount = (channelName) => {
+    const storedMessages = localStorage.getItem(channelName);
+    return storedMessages ? JSON.parse(storedMessages).length : 0;
+  };
+
   const sendMessage = () => {
     if (messageInput.trim() !== "") {
       console.log(
@@ -64,11 +75,7 @@ const ChatFeature = () => {
         `${userId}-${selectedChannel}`
       );
       const newMessage = { user: userId, text: messageInput };
-
-      // Update messages state
-      setMessages(prevMessages => [...prevMessages, newMessage]);
-
-      // Save messages to local storage
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
       const storedMessages = localStorage.getItem(selectedChannel);
       const updatedMessages = storedMessages
         ? [...JSON.parse(storedMessages), newMessage]
@@ -95,12 +102,15 @@ const ChatFeature = () => {
             {channels.map((channel, index) => (
               <li
                 key={index}
-                onClick={() => setSelectedChannel(channel)}
+                onClick={() => setSelectedChannel(channel.name)}
                 className={`cursor-pointer px-2 py-1 rounded ${
-                  selectedChannel === channel ? "bg-blue-200" : ""
+                  selectedChannel === channel.name ? "bg-blue-200" : ""
                 }`}
               >
-                {channel}
+                {channel.name}{" "}
+                <span className="text-red-500 px-1 text-base">
+                ({channel.count})
+                </span>
               </li>
             ))}
           </ul>
