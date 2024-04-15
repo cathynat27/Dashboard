@@ -35,6 +35,13 @@ const ChatFeature = () => {
     // Subscribe to selected channel
     if (selectedChannel) {
       subscribeToChannel(selectedChannel);
+      // Fetch messages for the selected channel from local storage
+      const storedMessages = localStorage.getItem(selectedChannel);
+      if (storedMessages) {
+        setMessages(JSON.parse(storedMessages));
+      } else {
+        setMessages([]); // Clear messages if there are no stored messages
+      }
     }
   }, [selectedChannel]);
 
@@ -58,6 +65,12 @@ const ChatFeature = () => {
             ...prevMessages,
             { user: message.publisher, text: message.message.text },
           ]);
+          // Store the message locally
+          const storedMessages = localStorage.getItem(selectedChannel);
+          const updatedMessages = storedMessages
+            ? [...JSON.parse(storedMessages), message.message]
+            : [message.message];
+          localStorage.setItem(selectedChannel, JSON.stringify(updatedMessages));
         }
       },
     });
