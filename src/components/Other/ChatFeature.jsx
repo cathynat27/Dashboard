@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import PubNub from "pubnub";
 import Navbar from "../Navbar/Index";
 import { useOutletContext } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const ChatFeature = () => {
   const [sidebarToggle] = useOutletContext();
   const publishKey = "pub-c-c9eab6f5-0232-4d25-88f2-8c6de320d091";
   const subscribeKey = "sub-c-547e7070-2c74-406e-834d-5fcdf72324ab";
-  const userId = "Dr Ibrahim";
+  const { userNames } = useAuth();
+  const userId = userNames;
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
 
@@ -23,13 +25,10 @@ const ChatFeature = () => {
         appendMessage(sender, message.message.text);
       },
     });
-
     pubnub.subscribe({
-      channels: ["Dr-Ibrahim-Mr Arafat"],
+      channels: [`${userId}-Mr Arafat`],
       withPresence: true,
     });
-
-    // Clean up
     return () => {
       pubnub.unsubscribeAll();
     };
@@ -37,18 +36,19 @@ const ChatFeature = () => {
 
   const sendMessage = () => {
     if (messageInput.trim() !== "") {
+      console.log("Publishing message to channel:", `${userId}-Mr Arafat`);
       pubnub.publish({
-        channel: "Dr-Ibrahim-Mr Arafat",
+        channel: `${userId}-Mr Arafat`,
         message: {
           user: userId,
           text: messageInput,
         },
       });
+      
       setMessageInput("");
     }
   };
 
-  // Function to append messages to the messages container
   const appendMessage = (user, text) => {
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -60,7 +60,7 @@ const ChatFeature = () => {
     <div>
       <Navbar toggle={sidebarToggle} />
       <div className="mainCard">
-        <div  className="border border-gray-200 bg-white p-4 rounded-md">
+        <div className="border border-gray-200 bg-white p-4 rounded-md">
           <h3 className="font-semibold text-2xl items-center text-sky-500 px-4 py-6">
             CHAT WITH USER{" "}
           </h3>
