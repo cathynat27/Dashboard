@@ -30,6 +30,12 @@ const ChatFeature = () => {
       subscribeToChannel(selectedChannel);
     }
 
+    // Load messages from local storage
+    const storedMessages = localStorage.getItem(selectedChannel);
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
+
     // Clean up
     return () => {
       pubnub.unsubscribeAll();
@@ -53,71 +59,73 @@ const ChatFeature = () => {
 
   const sendMessage = () => {
     if (messageInput.trim() !== "") {
-      console.log("Publishing message to channel:", `${userId}-${selectedChannel}`);
+      console.log(
+        "Publishing message to channel:",
+        `${userId}-${selectedChannel}`
+      );
+      const newMessage = { user: userId, text: messageInput };
+
+      // Update messages state
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+
+      // Save messages to local storage
+      const storedMessages = localStorage.getItem(selectedChannel);
+      const updatedMessages = storedMessages
+        ? [...JSON.parse(storedMessages), newMessage]
+        : [newMessage];
+      localStorage.setItem(selectedChannel, JSON.stringify(updatedMessages));
+
+      // Publish message via PubNub
       pubnub.publish({
         channel: `${userId}-${selectedChannel}`,
-        message: {
-          user: userId,
-          text: messageInput,
-        },
+        message: newMessage,
       });
-      
+
       setMessageInput("");
     }
   };
 
-  const appendMessage = (user, text) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { user: user, text: text },
-    ]);
-  };
-
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Navbar toggle={sidebarToggle} />
-      <div className="mainCard">
-        <div className="border border-gray-200 bg-white p-4 rounded-md">
-          <h3 className="font-semibold text-2xl items-center text-sky-500 px-4 py-6">
-            CHAT WITH USER{" "}
-          </h3>
-          <div className="flex">
-            <div className="mr-4">
-              <h4 className="font-semibold mb-2">Channels:</h4>
-              <ul>
-                {channels.map((channel, index) => (
-                  <li key={index} onClick={() => setSelectedChannel(channel)} className={selectedChannel === channel ? "text-blue-500 cursor-pointer" : "cursor-pointer"}>
-                    {channel}
-                  </li>
-                ))}
-              </ul>
+      <div className="flex-grow flex">
+        <div className="w-1/4 p-4 bg-gray-100">
+          <h3 className="font-semibold text-lg mb-4">Channels</h3>
+          <ul className="space-y-2">
+            {channels.map((channel, index) => (
+              <li
+                key={index}
+                onClick={() => setSelectedChannel(channel)}
+                className={`cursor-pointer px-2 py-1 rounded ${
+                  selectedChannel === channel ? "bg-blue-200" : ""
+                }`}
+              >
+                {channel}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-grow p-4 bg-white">
+          <h3 className="font-semibold text-lg mb-4">Messages</h3>
+          {messages.map((message, index) => (
+            <div key={index} className="mb-2 px-4 py-2 bg-gray-100 rounded-lg">
+              <p className="m-0">{`${message.user}: ${message.text}`}</p>
             </div>
-            <div>
-              <h4 className="font-semibold mb-2">Messages:</h4>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className="mb-2 px-4 py-2 bg-gray-100 rounded-lg"
-                >
-                  <p className="m-0">{`${message.user}: ${message.text}`}</p>
-                </div>
-              ))}
-              <div className="flex items-center mt-4">
-                <input
-                  type="text"
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 mr-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:bg-white focus:border-sky-500"
-                />
-                <button
-                  onClick={sendMessage}
-                  className="hover:bg-sky-800 focus:outline-none bg-sky-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
+          ))}
+          <div className="flex items-center mt-4">
+            <input
+              type="text"
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-2 mr-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:bg-white focus:border-blue-500"
+            />
+            <button
+              onClick={sendMessage}
+              className="hover:bg-blue-600 focus:outline-none bg-blue-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm"
+            >
+              Send
+            </button>
           </div>
         </div>
       </div>
