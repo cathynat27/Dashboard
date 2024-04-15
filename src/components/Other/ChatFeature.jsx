@@ -70,7 +70,10 @@ const ChatFeature = () => {
           const updatedMessages = storedMessages
             ? [...JSON.parse(storedMessages), message.message]
             : [message.message];
-          localStorage.setItem(selectedChannel, JSON.stringify(updatedMessages));
+          localStorage.setItem(
+            selectedChannel,
+            JSON.stringify(updatedMessages)
+          );
         }
       },
     });
@@ -130,7 +133,22 @@ const ChatFeature = () => {
         <div className="flex-grow p-4 bg-white">
           <h3 className="font-semibold text-lg mb-4">Messages</h3>
           {messages.map((message, index) => (
-            <div key={index} className="mb-2 px-4 py-2 bg-gray-100 rounded-lg">
+            <div
+              key={index}
+              className={`mb-2 px-4 py-2 rounded-lg ${
+                message.user === userId
+                  ? "bg-blue-200 text-white clear-end"
+                  : "bg-green-100 text-black clear-start"
+              }`}
+              style={{
+                textAlign: message.user === userId ? "right" : "left",
+                marginLeft: message.user === userId ? "auto" : "0",
+                marginRight: message.user !== userId ? "auto" : "0",
+                width: "fit-content",
+                maxWidth: "80%",
+                wordWrap: "break-word",
+              }}
+            >
               <p className="m-0">{`${message.user}: ${message.text}`}</p>
             </div>
           ))}
