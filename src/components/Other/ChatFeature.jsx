@@ -61,19 +61,21 @@ const ChatFeature = () => {
       message: function (message) {
         console.log("Received message:", message);
         if (message.channel === `${userId}-${channelName}`) {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { user: message.publisher, text: message.message.text },
-          ]);
-          // Store the message locally
-          const storedMessages = localStorage.getItem(selectedChannel);
-          const updatedMessages = storedMessages
-            ? [...JSON.parse(storedMessages), message.message]
-            : [message.message];
-          localStorage.setItem(
-            selectedChannel,
-            JSON.stringify(updatedMessages)
-          );
+          if (message.message.user !== userId) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { user: message.publisher, text: message.message.text },
+            ]);
+            // Store the message locally
+            const storedMessages = localStorage.getItem(selectedChannel);
+            const updatedMessages = storedMessages
+              ? [...JSON.parse(storedMessages), message.message]
+              : [message.message];
+            localStorage.setItem(
+              selectedChannel,
+              JSON.stringify(updatedMessages)
+            );
+          }
         }
       },
     });
@@ -119,7 +121,9 @@ const ChatFeature = () => {
                 key={index}
                 onClick={() => setSelectedChannel(channel.name)}
                 className={`cursor-pointer px-2 py-1 rounded ${
-                  selectedChannel === channel.name ? "bg-sky-400 text-white" : ""
+                  selectedChannel === channel.name
+                    ? "bg-sky-400 text-white"
+                    : ""
                 }`}
               >
                 {channel.name}{" "}
