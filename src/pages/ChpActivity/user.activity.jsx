@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useOutletContext } from "react-router-dom";
 import Navbar from "../../components/Navbar/Index";
+import { useAuth } from "../../context/AuthContext";
 
 const UserActivity = () => {
   const [loading, setLoading] = useState(true);
   const [usersData, setUsersData] = useState([]);
   const [error, setError] = useState(null);
   const [sidebarToggle] = useOutletContext();
+  const { setSelectedUser } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +64,16 @@ const UserActivity = () => {
             <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
               Number of Patients: {user.numberOfPatients}
             </h3>
+            <Link
+              className="flex p-6"
+              to="/chat"
+              onClick={() => setSelectedUser(user)}
+            >
+              <button className="hover:bg-sky-600 focus:outline-none bg-sky-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm">
+                Chat with CHP
+              </button>
+            </Link>
+
             {/* <ul>
               {user.patients.map((patient) => (
                 <li key={patient.id}>

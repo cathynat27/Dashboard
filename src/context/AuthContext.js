@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
   const updateNotificationCount = (newCount) => {
     setNotificationCount(newCount);
   };
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLoginIndex = () => setIsLoggedIn(true);
   const handleLogout = () => setIsLoggedIn(false);
@@ -33,6 +35,8 @@ export const AuthProvider = ({ children }) => {
         notificationCount,
         setNotificationCount,
         updateNotificationCount,
+        selectedUser,
+        setSelectedUser,
       }}
     >
       {children}

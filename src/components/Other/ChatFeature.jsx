@@ -8,7 +8,7 @@ const ChatFeature = () => {
   const [sidebarToggle] = useOutletContext();
   const publishKey = "pub-c-c9eab6f5-0232-4d25-88f2-8c6de320d091";
   const subscribeKey = "sub-c-547e7070-2c74-406e-834d-5fcdf72324ab";
-  const { userNames } = useAuth();
+  const { userNames, selectedUser } = useAuth();
   const userId = userNames;
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState("");
@@ -32,6 +32,14 @@ const ChatFeature = () => {
   }, []);
 
   useEffect(() => {
+    if (selectedUser) {
+      const channelName = `${selectedUser.firstName}-${selectedUser.lastName}`;
+      setSelectedChannel(channelName);
+      fetchChannels();
+    }
+  }, [selectedUser]);
+
+  useEffect(() => {
     // Subscribe to selected channel
     if (selectedChannel) {
       subscribeToChannel(selectedChannel);
@@ -46,13 +54,17 @@ const ChatFeature = () => {
   }, [selectedChannel]);
 
   const fetchChannels = () => {
-    const fetchedChannels = ["Mr Arafat", "Jane Doe", "Dr Smith"];
-    setChannels(
-      fetchedChannels.map((channel) => ({
-        name: channel,
-        count: getMessagesCount(channel),
-      }))
-    );
+    if (selectedUser) {
+      const fetchedChannels = [
+        `${selectedUser.firstName} ${selectedUser.lastName}`,
+      ];
+      setChannels(
+        fetchedChannels.map((channel) => ({
+          name: channel,
+          count: getMessagesCount(channel),
+        }))
+      );
+    }
   };
 
   // Function to subscribe to a channel
