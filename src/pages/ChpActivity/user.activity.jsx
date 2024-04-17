@@ -6,6 +6,7 @@ import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useOutletContext } from "react-router-dom";
 import Navbar from "../../components/Navbar/Index";
 import { useAuth } from "../../context/AuthContext";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const UserActivity = () => {
   const [loading, setLoading] = useState(true);
@@ -40,8 +41,18 @@ const UserActivity = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-full">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-full">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </div>
+    );
 
   return (
     <div>

@@ -3,6 +3,7 @@ import PubNub from "pubnub";
 import Navbar from "../Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ChatFeature = () => {
   const [sidebarToggle] = useOutletContext();
@@ -35,7 +36,6 @@ const ChatFeature = () => {
     if (selectedUser) {
       const channelName = `${selectedUser.firstName}-${selectedUser.lastName}`;
       setSelectedChannel(channelName);
-      fetchChannels();
     }
   }, [selectedUser]);
 
