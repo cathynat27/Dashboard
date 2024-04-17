@@ -55,15 +55,16 @@ const ChatFeature = () => {
 
   const fetchChannels = () => {
     if (selectedUser) {
-      const fetchedChannels = [
-        `${selectedUser.firstName} ${selectedUser.lastName}`,
-      ];
-      setChannels(
-        fetchedChannels.map((channel) => ({
-          name: channel,
-          count: getMessagesCount(channel),
-        }))
+      // Fetch all channels from local storage
+      const allChannels = Object.keys(localStorage);
+
+      // Filter channels with message count greater than 1
+      const channelsWithMessages = allChannels.filter(
+        (channel) => getMessagesCount(channel) > 1
       );
+
+      // Update state with channels
+      setChannels(channelsWithMessages);
     }
   };
 
@@ -126,21 +127,21 @@ const ChatFeature = () => {
       <Navbar toggle={sidebarToggle} />
       <div className="flex-grow flex">
         <div className="w-1/4 p-4 bg-gray-100">
-          <h3 className="font-semibold text-lg mb-4">Channels</h3>
+          <h3 className="font-semibold text-lg mb-4">Channel Lists</h3>
           <ul className="space-y-2">
             {channels.map((channel, index) => (
               <li
                 key={index}
-                onClick={() => setSelectedChannel(channel.name)}
+                onClick={() => setSelectedChannel(channel)}
                 className={`cursor-pointer px-2 py-1 rounded ${
-                  selectedChannel === channel.name
+                  selectedChannel === channel
                     ? "bg-sky-400 text-white"
                     : ""
                 }`}
               >
-                {channel.name}{" "}
+                {channel}{" "}
                 <span className="text-red-500 px-1 text-base">
-                  {channel.count}
+                  {getMessagesCount(channel)}
                 </span>
               </li>
             ))}
