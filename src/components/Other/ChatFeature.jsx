@@ -148,7 +148,7 @@ const ChatFeature = () => {
           </ul>
         </div>
         <div className="flex-grow p-4 bg-white">
-          <h3 className="font-semibold text-lg mb-4">Messages</h3>
+          <h3 className="font-semibold text-lg mb-4">Message Community Health Provider</h3>
           {messages.map((message, index) => (
             <div
               key={index}
