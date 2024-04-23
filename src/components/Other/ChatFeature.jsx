@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PubNub from "pubnub";
 import Navbar from "../Navbar/Index";
 import { useOutletContext } from "react-router-dom";
@@ -7,21 +7,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ChatFeature = () => {
   const [sidebarToggle] = useOutletContext();
-  const publishKey = "pub-c-c9eab6f5-0232-4d25-88f2-8c6de320d091";
-  const subscribeKey = "sub-c-547e7070-2c74-406e-834d-5fcdf72324ab";
   const { userNames, selectedUser } = useAuth();
   const userId = userNames;
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState("");
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-
+  const publishKey = "pub-c-bb0b06cd-fdec-4df3-9688-a39a94a00283";
+  const subscribeKey = "sub-c-993f853e-393e-4e88-b0ea-760623fba8d1";
   const pubnub = new PubNub({
     publishKey: publishKey,
     subscribeKey: subscribeKey,
     uuid: userId,
   });
-
   useEffect(() => {
     // Fetch channels when component mounts
     fetchChannels();
@@ -52,7 +50,6 @@ const ChatFeature = () => {
       }
     }
   }, [selectedChannel]);
-
   const fetchChannels = () => {
     if (selectedUser) {
       // Fetch all channels from local storage
@@ -134,9 +131,7 @@ const ChatFeature = () => {
                 key={index}
                 onClick={() => setSelectedChannel(channel)}
                 className={`cursor-pointer px-2 py-1 rounded ${
-                  selectedChannel === channel
-                    ? "bg-sky-400 text-white"
-                    : ""
+                  selectedChannel === channel ? "bg-sky-400 text-white" : ""
                 }`}
               >
                 {channel}{" "}
@@ -148,7 +143,9 @@ const ChatFeature = () => {
           </ul>
         </div>
         <div className="flex-grow p-4 bg-white">
-          <h3 className="font-semibold text-lg mb-4">Message Community Health Provider</h3>
+          <h3 className="font-semibold text-lg mb-4">
+            Message Community Health Provider
+          </h3>
           {messages.map((message, index) => (
             <div
               key={index}
