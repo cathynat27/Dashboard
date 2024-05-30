@@ -54,14 +54,12 @@ const ChatFeature = () => {
     if (selectedUser) {
       // Fetch all channels from local storage
       const allChannels = Object.keys(localStorage);
+      // const channelsWithMessages = allChannels.filter(
+      //   (channel) => getMessagesCount(channel) > 1
+      // );
 
-      // Filter channels with message count greater than 1
-      const channelsWithMessages = allChannels.filter(
-        (channel) => getMessagesCount(channel) > 1
-      );
-
-      // Update state with channels
-      setChannels(channelsWithMessages);
+      // // Update state with channels
+      // setChannels(channelsWithMessages);
     }
   };
 
