@@ -70,7 +70,7 @@ function LoginIndex() {
     setShowPassword(!showPassword);
   };
   const LoginImage =
-    "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
+    "https://res.cloudinary.com/dqkofl9se/image/upload/v1728551486/Mobklinic/favicon_ufzeph.png";
   return (
     <>
       <div className="flex min-h-screen">
@@ -84,8 +84,8 @@ function LoginIndex() {
                 className="md:w-72 w-48 mx-auto"
               />
               <div className="md:block hidden text-slate-100">
-                <h1 className="font-semibold text-2xl pb-2">
-                  Mobiklinic Renal Feature Dashboard{" "}
+                <h1 className="font-semibold text-4xl pb-4">
+                  Mobiklinic Dashboard{" "}
                 </h1>
               </div>
             </div>
@@ -95,7 +95,7 @@ function LoginIndex() {
             <div className="loginWrapper flex flex-col w-full lg:px-36 md:px-8 px-8 md:py-8">
               {/* Login Header Text */}
               <div className="hidden md:block font-medium self-center text-xl sm:text-3xl text-gray-800">
-                Mobiklinic Renal Dashboard!
+                Mobiklinic Projects Dashboard!
               </div>
 
               {/* Sparator */}
