@@ -285,43 +285,48 @@ function Dashboard() {
           </div>
         </div>
 
-          {/* NAFS PROJECT Section */}
-          <div className="px-2 mx-auto mainCard mt-10">
-          <h1
-            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
-            onClick={() => setShowNafs(!showNafs)}
-          >
-            NAFS Project
-          </h1>
-          {showNafs && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {nafsData.map((data, index) => (
-          <div key={index} className="bg-gray-800 p-4 rounded-lg ">
-            <h3 className="text-lg text-white">{data.title}</h3>
-            <p className="text-2xl text-white">{data.count}</p>
-          </div>
-         ))}
-         </div>
-       )}
-     </div>
+         {/* NAFS PROJECT Section */}
+<div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
+  {/* Subheading */}
+  <h2 className="text-blue-500 font-bold text-sm md:text-base mb-2">
+    Click on a project to view
+  </h2>
 
-        {/* Overall Activity Section */}
-        <div className="px-2 mx-auto mainCard mt-10">
-          <h1
-            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
-            onClick={() => setShowOverall(!showOverall)}
-          >
-            Overall Activity
-          </h1>
-
-          {showOverall && (
-            <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
-              {dataOS?.map((data, index) => (
-                <ScrolledCard key={index} data={data} />
-              ))}
-            </div>
-          )}
+  <h1
+    className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
+    onClick={() => setShowNafs(!showNafs)}
+  >
+    NAFS Project
+  </h1>
+  {showNafs && (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {nafsData.map((data, index) => (
+        <div key={index} className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg text-white">{data.title}</h3>
+          <p className="text-2xl text-white">{data.count}</p>
         </div>
+      ))}
+    </div>
+  )}
+</div>
+
+{/* Overall Activity Section */}
+<div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
+  <h1
+    className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
+    onClick={() => setShowOverall(!showOverall)}
+  >
+    Overall Activity
+  </h1>
+  {showOverall && (
+    <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
+      {dataOS?.map((data, index) => (
+        <ScrolledCard key={index} data={data} />
+      ))}
+    </div>
+  )}
+</div>
+
 
       
       </main>
