@@ -143,6 +143,8 @@ function Dashboard() {
   const avatar =
     "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
 
+
+
   const dataOS = [
     {
       title: "Daily Enrollments",
@@ -199,6 +201,75 @@ function Dashboard() {
     },
   ];
 
+  const overallData = [
+    {
+      title: "Total Patients",
+      count: totalPatients,
+    },
+    {
+      title: "Total Female Patients",
+      count: femaleCount,
+    },
+    {
+      title: "Total Male Patients",
+      count: maleCount,
+    },
+    {
+      title: "Total Monitoring",
+      count: monitoringCount,
+    },
+    {
+      title: "Total Screening",
+      count: screeningCount,
+    },
+    {
+      title: "Total RFTs",
+      count: rftCount,
+    },
+    {
+      title: "Total Vaccinations",
+      count: vaccinationsCount,
+    },
+    {
+      title: "Total Diagnoses",
+      count: diagnosesCount,
+    },
+  ];
+
+  const nafsData = [
+    {
+      title: "Total Vaccinations",
+      count: vaccinationsCount,
+    },
+    {
+      title: "Total Antenantals",
+      count: nafsProjectData.reduce((acc, patient) => acc + (patient.antenantals ? patient.antenantals.length : 0), 0),
+    },
+    {
+      title: "Total Renal Histories",
+      count: nafsProjectData.reduce((acc, patient) => acc + (patient.renal_histories ? patient.renal_histories.length : 0), 0),
+    },
+    {
+      title: "Total Diagnoses",
+      count: diagnosesCount,
+    },
+    {
+      title: "Total Monitorings",
+      count: monitoringCount,
+    },
+    {
+      title: "Total RFTs",
+      count: rftCount,
+    },
+    {
+      title: "Total Drugs",
+      count: nafsProjectData.reduce((acc, patient) => {
+        return acc + (patient.drugs ? patient.drugs.length : 0);
+      }, 0),
+    },
+  ];
+
+
   return (
     <>
       <main className="h-full">
@@ -213,6 +284,26 @@ function Dashboard() {
             <AchievementWidget />
           </div>
         </div>
+
+          {/* NAFS PROJECT Section */}
+          <div className="px-2 mx-auto mainCard mt-10">
+          <h1
+            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
+            onClick={() => setShowNafs(!showNafs)}
+          >
+            NAFS Project
+          </h1>
+          {showNafs && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {nafsData.map((data, index) => (
+          <div key={index} className="bg-gray-800 p-4 rounded-lg ">
+            <h3 className="text-lg text-white">{data.title}</h3>
+            <p className="text-2xl text-white">{data.count}</p>
+          </div>
+         ))}
+         </div>
+       )}
+     </div>
 
         {/* Overall Activity Section */}
         <div className="px-2 mx-auto mainCard mt-10">
@@ -232,29 +323,9 @@ function Dashboard() {
           )}
         </div>
 
-        {/* NAFS PROJECT Section */}
-        <div className="px-2 mx-auto mainCard mt-10">
-          <h1
-            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
-            onClick={() => setShowNafs(!showNafs)}
-          >
-            NAFS PROJECT
-          </h1>
-
-          {showNafs && (
-            <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
-              {nafsProjectData.length > 0 ? (
-                nafsProjectData.map((patient, index) => (
-                  <ScrolledCard key={index} data={{ title: patient.name, count: patient.createdAt }} />
-                ))
-              ) : (
-                <div>No data available for NAFS PROJECT</div>
-              )}
-            </div>
-          )}
-        </div>
+      
       </main>
-      <Footer />
+     
     </>
   );
 }
