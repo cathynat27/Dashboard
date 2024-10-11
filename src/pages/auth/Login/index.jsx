@@ -11,7 +11,7 @@ import { useAuth } from "../../../context/AuthContext";
 
 function LoginIndex() {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setUserRole, updateUserNames, handleLoginIndex } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
