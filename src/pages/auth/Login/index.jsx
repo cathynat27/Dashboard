@@ -5,8 +5,8 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState} from "react";
-import { Link, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 function LoginIndex() {
@@ -20,6 +20,7 @@ function LoginIndex() {
     password: "",
   });
   const [showModal, setShowModal] = useState(false);
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -30,7 +31,6 @@ function LoginIndex() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setLoading(true);
 
     try {
@@ -67,13 +67,15 @@ function LoginIndex() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const LoginImage =
     "https://res.cloudinary.com/dqkofl9se/image/upload/v1728551486/Mobklinic/favicon_ufzeph.png";
+
   return (
     <>
       <div className="flex min-h-screen">
         <div className="flex w-full flex-col md:flex-row">
-          {/* Image */}
+          {/* Image Section */}
           <div className="md:bg-sky-500 md:min-h-screen flex flex-wrap md:w-1/2">
             <div className="items-center text-center flex flex-col relative justify-center mx-auto">
               <img
@@ -83,20 +85,21 @@ function LoginIndex() {
               />
               <div className="md:block hidden text-slate-100">
                 <h1 className="font-semibold text-4xl pb-4">
-                  Mobiklinic Dashboard{" "}
+                  Mobiklinic Dashboard
                 </h1>
               </div>
             </div>
           </div>
+
           {/* Login Section */}
           <div className="flex flex-col md:flex-1 items-center justify-center">
             <div className="loginWrapper flex flex-col w-full lg:px-36 md:px-8 px-8 md:py-8">
-              {/* Login Header Text */}
+              {/* Login Header */}
               <div className="hidden md:block font-medium self-center text-xl sm:text-3xl text-gray-800">
                 Mobiklinic Projects Dashboard!
               </div>
 
-              {/* Sparator */}
+              {/* Separator */}
               <div className="hidden md:block relative mt-10 h-px bg-gray-300">
                 <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
                   <span className="bg-white px-4 text-xs text-gray-500 uppercase">
@@ -112,13 +115,12 @@ function LoginIndex() {
               {/* Login Form */}
               <div className="md:mt-10 mt-4">
                 <form onSubmit={handleLogin}>
-                  {/* Username */}
+                  {/* Username Input */}
                   <div className="flex flex-col mb-3">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                         <FontAwesomeIcon icon={faUser} />
                       </div>
-
                       <input
                         id="username"
                         type="text"
@@ -134,20 +136,14 @@ function LoginIndex() {
                         placeholder="Enter Username"
                       />
                     </div>
-                    {error?.username && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.username[0]}
-                      </span>
-                    )}
                   </div>
 
-                  {/* Password */}
+                  {/* Password Input */}
                   <div className="flex flex-col mb-6">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                         <FontAwesomeIcon icon={faLock} />
                       </div>
-
                       <input
                         id="password"
                         type={showPassword ? "text" : "password"}
@@ -168,11 +164,6 @@ function LoginIndex() {
                         onClick={togglePasswordVisibility}
                       />
                     </div>
-                    {error?.password && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.password[0]}
-                      </span>
-                    )}
                   </div>
 
                   {/* Forgot Password Link */}
@@ -191,7 +182,7 @@ function LoginIndex() {
                     </div>
                   </div>
 
-                  {/* Button Login */}
+                  {/* Login Button */}
                   <div className="flex w-full">
                     <button
                       disabled={loading}
@@ -206,6 +197,7 @@ function LoginIndex() {
                 </form>
               </div>
 
+              {/* Modal for Forgot Password */}
               {showModal && (
                 <div className="fixed z-10 inset-0 overflow-y-auto">
                   <div className="flex items-center justify-center min-h-screen">
