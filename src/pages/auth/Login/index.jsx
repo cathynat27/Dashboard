@@ -1,14 +1,12 @@
-import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import {
-  faEnvelope,
   faLock,
   faUser,
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useContext } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import React, { useState} from "react";
+import { Link, useNavigate} from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 function LoginIndex() {
