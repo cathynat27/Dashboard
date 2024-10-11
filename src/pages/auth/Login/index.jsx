@@ -60,7 +60,6 @@ function LoginIndex() {
       console.error("Login error:", error);
       setError("An error occurred while logging in. Please try again later.");
     }
-
     setLoading(false);
   };
 
