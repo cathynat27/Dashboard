@@ -17,6 +17,8 @@ function Dashboard() {
   const [dailyCount, setDailyCount] = useState(0);
   const [error, setError] = useState(null);
   const [totalPatients, setTotalPatients] = useState(0);
+  const [diagnosesAfterCutoffCount, setDiagnosesAfterCutoffCount] = useState(0);
+  const [vaccinationsAfterCutoffCount, setVaccinationsAfterCutoffCount] = useState(0); // Vaccinations after cutoff date
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
   const [monitoringCount, setMonitoringCount] = useState(0);
@@ -31,30 +33,111 @@ function Dashboard() {
   const [showOverall, setShowOverall] = useState(false);
   const [showNafs, setShowNafs] = useState(false);
 
+  const [antenantalsAfterCutoffCount, setAntenantalsAfterCutoffCount] = useState(0);
+  const [renalHistoriesAfterCutoffCount, setRenalHistoriesAfterCutoffCount] = useState(0);
+  const [rftsAfterCutoffCount, setRFTsAfterCutoffCount] = useState(0);
+  const [monitoringsAfterCutoffCount, setMonitoringsAfterCutoffCount] = useState(0);
+  const [drugsAfterCutoffCount, setDrugsAfterCutoffCount] = useState(0);
+
+  const cutOffDate = new Date("2024-10-07T00:00:00Z");
+
   const fetchData = async () => {
     try {
-      const response = await fetch(
+      // Fetch the all-patients API
+      const patientsResponse = await fetch(
         "https://mk-be-strapi-production.up.railway.app/api/all-patients"
       );
-      const data = await response.json();
+      const patientsData = await patientsResponse.json();
 
-      const allPatients = data.map((user) => user.patients).flat();
+      // Extract and flatten patients data
+      const allPatients = patientsData.map((user) => user.patients).flat();
       setTotalPatients(allPatients.length);
 
-      // Filter out patients created after October 7, 2024
-      const cutOffDate = new Date("2024-10-07T00:00:00Z");
+      // Filter patients created after the cutoff date
       const filteredNafsProjectData = allPatients.filter((patient) => {
         const patientDate = new Date(patient.createdAt);
         return patientDate >= cutOffDate;
       });
-      
-    // Calculate total patients for NAFS project
-    const totalNafsPatients = filteredNafsProjectData.length;
 
-    // Set NAFS project data to an array with only the total patients count
-    setNafsProjectData([{ title: "Total Patients", count: totalNafsPatients }]);
+      const totalNafsPatients = filteredNafsProjectData.length;
 
-      // Existing calculations for counts
+      // Filter and count diagnoses after the cutoff date
+      const diagnosesAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientDiagnoses = patient.diagnoses || [];
+        const validDiagnoses = patientDiagnoses.filter((diagnosis) => {
+          const diagnosisDate = new Date(diagnosis.createdAt);
+          return diagnosisDate >= cutOffDate;
+        });
+        return count + validDiagnoses.length;
+      }, 0);
+      setDiagnosesAfterCutoffCount(diagnosesAfterCutoff);
+
+      // Filter and count vaccinations after the cutoff date
+      const vaccinationsAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientVaccinations = patient.vaccinations || [];
+        const validVaccinations = patientVaccinations.filter((vaccination) => {
+          const vaccinationDate = new Date(vaccination.createdAt);
+          return vaccinationDate >= cutOffDate;
+        });
+        return count + validVaccinations.length;
+      }, 0);
+      setVaccinationsAfterCutoffCount(vaccinationsAfterCutoff);
+
+      // Filter and count antenatals after the cutoff date
+      const antenantalsAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientAntenantals = patient.antenantals || [];
+        const validAntenantals = patientAntenantals.filter((antenatal) => {
+          const antenatalDate = new Date(antenatal.createdAt);
+          return antenatalDate >= cutOffDate;
+        });
+        return count + validAntenantals.length;
+      }, 0);
+      setAntenantalsAfterCutoffCount(antenantalsAfterCutoff);
+
+      // Filter and count renal histories after the cutoff date
+      const renalHistoriesAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientRenalHistories = patient.renal_histories || [];
+        const validRenalHistories = patientRenalHistories.filter((renalHistory) => {
+          const renalHistoryDate = new Date(renalHistory.createdAt);
+          return renalHistoryDate >= cutOffDate;
+        });
+        return count + validRenalHistories.length;
+      }, 0);
+      setRenalHistoriesAfterCutoffCount(renalHistoriesAfterCutoff);
+
+      // Filter and count RFTs after the cutoff date
+      const rftsAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientRFTs = patient.rfts || [];
+        const validRFTs = patientRFTs.filter((rft) => {
+          const rftDate = new Date(rft.createdAt);
+          return rftDate >= cutOffDate;
+        });
+        return count + validRFTs.length;
+      }, 0);
+      setRFTsAfterCutoffCount(rftsAfterCutoff);
+
+      // Filter and count monitorings after the cutoff date
+      const monitoringsAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientMonitorings = patient.monitorings || [];
+        const validMonitorings = patientMonitorings.filter((monitoring) => {
+          const monitoringDate = new Date(monitoring.createdAt);
+          return monitoringDate >= cutOffDate;
+        });
+        return count + validMonitorings.length;
+      }, 0);
+      setMonitoringsAfterCutoffCount(monitoringsAfterCutoff);
+
+      // Filter and count drugs after the cutoff date
+      const drugsAfterCutoff = filteredNafsProjectData.reduce((count, patient) => {
+        const patientDrugs = patient.drugs || [];
+        const validDrugs = patientDrugs.filter((drug) => {
+          const drugDate = new Date(drug.createdAt);
+          return drugDate >= cutOffDate;
+        });
+        return count + validDrugs.length;
+      }, 0);
+      setDrugsAfterCutoffCount(drugsAfterCutoff);
+
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
       const monthlyData = allPatients.filter((patient) => {
@@ -100,26 +183,18 @@ function Dashboard() {
       );
       setFemaleCount(femalePatients.length);
 
-      // Calculate patients under monitoring, screening, and RFT
-      let monitoring = 0;
-      let screening = 0;
-      let rft = 0;
-      let vaccination = 0;
-      let diagnosis = 0;
-      allPatients.forEach((patient) => {
-        monitoring += patient.monitorings ? patient.monitorings.length : 0;
-        screening += patient.renal_histories
-          ? patient.renal_histories.length
-          : 0;
-        rft += patient.rfts ? patient.rfts.length : 0;
-        vaccination += patient.vaccinations ? patient.vaccinations.length : 0;
-        diagnosis += patient.diagnoses ? patient.diagnoses.length : 0;
-      });
-      setMonitoringCount(monitoring);
-      setScreeningCount(screening);
-      setRftCount(rft);
-      setVaccinationsCount(vaccination);
-      setDiagnosesCount(diagnosis);
+      // Combine both total patients and total data into the NAFS data array
+      setNafsProjectData([
+        { title: "Total Patients", count: totalNafsPatients },
+        { title: "Total Diagnoses (After Cutoff)", count: diagnosesAfterCutoff },
+        { title: "Total Vaccinations (After Cutoff)", count: vaccinationsAfterCutoff },
+        { title: "Total Antenatals (After Cutoff)", count: antenantalsAfterCutoff },
+        { title: "Total Renal Histories (After Cutoff)", count: renalHistoriesAfterCutoff },
+        { title: "Total RFTs (After Cutoff)", count: rftsAfterCutoff },
+        { title: "Total Monitorings (After Cutoff)", count: monitoringsAfterCutoff },
+        { title: "Total Drugs (After Cutoff)", count: drugsAfterCutoff },
+      ]);
+
 
       setLoading(false);
     } catch (error) {
@@ -128,6 +203,9 @@ function Dashboard() {
       setLoading(false);
     }
   };
+
+
+
 
   useEffect(() => {
     fetchData();
@@ -290,52 +368,51 @@ function Dashboard() {
           </div>
         </div>
 
-         {/* NAFS PROJECT Section */}
-<div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
-  {/* Subheading */}
-  <h2 className="text-blue-500 font-bold text-sm md:text-base mb-2">
-    Click on a project to view
-  </h2>
+        {/* NAFS PROJECT Section */}
+        <div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
+          {/* Subheading */}
+          <h2 className="text-blue-500 font-bold text-sm md:text-base mb-2">
+            Click on a project to view
+          </h2>
 
-  <h1
-    className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
-    onClick={() => setShowNafs(!showNafs)}
-  >
-    NAFS Project
-  </h1>
-  {nafsProjectData.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {nafsProjectData.map((data, index) => (
-              <div key={index} className="bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-lg text-white">{data.title}</h3>
-                <p className="text-2xl text-white">{data.count}</p>
-              </div>
-            ))}
-          </div>
-        )}
-</div>
-
-{/* Overall Activity Section */}
-<div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
-  <h1
-    className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
-    onClick={() => setShowOverall(!showOverall)}
-  >
-    Overall Activity
-  </h1>
-  {showOverall && (
-    <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
-      {dataOS?.map((data, index) => (
-        <ScrolledCard key={index} data={data} />
-      ))}
-    </div>
-  )}
-</div>
+          <h1
+            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
+            onClick={() => setShowNafs(!showNafs)}
+          >
+            NAFS Project
+          </h1>
+          {nafsProjectData.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {nafsProjectData.map((data, index) => (
+                <div key={index} className="bg-gray-800 p-4 rounded-lg">
+                  <h3 className="text-lg text-white">{data.title}</h3>
+                  <p className="text-2xl text-white">{data.count}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
 
-      
+        {/* Overall Activity Section */}
+        <div className="px-2 mx-auto mainCard"> {/* Reduced mt-10 to mt-6 */}
+          <h1
+            className="text-slate-500 pb-3 text-base md:text-lg cursor-pointer"
+            onClick={() => setShowOverall(!showOverall)}
+          >
+            Overall Activity
+          </h1>
+          {showOverall && (
+            <div className="flex flex-row gap-x-4 overflow-hidden overflow-x-auto justify-between no-scrollbar">
+              {dataOS?.map((data, index) => (
+                <ScrolledCard key={index} data={data} />
+              ))}
+            </div>
+          )}
+        </div>
+
       </main>
-     
+
     </>
   );
 }
