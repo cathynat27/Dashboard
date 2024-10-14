@@ -24,6 +24,14 @@ const initMenu = [
     icon: faTachometer,
   },
 
+  { label: "Records" },
+
+  {
+    label: "CHP Activity",
+    path: "/chpactivity",
+    icon: faUserMd,
+  },
+
   { label: "Services" },
   // {
   //   label: "Renal Monitorings",
@@ -61,16 +69,10 @@ const initMenu = [
     path: "/antenantal",
     icon: faBaby,
   },
-  { label: "Records" },
+ 
 
   {
-    label: "CHP Activity",
-    path: "/chpactivity",
-    icon: faUserMd,
-  },
-
-  {
-    label: "Patients",
+    label: "All Patients",
     path: "/table",
     icon: faUsers,
   },
