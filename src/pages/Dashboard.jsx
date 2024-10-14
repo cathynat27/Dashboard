@@ -47,7 +47,12 @@ function Dashboard() {
         const patientDate = new Date(patient.createdAt);
         return patientDate >= cutOffDate;
       });
-      setNafsProjectData(filteredNafsProjectData);
+      
+    // Calculate total patients for NAFS project
+    const totalNafsPatients = filteredNafsProjectData.length;
+
+    // Set NAFS project data to an array with only the total patients count
+    setNafsProjectData([{ title: "Total Patients", count: totalNafsPatients }]);
 
       // Existing calculations for counts
       const currentDate = new Date();
@@ -298,16 +303,16 @@ function Dashboard() {
   >
     NAFS Project
   </h1>
-  {showNafs && (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {nafsData.map((data, index) => (
-        <div key={index} className="bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-lg text-white">{data.title}</h3>
-          <p className="text-2xl text-white">{data.count}</p>
-        </div>
-      ))}
-    </div>
-  )}
+  {nafsProjectData.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {nafsProjectData.map((data, index) => (
+              <div key={index} className="bg-gray-800 p-4 rounded-lg">
+                <h3 className="text-lg text-white">{data.title}</h3>
+                <p className="text-2xl text-white">{data.count}</p>
+              </div>
+            ))}
+          </div>
+        )}
 </div>
 
 {/* Overall Activity Section */}
