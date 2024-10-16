@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faTrashAlt, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useOutletContext } from "react-router-dom";
 import Navbar from "../../components/Navbar/Index";
 import { useAuth } from "../../context/AuthContext";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const NafsUserActivity = () => {
   const [loading, setLoading] = useState(true);
@@ -25,15 +24,43 @@ const NafsUserActivity = () => {
           `https://mk-be-strapi-production.up.railway.app/api/all-patients`
         );
         if (response.status >= 200 && response.status < 300) {
-          // Count the number of patients created after the cutoff date for each user
+          // Count patients and medical data created after the cutoff date for each user
           const updatedUsersData = response.data.map((user) => {
             const filteredPatients = user.patients.filter(patient => {
               const patientDate = new Date(patient.createdAt);
               return patientDate >= cutOffDate;
             });
+
+            // Utility function to count items in a specific category
+            const countItemsAfterCutOff = (patients, field) => {
+              return patients.reduce((total, patient) => {
+                const filteredItems = patient[field].filter(item => {
+                  const itemDate = new Date(item.createdAt);
+                  return itemDate >= cutOffDate;
+                });
+                return total + filteredItems.length;
+              }, 0);
+            };
+
+            // Count for each category
+            const totalDiagnoses = countItemsAfterCutOff(filteredPatients, 'diagnoses');
+            const totalAntenantals = countItemsAfterCutOff(filteredPatients, 'antenantals');
+            const totalVaccinations = countItemsAfterCutOff(filteredPatients, 'vaccinations');
+            const totalRenalHistories = countItemsAfterCutOff(filteredPatients, 'renal_histories');
+            const totalRfts = countItemsAfterCutOff(filteredPatients, 'rfts');
+            const totalMonitorings = countItemsAfterCutOff(filteredPatients, 'monitorings');
+            const totalDrugs = countItemsAfterCutOff(filteredPatients, 'drugs');
+
             return {
               ...user,
               numberOfPatients: filteredPatients.length,
+              numberOfDiagnoses: totalDiagnoses,
+              numberOfAntenantals: totalAntenantals,
+              numberOfVaccinations: totalVaccinations,
+              numberOfRenalHistories: totalRenalHistories,
+              numberOfRfts: totalRfts,
+              numberOfMonitorings: totalMonitorings,
+              numberOfDrugs: totalDrugs,
             };
           });
           setUsersData(updatedUsersData);
@@ -82,7 +109,28 @@ const NafsUserActivity = () => {
               Phone Number: {user.username}
             </p>
             <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-              Number of Patients: {user.numberOfPatients}
+              Patients: {user.numberOfPatients}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Diagnoses: {user.numberOfDiagnoses}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Antenatals: {user.numberOfAntenantals}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Vaccinations: {user.numberOfVaccinations}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Renal Histories: {user.numberOfRenalHistories}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              RFTs: {user.numberOfRfts}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Monitorings: {user.numberOfMonitorings}
+            </h3>
+            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
+              Renal Drugs: {user.numberOfDrugs}
             </h3>
             <Link
               className="flex p-6"
@@ -93,17 +141,6 @@ const NafsUserActivity = () => {
                 Chat with CHP
               </button>
             </Link>
-
-            {/* If needed, you can uncomment the ul section below */}
-            {/* 
-            <ul>
-              {user.patients.map((patient) => (
-                <li key={patient.id}>
-                  {patient.firstName} {patient.lastName}
-                </li>
-              ))}
-            </ul> 
-            */}
           </div>
         ))}
       </div>
