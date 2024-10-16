@@ -17,6 +17,7 @@ import RenalScreening from "./pages/screening/ScreeningTable";
 import ScreeningDetails from "./pages/AppServices/Patient.Details";
 import RenalMonitoring from "./pages/monitoring/MonitoringTable";
 import UserActivity from "./pages/ChpActivity/user.activity";
+import NafsUserActivity from "./pages/NafsChpActivity/nafsuser.activity";
 import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/antenatal/AntenantalTable";
 import Chat from "./components/Other/ChatFeature";
@@ -66,6 +67,8 @@ function App() {
           ></Route>
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
+          <Route path="/nafschpactivity" element={<NafsUserActivity />}></Route>
+        
           <Route path="/blank" element={<Blank />}></Route>
           <Route path="/404" element={<NotFound />}></Route>
           <Route path="/form" element={<Form />}></Route>

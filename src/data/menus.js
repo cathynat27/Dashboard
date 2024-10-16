@@ -27,7 +27,13 @@ const initMenu = [
   { label: "Records" },
 
   {
-    label: "CHP Activity",
+    label: "NAFS CHPs",
+    path: "/nafschpactivity",
+    icon: faUserMd,
+  },
+
+  {
+    label: "Overall CHP Activity",
     path: "/chpactivity",
     icon: faUserMd,
   },
