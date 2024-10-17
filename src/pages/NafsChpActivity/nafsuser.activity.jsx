@@ -35,7 +35,7 @@ const NafsUserActivity = () => {
             // Utility function to count items added after the cutoff date for all patients
             const countItemsAfterCutOff = (patients, field) => {
               return patients.reduce((total, patient) => {
-                // We are filtering items for each patient based on the cutoff date, even if the patient was registered earlier
+                // Filter items for each patient based on the cutoff date, even if the patient was registered earlier
                 const filteredItems = patient[field].filter(item => {
                   const itemDate = new Date(item.createdAt);
                   return itemDate >= cutOffDate;
