@@ -25,46 +25,49 @@ const NafsUserActivity = () => {
         );
         if (response.status >= 200 && response.status < 300) {
           // Process the data
-          const updatedUsersData = response.data.map((user) => {
-            // Filter patients based on cutoff date for patient count
-            const filteredPatients = user.patients.filter(patient => {
-              const patientDate = new Date(patient.createdAt);
-              return patientDate >= cutOffDate;
-            });
-
-            // Utility function to count items added after the cutoff date for all patients
-            const countItemsAfterCutOff = (patients, field) => {
-              return patients.reduce((total, patient) => {
-                // Filter items for each patient based on the cutoff date, even if the patient was registered earlier
-                const filteredItems = patient[field].filter(item => {
-                  const itemDate = new Date(item.createdAt);
-                  return itemDate >= cutOffDate;
-                });
-                return total + filteredItems.length;
-              }, 0);
-            };
-
-            // Count for each category regardless of patient registration date
-            const totalDiagnoses = countItemsAfterCutOff(user.patients, 'diagnoses');
-            const totalAntenantals = countItemsAfterCutOff(user.patients, 'antenantals');
-            const totalVaccinations = countItemsAfterCutOff(user.patients, 'vaccinations');
-            const totalRenalHistories = countItemsAfterCutOff(user.patients, 'renal_histories');
-            const totalRfts = countItemsAfterCutOff(user.patients, 'rfts');
-            const totalMonitorings = countItemsAfterCutOff(user.patients, 'monitorings');
-            const totalDrugs = countItemsAfterCutOff(user.patients, 'drugs');
-
-            return {
-              ...user,
-              numberOfPatients: filteredPatients.length, // Only count patients created after the cutoff date
-              numberOfDiagnoses: totalDiagnoses,        // Count diagnoses added after the cutoff date for all patients
-              numberOfAntenantals: totalAntenantals,    // Same for antenantals
-              numberOfVaccinations: totalVaccinations,
-              numberOfRenalHistories: totalRenalHistories,
-              numberOfRfts: totalRfts,
-              numberOfMonitorings: totalMonitorings,
-              numberOfDrugs: totalDrugs,
-            };
-          });
+          const updatedUsersData = response.data
+            .map((user) => {
+              // Filter patients based on cutoff date
+              const filteredPatients = user.patients.filter(patient => {
+                const patientDate = new Date(patient.createdAt);
+                return patientDate >= cutOffDate;
+              });
+  
+              // Utility function to count items added after the cutoff date
+              const countItemsAfterCutOff = (patients, field) => {
+                return patients.reduce((total, patient) => {
+                  const filteredItems = patient[field].filter(item => {
+                    const itemDate = new Date(item.createdAt);
+                    return itemDate >= cutOffDate;
+                  });
+                  return total + filteredItems.length;
+                }, 0);
+              };
+  
+              // Count for each category regardless of patient registration date
+              const totalDiagnoses = countItemsAfterCutOff(user.patients, 'diagnoses');
+              const totalAntenantals = countItemsAfterCutOff(user.patients, 'antenantals');
+              const totalVaccinations = countItemsAfterCutOff(user.patients, 'vaccinations');
+              const totalRenalHistories = countItemsAfterCutOff(user.patients, 'renal_histories');
+              const totalRfts = countItemsAfterCutOff(user.patients, 'rfts');
+              const totalMonitorings = countItemsAfterCutOff(user.patients, 'monitorings');
+              const totalDrugs = countItemsAfterCutOff(user.patients, 'drugs');
+  
+              return {
+                ...user,
+                numberOfPatients: filteredPatients.length,
+                numberOfDiagnoses: totalDiagnoses,
+                numberOfAntenantals: totalAntenantals,
+                numberOfVaccinations: totalVaccinations,
+                numberOfRenalHistories: totalRenalHistories,
+                numberOfRfts: totalRfts,
+                numberOfMonitorings: totalMonitorings,
+                numberOfDrugs: totalDrugs,
+              };
+            })
+            // Filter out users with no patients after the cutoff date
+            .filter(user => user.numberOfPatients > 0);
+  
           setUsersData(updatedUsersData);
         } else {
           throw new Error(`API request failed with status ${response.status}`);
@@ -75,9 +78,10 @@ const NafsUserActivity = () => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   if (loading)
     return (
