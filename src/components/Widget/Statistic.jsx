@@ -6,23 +6,31 @@ import "./widget.css";
 Chart.register();
 
 function Statistic({ ...props }) {
-  const [patientData, setPatientData] = useState([]);
+  const [patientData, setPatientData] = useState(Array.from({ length: 12 }, () => 0)); // Default for 12 months
 
   useEffect(() => {
-    const apiUrl = `https://mk-be-strapi-production.up.railway.app/api/patients`;
+    const apiUrl = `https://mk-be-strapi-production.up.railway.app/api/users?populate=patients`; // Ensure patients are populated under users
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
         // Initialize an array to store patient counts for each month
         const patientCounts = Array.from({ length: 12 }, () => 0);
 
-        // Calculate the number of patients enrolled in each month
-        data.data.forEach((patient) => {
-          const month = new Date(patient.attributes.createdAt).getMonth();
-          patientCounts[month]++;
+        // Loop through each user
+        data.forEach((user) => {
+          // Loop through the user's patients
+          if (user.patients && user.patients.length > 0) {
+            user.patients.forEach((patient) => {
+              const createdAt = new Date(patient.createdAt);
+              const month = createdAt.getMonth(); // Get month (0 for Jan, 11 for Dec)
+              if (!isNaN(month)) {
+                patientCounts[month]++; // Increase the count for the respective month
+              }
+            });
+          }
         });
 
-        setPatientData(patientCounts);
+        setPatientData(patientCounts); // Update state with the patient counts
       })
       .catch((error) => {
         console.error("Error fetching patient data:", error);
@@ -45,10 +53,10 @@ function Statistic({ ...props }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    aspectRatio: 2,
     scales: {
       y: {
-        suggestedMax: Math.max(...patientData) + 10, // Adjust the suggested max based on the maximum patient count
+        beginAtZero: true, // Ensure y-axis starts from 0
+        suggestedMax: Math.max(...patientData) + 10, // Adjust max based on data
       },
     },
   };
@@ -56,7 +64,7 @@ function Statistic({ ...props }) {
   return (
     <div className={`widgetCard p-3 md:py-4 md:px-6 ${props.className}`}>
       <h1 className="text-medium font-semibold pb-4">Patients Enrolled</h1>
-      <div className="">
+      <div className="chart-container">
         <Bar data={data} options={options} />
       </div>
     </div>
