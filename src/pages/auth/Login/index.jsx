@@ -46,12 +46,24 @@ function LoginIndex() {
       );
 
       const data = await response.json();
-      handleLoginIndex();
 
       if (response.ok) {
+        // Store authentication data
         const fullName = `${data.user.firstName} ${data.user.lastName}`;
         updateUserNames(fullName);
         setUserRole(data.role);
+        
+        // Store JWT token if provided
+        if (data.jwt) {
+          localStorage.setItem('authToken', data.jwt);
+        }
+        
+        // Store user data
+        if (data.user) {
+          localStorage.setItem('userData', JSON.stringify(data.user));
+        }
+        
+        handleLoginIndex();
         navigate("/dashboard");
       } else {
         setError("Invalid username or password");
