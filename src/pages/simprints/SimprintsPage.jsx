@@ -28,19 +28,92 @@ const SimprintsPage = () => {
       const usersData = await usersResponse.json();
       console.log('Users data:', usersData);
 
-      // Try different patient endpoints to get patient data
+      // Try getting patient counts per user more efficiently
       let allPatientsData = [];
       
       try {
-        // Try patients endpoint with populated user data - fetch all pages
+        // First, try to get a smaller sample to understand the data structure
+        const sampleResponse = await fetch(`${API_CONFIG.BACKEND_URL_NEW}/api/patients?populate=users_permissions_user&pagination[pageSize]=25&pagination[page]=1`);
+        if (sampleResponse.ok) {
+          const sampleData = await sampleResponse.json();
+          console.log('Sample patient data:', sampleData);
+          
+          // If we have users, let's get counts for each user individually
+          if (usersData && usersData.length > 0) {
+            const userPatientCounts = {};
+            const userVaccinationCounts = {};
+            const userDiagnosisCounts = {};
+            
+            // Get patient count for each user
+            for (const user of usersData) {
+              try {
+                const userPatientsResponse = await fetch(
+                  `${API_CONFIG.BACKEND_URL_NEW}/api/patients?filters[users_permissions_user][id][$eq]=${user.id}&populate=vaccinations,diagnoses&pagination[pageSize]=100`
+                );
+                if (userPatientsResponse.ok) {
+                  const userPatientsData = await userPatientsResponse.json();
+                  const patientCount = userPatientsData.meta?.pagination?.total || 0;
+                  
+                  // Count vaccinations and diagnoses for this user
+                  let vaccinationCount = 0;
+                  let diagnosisCount = 0;
+                  if (userPatientsData.data) {
+                    userPatientsData.data.forEach(patient => {
+                      if (patient.attributes?.vaccinations && Array.isArray(patient.attributes.vaccinations)) {
+                        vaccinationCount += patient.attributes.vaccinations.length;
+                      }
+                      if (patient.attributes?.diagnoses && Array.isArray(patient.attributes.diagnoses)) {
+                        diagnosisCount += patient.attributes.diagnoses.length;
+                      }
+                    });
+                  }
+                  
+                  userPatientCounts[user.id] = patientCount;
+                  userVaccinationCounts[user.id] = vaccinationCount;
+                  userDiagnosisCounts[user.id] = diagnosisCount;
+                  console.log(`User ${user.id} (${user.firstName} ${user.lastName}) has ${patientCount} patients, ${vaccinationCount} vaccinations, and ${diagnosisCount} diagnoses`);
+                }
+              } catch (err) {
+                console.warn(`Failed to get count for user ${user.id}:`, err);
+                userPatientCounts[user.id] = 0;
+                userVaccinationCounts[user.id] = 0;
+                userDiagnosisCounts[user.id] = 0;
+              }
+            }
+            
+            console.log('Patient counts per user:', userPatientCounts);
+            console.log('Vaccination counts per user:', userVaccinationCounts);
+            console.log('Diagnosis counts per user:', userDiagnosisCounts);
+            
+            // Combine user data with patient counts
+            const usersWithPatientCounts = usersData.map(user => ({
+              ...user,
+              patientCount: userPatientCounts[user.id] || 0,
+              vaccinationCount: userVaccinationCounts[user.id] || 0,
+              diagnosisCount: userDiagnosisCounts[user.id] || 0,
+              fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A'
+            }));
+
+            // Sort by patient count (descending)
+            usersWithPatientCounts.sort((a, b) => b.patientCount - a.patientCount);
+
+            setUsers(usersWithPatientCounts);
+            return; // Exit early since we got the data efficiently
+          }
+        }
+      } catch (err) {
+        console.warn('Efficient counting failed, falling back to full fetch:', err);
+      }
+      
+      // Fallback: fetch all patients (original method)
+      try {
         let page = 1;
         let hasMorePages = true;
         
-        while (hasMorePages) {
-          const patientsResponse = await fetch(`${API_CONFIG.BACKEND_URL_NEW}/api/patients?populate=users_permissions_user&pagination[pageSize]=100&pagination[page]=${page}`);
+        while (hasMorePages && page <= 5) { // Limit to 5 pages max
+          const patientsResponse = await fetch(`${API_CONFIG.BACKEND_URL_NEW}/api/patients?populate=users_permissions_user,vaccinations,diagnoses&pagination[pageSize]=100&pagination[page]=${page}`);
           if (patientsResponse.ok) {
             const pageData = await patientsResponse.json();
-            console.log(`Fetched page ${page}:`, pageData);
             
             if (pageData.data && pageData.data.length > 0) {
               allPatientsData = allPatientsData.concat(pageData.data);
@@ -57,6 +130,7 @@ const SimprintsPage = () => {
               hasMorePages = false;
             }
           } else {
+            console.warn(`Failed to fetch page ${page}:`, patientsResponse.status);
             hasMorePages = false;
           }
         }
@@ -64,7 +138,7 @@ const SimprintsPage = () => {
         console.log(`Total patients fetched: ${allPatientsData.length}`);
         
       } catch (err) {
-        console.warn('patients endpoint failed, trying alternatives...');
+        console.warn('patients endpoint failed, trying alternatives...', err);
         
         // Try all-patients endpoint as alternative
         try {
@@ -74,49 +148,53 @@ const SimprintsPage = () => {
             allPatientsData = patientsData.data || patientsData;
           }
         } catch (err2) {
-          console.warn('all-patients endpoint also failed');
+          console.warn('all-patients endpoint also failed', err2);
         }
       }
 
       // Count patients per user - handle Strapi data structure
       const userPatientCounts = {};
-      
-      console.log('All patients data:', allPatientsData);
+      const userVaccinationCounts = {};
+      const userDiagnosisCounts = {};
       
       if (Array.isArray(allPatientsData)) {
-        console.log('Processing', allPatientsData.length, 'patients');
-        
-        allPatientsData.forEach((patient, index) => {
-          console.log(`Patient ${index + 1}:`, patient);
-          
+        allPatientsData.forEach((patient) => {
           // Handle Strapi format with populated user data
           let userId = null;
           if (patient.attributes?.users_permissions_user?.id) {
             userId = patient.attributes.users_permissions_user.id;
-            console.log(`Found user ID ${userId} for patient ${patient.attributes?.firstName} ${patient.attributes?.lastName}`);
           } else if (patient.attributes?.user?.data?.id) {
             userId = patient.attributes.user.data.id;
-            console.log(`Found user ID ${userId} (via user.data) for patient ${patient.attributes?.firstName}`);
           } else if (patient.attributes?.createdBy?.id) {
             userId = patient.attributes.createdBy.id;
-            console.log(`Found user ID ${userId} (via createdBy) for patient ${patient.attributes?.firstName}`);
-          } else {
-            console.log(`No user found for patient ${patient.attributes?.firstName} ${patient.attributes?.lastName}`);
           }
           
           if (userId) {
             userPatientCounts[userId] = (userPatientCounts[userId] || 0) + 1;
-            console.log(`User ${userId} now has ${userPatientCounts[userId]} patients`);
+            
+            // Count vaccinations for this patient
+            if (patient.attributes?.vaccinations && Array.isArray(patient.attributes.vaccinations)) {
+              userVaccinationCounts[userId] = (userVaccinationCounts[userId] || 0) + patient.attributes.vaccinations.length;
+            }
+            
+            // Count diagnoses for this patient
+            if (patient.attributes?.diagnoses && Array.isArray(patient.attributes.diagnoses)) {
+              userDiagnosisCounts[userId] = (userDiagnosisCounts[userId] || 0) + patient.attributes.diagnoses.length;
+            }
           }
         });
       }
       
-      console.log('Final patient counts per user:', userPatientCounts);
+      console.log('Patient counts per user:', userPatientCounts);
+      console.log('Vaccination counts per user:', userVaccinationCounts);
+      console.log('Diagnosis counts per user:', userDiagnosisCounts);
 
       // Combine user data with patient counts
       const usersWithPatientCounts = usersData.map(user => ({
         ...user,
         patientCount: userPatientCounts[user.id] || 0,
+        vaccinationCount: userVaccinationCounts[user.id] || 0,
+        diagnosisCount: userDiagnosisCounts[user.id] || 0,
         fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A'
       }));
 
@@ -162,6 +240,8 @@ const SimprintsPage = () => {
   }
 
   const totalPatients = users.reduce((sum, user) => sum + user.patientCount, 0);
+  const totalVaccinations = users.reduce((sum, user) => sum + (user.vaccinationCount || 0), 0);
+  const totalDiagnoses = users.reduce((sum, user) => sum + (user.diagnosisCount || 0), 0);
 
   return (
     <div className="p-6">
@@ -174,7 +254,7 @@ const SimprintsPage = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-blue-600 mr-4" />
@@ -197,6 +277,26 @@ const SimprintsPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-orange-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Vaccinations</p>
+              <p className="text-2xl font-bold text-gray-900">{totalVaccinations}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-red-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Diagnoses</p>
+              <p className="text-2xl font-bold text-gray-900">{totalDiagnoses}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-purple-600 mr-4" />
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Patients/User</p>
@@ -211,7 +311,7 @@ const SimprintsPage = () => {
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Users and Patient Counts</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Users, Patient Counts, Vaccinations, and Diagnoses</h2>
         </div>
         
         <div className="overflow-x-auto">
@@ -231,7 +331,10 @@ const SimprintsPage = () => {
                   Patient Count
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  Vaccinations
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Diagnoses
                 </th>
               </tr>
             </thead>
@@ -276,13 +379,34 @@ const SimprintsPage = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.blocked 
-                        ? 'bg-red-100 text-red-800' 
-                        : 'bg-green-100 text-green-800'
-                    }`}>
-                      {user.blocked ? 'Blocked' : 'Active'}
-                    </span>
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.vaccinationCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-orange-500 h-2 rounded-full"
+                          style={{
+                            width: totalVaccinations > 0 ? `${((user.vaccinationCount || 0) / Math.max(...users.map(u => u.vaccinationCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.diagnosisCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-red-500 h-2 rounded-full"
+                          style={{
+                            width: totalDiagnoses > 0 ? `${((user.diagnosisCount || 0) / Math.max(...users.map(u => u.diagnosisCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
