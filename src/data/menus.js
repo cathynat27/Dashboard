@@ -38,6 +38,12 @@ const initMenu = [
     icon: faUserMd,
   },
 
+  {
+    label: "SIMPRINTS 2025",
+    path: "/simprints",
+    icon: faUsers,
+  },
+
   { label: "Services" },
   // {
   //   label: "Renal Monitorings",

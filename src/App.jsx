@@ -22,6 +22,7 @@ import { useAuth } from "./context/AuthContext";
 import AntenatalTable from "./pages/antenatal/AntenantalTable";
 import Chat from "./components/Other/ChatFeature";
 import Notifications from "./components/Other/Notification.Table";
+import SimprintsPage from "./pages/simprints/SimprintsPage";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
@@ -68,6 +69,7 @@ function App() {
           <Route path="/monitoring" element={<RenalMonitoring />}></Route>
           <Route path="/chpactivity" element={<UserActivity />}></Route>
           <Route path="/nafschpactivity" element={<NafsUserActivity />}></Route>
+          <Route path="/simprints" element={<SimprintsPage />}></Route>
         
           <Route path="/blank" element={<Blank />}></Route>
           <Route path="/404" element={<NotFound />}></Route>
