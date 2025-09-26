@@ -16,5 +16,7 @@ export const API_ENDPOINTS = {
     USERS: `${API_CONFIG.BACKEND_URL_NEW}/api/users`,
     ALL_PATIENTS: `${API_CONFIG.BACKEND_URL_NEW}/api/all-patients`,
     PATIENTS_BASE: `${API_CONFIG.BACKEND_URL_NEW}/api/patients`,
+    USERS_WITH_PATIENTS: `${API_CONFIG.BACKEND_URL_NEW}/api/patients/users-with-patients`,
+    PATIENTS_BY_USER: `${API_CONFIG.BACKEND_URL_NEW}/api/patients/by-user`,
   }
 };

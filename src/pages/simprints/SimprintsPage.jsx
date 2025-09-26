@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faUser, faSpinner, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
+import { testApiConnection } from '../../utils/apiTest';
 
 const SimprintsPage = () => {
   const [users, setUsers] = useState([]);
@@ -13,198 +14,134 @@ const SimprintsPage = () => {
   }, []);
 
   const fetchUsersData = async () => {
+    const startTime = performance.now();
     try {
       setLoading(true);
       setError(null);
 
-      console.log('Fetching from URL:', API_ENDPOINTS.NEW.USERS);
-      console.log('API Config:', API_CONFIG);
+      console.log('🔧 Environment Configuration:');
+      console.log('- REACT_APP_BACKEND_URL_NEW:', process.env.REACT_APP_BACKEND_URL_NEW);
+      console.log('- API_CONFIG.BACKEND_URL_NEW:', API_CONFIG.BACKEND_URL_NEW);
+      console.log('- Users endpoint:', API_ENDPOINTS.NEW.USERS);
+      console.log('- Users with patients endpoint:', `${API_CONFIG.BACKEND_URL_NEW}/api/patients/users-with-patients`);
+      console.log('Starting data fetch at:', new Date().toISOString());
+      
+      // Run API connection test for diagnostics
+      await testApiConnection();
 
-      // Fetch users from the new backend
-      const usersResponse = await fetch(API_ENDPOINTS.NEW.USERS);
-      if (!usersResponse.ok) {
-        throw new Error(`Failed to fetch users: ${usersResponse.status}`);
-      }
-      const usersData = await usersResponse.json();
-      console.log('Users data:', usersData);
+      // Add timeout to prevent hanging requests
+      const fetchWithTimeout = (url, timeout = 30000) => {
+        return Promise.race([
+          fetch(url),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
 
-      // Try getting patient counts per user more efficiently
-      let allPatientsData = [];
+      // Use the all-patients endpoint which includes vaccination and diagnosis data
+      console.log('🚀 Using all-patients endpoint with full data...');
       
       try {
-        // First, try to get a smaller sample to understand the data structure
-        const sampleResponse = await fetch(`${API_CONFIG.BACKEND_URL_NEW}/api/patients?populate=users_permissions_user&pagination[pageSize]=25&pagination[page]=1`);
-        if (sampleResponse.ok) {
-          const sampleData = await sampleResponse.json();
-          console.log('Sample patient data:', sampleData);
-          
-          // If we have users, let's get counts for each user individually
-          if (usersData && usersData.length > 0) {
-            const userPatientCounts = {};
-            const userVaccinationCounts = {};
-            const userDiagnosisCounts = {};
-            
-            // Get patient count for each user
-            for (const user of usersData) {
-              try {
-                const userPatientsResponse = await fetch(
-                  `${API_CONFIG.BACKEND_URL_NEW}/api/patients?filters[users_permissions_user][id][$eq]=${user.id}&populate=vaccinations,diagnoses&pagination[pageSize]=100`
-                );
-                if (userPatientsResponse.ok) {
-                  const userPatientsData = await userPatientsResponse.json();
-                  const patientCount = userPatientsData.meta?.pagination?.total || 0;
-                  
-                  // Count vaccinations and diagnoses for this user
-                  let vaccinationCount = 0;
-                  let diagnosisCount = 0;
-                  if (userPatientsData.data) {
-                    userPatientsData.data.forEach(patient => {
-                      if (patient.attributes?.vaccinations && Array.isArray(patient.attributes.vaccinations)) {
-                        vaccinationCount += patient.attributes.vaccinations.length;
-                      }
-                      if (patient.attributes?.diagnoses && Array.isArray(patient.attributes.diagnoses)) {
-                        diagnosisCount += patient.attributes.diagnoses.length;
-                      }
-                    });
-                  }
-                  
-                  userPatientCounts[user.id] = patientCount;
-                  userVaccinationCounts[user.id] = vaccinationCount;
-                  userDiagnosisCounts[user.id] = diagnosisCount;
-                  console.log(`User ${user.id} (${user.firstName} ${user.lastName}) has ${patientCount} patients, ${vaccinationCount} vaccinations, and ${diagnosisCount} diagnoses`);
-                }
-              } catch (err) {
-                console.warn(`Failed to get count for user ${user.id}:`, err);
-                userPatientCounts[user.id] = 0;
-                userVaccinationCounts[user.id] = 0;
-                userDiagnosisCounts[user.id] = 0;
-              }
-            }
-            
-            console.log('Patient counts per user:', userPatientCounts);
-            console.log('Vaccination counts per user:', userVaccinationCounts);
-            console.log('Diagnosis counts per user:', userDiagnosisCounts);
-            
-            // Combine user data with patient counts
-            const usersWithPatientCounts = usersData.map(user => ({
-              ...user,
-              patientCount: userPatientCounts[user.id] || 0,
-              vaccinationCount: userVaccinationCounts[user.id] || 0,
-              diagnosisCount: userDiagnosisCounts[user.id] || 0,
-              fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A'
-            }));
-
-            // Sort by patient count (descending)
-            usersWithPatientCounts.sort((a, b) => b.patientCount - a.patientCount);
-
-            setUsers(usersWithPatientCounts);
-            return; // Exit early since we got the data efficiently
-          }
-        }
-      } catch (err) {
-        console.warn('Efficient counting failed, falling back to full fetch:', err);
-      }
-      
-      // Fallback: fetch all patients (original method)
-      try {
-        let page = 1;
-        let hasMorePages = true;
+        const [usersResponse, allPatientsResponse] = await Promise.all([
+          fetchWithTimeout(API_ENDPOINTS.NEW.USERS),
+          fetchWithTimeout(API_ENDPOINTS.NEW.ALL_PATIENTS)
+        ]);
         
-        while (hasMorePages && page <= 5) { // Limit to 5 pages max
-          const patientsResponse = await fetch(`${API_CONFIG.BACKEND_URL_NEW}/api/patients?populate=users_permissions_user,vaccinations,diagnoses&pagination[pageSize]=100&pagination[page]=${page}`);
-          if (patientsResponse.ok) {
-            const pageData = await patientsResponse.json();
+        if (!usersResponse.ok) {
+          throw new Error(`Failed to fetch users: ${usersResponse.status}`);
+        }
+
+        const usersData = await usersResponse.json();
+        console.log('✅ Users data:', usersData);
+        
+        let allPatientsData = [];
+        if (allPatientsResponse.ok) {
+          const patientsData = await allPatientsResponse.json();
+          allPatientsData = patientsData; // all-patients returns array directly, not wrapped in data
+          console.log(`✅ All patients data: ${allPatientsData.length} patients`);
+        } else {
+          console.warn('Failed to fetch all-patients, will show users with 0 counts');
+        }
+
+        // Process the data to count patients, vaccinations, and diagnoses per user
+        const userStats = {};
+        
+        if (Array.isArray(allPatientsData)) {
+          allPatientsData.forEach((userWithPatients) => {
+            const userId = userWithPatients.id;
+            const patients = userWithPatients.patients || [];
             
-            if (pageData.data && pageData.data.length > 0) {
-              allPatientsData = allPatientsData.concat(pageData.data);
+            let vaccinationCount = 0;
+            let diagnosisCount = 0;
+            
+            patients.forEach(patient => {
+              // Count vaccinations for this patient
+              if (patient.vaccinations && Array.isArray(patient.vaccinations)) {
+                vaccinationCount += patient.vaccinations.length;
+              }
               
-              // Check if there are more pages
-              if (pageData.meta?.pagination) {
-                const { pageCount } = pageData.meta.pagination;
-                hasMorePages = page < pageCount;
-                page++;
-              } else {
-                hasMorePages = false;
+              // Count diagnoses for this patient
+              if (patient.diagnoses && Array.isArray(patient.diagnoses)) {
+                diagnosisCount += patient.diagnoses.length;
               }
-            } else {
-              hasMorePages = false;
-            }
-          } else {
-            console.warn(`Failed to fetch page ${page}:`, patientsResponse.status);
-            hasMorePages = false;
-          }
+            });
+            
+            userStats[userId] = {
+              patientCount: patients.length,
+              vaccinationCount,
+              diagnosisCount
+            };
+          });
         }
         
-        console.log(`Total patients fetched: ${allPatientsData.length}`);
+        console.log('📊 User statistics calculated:', userStats);
+        
+        // Combine user data with statistics
+        const enhancedUsers = usersData.map(user => {
+          const stats = userStats[user.id] || { patientCount: 0, vaccinationCount: 0, diagnosisCount: 0 };
+          return {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email,
+            patientCount: stats.patientCount,
+            vaccinationCount: stats.vaccinationCount,
+            diagnosisCount: stats.diagnosisCount,
+            fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A'
+          };
+        });
+        
+        // Sort by patient count (descending)
+        enhancedUsers.sort((a, b) => b.patientCount - a.patientCount);
+        
+        // Calculate and log final statistics
+        const totalPatients = enhancedUsers.reduce((sum, user) => sum + user.patientCount, 0);
+        const totalVaccinations = enhancedUsers.reduce((sum, user) => sum + user.vaccinationCount, 0);
+        const totalDiagnoses = enhancedUsers.reduce((sum, user) => sum + user.diagnosisCount, 0);
+        
+        console.log('📊 Final Statistics:');
+        console.log(`- Total Users: ${enhancedUsers.length}`);
+        console.log(`- Total Patients: ${totalPatients}`);
+        console.log(`- Total Vaccinations: ${totalVaccinations}`);
+        console.log(`- Total Diagnoses: ${totalDiagnoses}`);
+        
+        // Show top users
+        console.log('🏆 Top 5 users by patient count:');
+        enhancedUsers.slice(0, 5).forEach((user, index) => {
+          console.log(`${index + 1}. ${user.fullName}: ${user.patientCount} patients, ${user.vaccinationCount} vaccinations, ${user.diagnosisCount} diagnoses`);
+        });
+        
+        setUsers(enhancedUsers);
         
       } catch (err) {
-        console.warn('patients endpoint failed, trying alternatives...', err);
-        
-        // Try all-patients endpoint as alternative
-        try {
-          const patientsResponse = await fetch(API_ENDPOINTS.NEW.ALL_PATIENTS);
-          if (patientsResponse.ok) {
-            const patientsData = await patientsResponse.json();
-            allPatientsData = patientsData.data || patientsData;
-          }
-        } catch (err2) {
-          console.warn('all-patients endpoint also failed', err2);
-        }
-      }
-
-      // Count patients per user - handle Strapi data structure
-      const userPatientCounts = {};
-      const userVaccinationCounts = {};
-      const userDiagnosisCounts = {};
-      
-      if (Array.isArray(allPatientsData)) {
-        allPatientsData.forEach((patient) => {
-          // Handle Strapi format with populated user data
-          let userId = null;
-          if (patient.attributes?.users_permissions_user?.id) {
-            userId = patient.attributes.users_permissions_user.id;
-          } else if (patient.attributes?.user?.data?.id) {
-            userId = patient.attributes.user.data.id;
-          } else if (patient.attributes?.createdBy?.id) {
-            userId = patient.attributes.createdBy.id;
-          }
-          
-          if (userId) {
-            userPatientCounts[userId] = (userPatientCounts[userId] || 0) + 1;
-            
-            // Count vaccinations for this patient
-            if (patient.attributes?.vaccinations && Array.isArray(patient.attributes.vaccinations)) {
-              userVaccinationCounts[userId] = (userVaccinationCounts[userId] || 0) + patient.attributes.vaccinations.length;
-            }
-            
-            // Count diagnoses for this patient
-            if (patient.attributes?.diagnoses && Array.isArray(patient.attributes.diagnoses)) {
-              userDiagnosisCounts[userId] = (userDiagnosisCounts[userId] || 0) + patient.attributes.diagnoses.length;
-            }
-          }
-        });
+        console.error('Error fetching SIMPRINTS data:', err);
+        setError(err.message);
       }
       
-      console.log('Patient counts per user:', userPatientCounts);
-      console.log('Vaccination counts per user:', userVaccinationCounts);
-      console.log('Diagnosis counts per user:', userDiagnosisCounts);
-
-      // Combine user data with patient counts
-      const usersWithPatientCounts = usersData.map(user => ({
-        ...user,
-        patientCount: userPatientCounts[user.id] || 0,
-        vaccinationCount: userVaccinationCounts[user.id] || 0,
-        diagnosisCount: userDiagnosisCounts[user.id] || 0,
-        fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A'
-      }));
-
-      // Sort by patient count (descending)
-      usersWithPatientCounts.sort((a, b) => b.patientCount - a.patientCount);
-
-      setUsers(usersWithPatientCounts);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError(err.message);
+      const endTime = performance.now();
+      console.log(`✅ SIMPRINTS data loaded successfully in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
     } finally {
       setLoading(false);
     }
