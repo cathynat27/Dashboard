@@ -14,6 +14,7 @@ import {
   faSyringe,
   faBaby,
   faStethoscope,
+  faHospital,
 } from "@fortawesome/free-solid-svg-icons";
 import { FiSettings } from "react-icons/fi";
 
@@ -42,6 +43,12 @@ const initMenu = [
     label: "SIMPRINTS 2025",
     path: "/simprints",
     icon: faUsers,
+  },
+
+  {
+    label: "MITYANA PROJECT",
+    path: "/mityana",
+    icon: faHospital,
   },
 
   { label: "Services" },
