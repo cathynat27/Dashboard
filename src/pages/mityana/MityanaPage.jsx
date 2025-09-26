@@ -8,8 +8,8 @@ const MityanaPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Define the user ID range for Mityana Project (197-213)
-  const MITYANA_USER_IDS = Array.from({ length: 17 }, (_, i) => 197 + i);
+  // Define the user IDs for Mityana Project (88, 197-213)
+  const MITYANA_USER_IDS = [88, ...Array.from({ length: 17 }, (_, i) => 197 + i)];
 
   useEffect(() => {
     fetchMityanaData();
@@ -21,7 +21,7 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-213');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 88, 197-213');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
@@ -168,7 +168,6 @@ const MityanaPage = () => {
   const totalVaccinations = users.reduce((sum, user) => sum + (user.vaccinationCount || 0), 0);
   const totalDiagnoses = users.reduce((sum, user) => sum + (user.diagnosisCount || 0), 0);
   const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
-  const avgPatientsPerUser = users.length > 0 ? (totalPatients / users.length).toFixed(1) : 0;
 
   return (
     <div className="p-6">
@@ -182,7 +181,7 @@ const MityanaPage = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
@@ -219,16 +218,6 @@ const MityanaPage = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Diagnoses</p>
               <p className="text-2xl font-bold text-gray-900">{totalDiagnoses}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <FontAwesomeIcon icon={faUsers} className="text-3xl text-purple-600 mr-4" />
-            <div>
-              <p className="text-sm font-medium text-gray-600">Avg Patients/User</p>
-              <p className="text-2xl font-bold text-gray-900">{avgPatientsPerUser}</p>
             </div>
           </div>
         </div>
