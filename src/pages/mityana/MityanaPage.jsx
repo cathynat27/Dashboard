@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser, faSpinner, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 const MityanaPage = () => {
@@ -25,8 +25,11 @@ const MityanaPage = () => {
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
-      // Fetch all patients data from the old backend
-      const patientsResponse = await fetch(API_ENDPOINTS.OLD.ALL_PATIENTS);
+      // Fetch patients and payments data in parallel
+      const [patientsResponse, paymentsResponse] = await Promise.all([
+        fetch(API_ENDPOINTS.OLD.ALL_PATIENTS),
+        fetch(API_ENDPOINTS.OLD.PAYMENTS)
+      ]);
       
       if (!patientsResponse.ok) {
         throw new Error(`Failed to fetch patients: ${patientsResponse.status}`);
@@ -35,6 +38,16 @@ const MityanaPage = () => {
       const allUsersData = await patientsResponse.json();
       console.log('Total users from backend:', allUsersData.length);
 
+      // Process payments data
+      let allPayments = [];
+      if (paymentsResponse.ok) {
+        const paymentsData = await paymentsResponse.json();
+        allPayments = paymentsData.data || paymentsData || [];
+        console.log('Total payments from backend:', allPayments.length);
+      } else {
+        console.warn('Failed to fetch payments data:', paymentsResponse.status);
+      }
+
       // Filter users by the Mityana Project user IDs (197-213)
       const mityanaUsers = allUsersData.filter(user => 
         MITYANA_USER_IDS.includes(user.id)
@@ -42,7 +55,7 @@ const MityanaPage = () => {
 
       console.log('Filtered Mityana users:', mityanaUsers.length);
 
-      // Process each user to get patient counts, vaccinations, and diagnoses
+      // Process each user to get patient counts, vaccinations, diagnoses, and payments
       const processedUsers = mityanaUsers.map(user => {
         const patients = user.patients || [];
         
@@ -62,16 +75,45 @@ const MityanaPage = () => {
           }
         });
 
+        // Calculate total payments for this user
+        // Match payments by user_name with user's names or username
+        const userName = user.username;
+        const firstName = user.firstName || '';
+        const lastName = user.lastName || '';
+        const fullName = `${firstName} ${lastName}`.trim();
+        
+        const userPayments = allPayments.filter(payment => {
+          if (!payment.attributes && !payment.user_name) return false;
+          
+          const paymentUserName = payment.attributes?.user_name || payment.user_name;
+          if (!paymentUserName) return false;
+          
+          // Match by username, full name, or individual names
+          return paymentUserName.toLowerCase() === userName?.toLowerCase() ||
+                 paymentUserName.toLowerCase() === fullName.toLowerCase() ||
+                 paymentUserName.toLowerCase().includes(firstName.toLowerCase()) ||
+                 paymentUserName.toLowerCase().includes(lastName.toLowerCase());
+        });
+
+        const totalPayments = userPayments.reduce((sum, payment) => {
+          const amount = payment.attributes?.amount || payment.amount || 0;
+          return sum + parseFloat(amount);
+        }, 0);
+
+        console.log(`User ${userName} (${fullName}) has ${userPayments.length} payments totaling ${totalPayments} UGX`);
+
         return {
           id: user.id,
           username: user.username,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'N/A',
+          fullName: fullName || user.username || 'N/A',
           patientCount: patients.length,
           vaccinationCount: totalVaccinations,
           diagnosisCount: totalDiagnoses,
+          paymentCount: userPayments.length,
+          totalPayments: totalPayments,
           patients: patients
         };
       });
@@ -125,6 +167,7 @@ const MityanaPage = () => {
   const totalPatients = users.reduce((sum, user) => sum + user.patientCount, 0);
   const totalVaccinations = users.reduce((sum, user) => sum + (user.vaccinationCount || 0), 0);
   const totalDiagnoses = users.reduce((sum, user) => sum + (user.diagnosisCount || 0), 0);
+  const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
   const avgPatientsPerUser = users.length > 0 ? (totalPatients / users.length).toFixed(1) : 0;
 
   return (
@@ -139,7 +182,7 @@ const MityanaPage = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
@@ -189,6 +232,16 @@ const MityanaPage = () => {
             </div>
           </div>
         </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faCreditCard} className="text-3xl text-green-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Payments</p>
+              <p className="text-2xl font-bold text-gray-900">{totalPayments.toLocaleString()} UGX</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Users Table */}
@@ -218,6 +271,9 @@ const MityanaPage = () => {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Diagnoses
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payments (UGX)
                 </th>
               </tr>
             </thead>
@@ -286,6 +342,21 @@ const MityanaPage = () => {
                           className="bg-red-500 h-2 rounded-full"
                           style={{
                             width: totalDiagnoses > 0 ? `${((user.diagnosisCount || 0) / Math.max(...users.map(u => u.diagnosisCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.totalPayments ? user.totalPayments.toLocaleString() : '0'}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-green-500 h-2 rounded-full"
+                          style={{
+                            width: totalPayments > 0 ? `${((user.totalPayments || 0) / Math.max(...users.map(u => u.totalPayments || 0), 1)) * 100}%` : '0%'
                           }}
                         ></div>
                       </div>

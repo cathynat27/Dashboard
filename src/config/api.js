@@ -10,6 +10,8 @@ export const API_ENDPOINTS = {
   OLD: {
     ALL_PATIENTS: `${API_CONFIG.BACKEND_URL_OLD}/api/all-patients`,
     AUTH_REGISTER: `${API_CONFIG.BACKEND_URL_OLD}/api/auth/local/register`,
+    PAYMENTS: `${API_CONFIG.BACKEND_URL_OLD}/api/payments`,
+    PAYMENTS_BY_USER: `${API_CONFIG.BACKEND_URL_OLD}/api/payments/user`,
   },
   // New backend endpoints  
   NEW: {
