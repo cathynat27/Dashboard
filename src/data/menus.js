@@ -28,7 +28,7 @@ const initMenu = [
   { label: "Records" },
 
   {
-    label: "NASF CHPs",
+    label: "NASF PROJECT",
     path: "/nafschpactivity",
     icon: faUserMd,
   },

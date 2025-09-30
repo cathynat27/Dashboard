@@ -124,18 +124,7 @@ const NafsUserActivity = () => {
             <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
               Vaccinations: {user.numberOfVaccinations}
             </h3>
-            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-              Renal Histories: {user.numberOfRenalHistories}
-            </h3>
-            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-              RFTs: {user.numberOfRfts}
-            </h3>
-            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-              Monitorings: {user.numberOfMonitorings}
-            </h3>
-            <h3 className="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">
-              Renal Drugs: {user.numberOfDrugs}
-            </h3>
+           
             <Link
               className="flex p-6"
               to="/chat"
