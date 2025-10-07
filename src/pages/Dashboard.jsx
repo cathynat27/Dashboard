@@ -40,6 +40,7 @@ function Dashboard() {
   const [drugsAfterCutoffCount, setDrugsAfterCutoffCount] = useState(0);
 
   const cutOffDate = new Date("2024-10-07T00:00:00Z");
+  const endDate = new Date("2025-05-01T23:59:59Z");
 
   const fetchData = async () => {
     try {
@@ -53,86 +54,86 @@ function Dashboard() {
       const allPatients = patientsData.map((user) => user.patients).flat();
       setTotalPatients(allPatients.length);
   
-      // Filter patients created after the cutoff date
+      // Filter patients created within the date range (Oct 2024 - May 2025)
       const filteredNafsProjectData = allPatients.filter((patient) => {
         const patientDate = new Date(patient.createdAt);
-        return patientDate >= cutOffDate;
+        return patientDate >= cutOffDate && patientDate <= endDate;
       });
   
       const totalNafsPatients = filteredNafsProjectData.length;
   
-      // Count diagnoses added after the cutoff date (regardless of patient registration date)
+      // Count diagnoses added within the date range (regardless of patient registration date)
       const diagnosesAfterCutoff = allPatients.reduce((count, patient) => {
         const patientDiagnoses = patient.diagnoses || [];
         const validDiagnoses = patientDiagnoses.filter((diagnosis) => {
           const diagnosisDate = new Date(diagnosis.createdAt);
-          return diagnosisDate >= cutOffDate;
+          return diagnosisDate >= cutOffDate && diagnosisDate <= endDate;
         });
         return count + validDiagnoses.length;
       }, 0);
       setDiagnosesAfterCutoffCount(diagnosesAfterCutoff);
   
-      // Count vaccinations added after the cutoff date (regardless of patient registration date)
+      // Count vaccinations added within the date range (regardless of patient registration date)
       const vaccinationsAfterCutoff = allPatients.reduce((count, patient) => {
         const patientVaccinations = patient.vaccinations || [];
         const validVaccinations = patientVaccinations.filter((vaccination) => {
           const vaccinationDate = new Date(vaccination.createdAt);
-          return vaccinationDate >= cutOffDate;
+          return vaccinationDate >= cutOffDate && vaccinationDate <= endDate;
         });
         return count + validVaccinations.length;
       }, 0);
       setVaccinationsAfterCutoffCount(vaccinationsAfterCutoff);
   
-      // Count antenatals added after the cutoff date
+      // Count antenatals added within the date range
       const antenantalsAfterCutoff = allPatients.reduce((count, patient) => {
         const patientAntenantals = patient.antenantals || [];
         const validAntenantals = patientAntenantals.filter((antenatal) => {
           const antenatalDate = new Date(antenatal.createdAt);
-          return antenatalDate >= cutOffDate;
+          return antenatalDate >= cutOffDate && antenatalDate <= endDate;
         });
         return count + validAntenantals.length;
       }, 0);
       setAntenantalsAfterCutoffCount(antenantalsAfterCutoff);
   
-      // Count renal histories added after the cutoff date
+      // Count renal histories added within the date range
       const renalHistoriesAfterCutoff = allPatients.reduce((count, patient) => {
         const patientRenalHistories = patient.renal_histories || [];
         const validRenalHistories = patientRenalHistories.filter((renalHistory) => {
           const renalHistoryDate = new Date(renalHistory.createdAt);
-          return renalHistoryDate >= cutOffDate;
+          return renalHistoryDate >= cutOffDate && renalHistoryDate <= endDate;
         });
         return count + validRenalHistories.length;
       }, 0);
       setRenalHistoriesAfterCutoffCount(renalHistoriesAfterCutoff);
   
-      // Count RFTs added after the cutoff date
+      // Count RFTs added within the date range
       const rftsAfterCutoff = allPatients.reduce((count, patient) => {
         const patientRFTs = patient.rfts || [];
         const validRFTs = patientRFTs.filter((rft) => {
           const rftDate = new Date(rft.createdAt);
-          return rftDate >= cutOffDate;
+          return rftDate >= cutOffDate && rftDate <= endDate;
         });
         return count + validRFTs.length;
       }, 0);
       setRFTsAfterCutoffCount(rftsAfterCutoff);
   
-      // Count monitorings added after the cutoff date
+      // Count monitorings added within the date range
       const monitoringsAfterCutoff = allPatients.reduce((count, patient) => {
         const patientMonitorings = patient.monitorings || [];
         const validMonitorings = patientMonitorings.filter((monitoring) => {
           const monitoringDate = new Date(monitoring.createdAt);
-          return monitoringDate >= cutOffDate;
+          return monitoringDate >= cutOffDate && monitoringDate <= endDate;
         });
         return count + validMonitorings.length;
       }, 0);
       setMonitoringsAfterCutoffCount(monitoringsAfterCutoff);
   
-      // Count drugs added after the cutoff date
+      // Count drugs added within the date range
       const drugsAfterCutoff = allPatients.reduce((count, patient) => {
         const patientDrugs = patient.drugs || [];
         const validDrugs = patientDrugs.filter((drug) => {
           const drugDate = new Date(drug.createdAt);
-          return drugDate >= cutOffDate;
+          return drugDate >= cutOffDate && drugDate <= endDate;
         });
         return count + validDrugs.length;
       }, 0);
