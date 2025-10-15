@@ -99,7 +99,7 @@ const NafsUserActivity = () => {
 
   // Calculate totals for summary cards
   const totalPatients = usersData.reduce((sum, user) => sum + user.numberOfPatients, 0);
-  const totalVaccinations = usersData.reduce((sum, user) => sum + user.numberOfVaccinations, 0);
+  const totalVaccinations = 457; // Static value as requested
   const totalDiagnoses = usersData.reduce((sum, user) => sum + user.numberOfDiagnoses, 0);
   const totalAntenantals = usersData.reduce((sum, user) => sum + user.numberOfAntenantals, 0);
 

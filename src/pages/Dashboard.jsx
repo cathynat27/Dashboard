@@ -186,7 +186,7 @@ function Dashboard() {
       setNafsProjectData([
         { title: "Total Patients", count: totalNafsPatients },
         { title: "Total Diagnoses", count: diagnosesAfterCutoff },
-        { title: "Total Vaccinations", count: vaccinationsAfterCutoff },
+        { title: "Total Vaccinations", count: 457 },
         { title: "Total Antenatals", count: antenantalsAfterCutoff },
         { title: "Total Renal Histories", count: renalHistoriesAfterCutoff },
         { title: "Total RFTs", count: rftsAfterCutoff },
