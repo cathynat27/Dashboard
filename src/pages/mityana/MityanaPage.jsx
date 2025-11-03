@@ -180,6 +180,15 @@ const MityanaPage = () => {
         <p className="text-gray-600">Overview of Mityana Project users</p>
       </div>
 
+      {/* Mityana Image Banner */}
+      <div className="mb-8">
+        <img 
+          src="/mityana.png" 
+          alt="Mityana Project" 
+          className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
+        />
+      </div>
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
