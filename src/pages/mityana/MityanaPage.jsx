@@ -8,8 +8,8 @@ const MityanaPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Define the user IDs for Mityana Project (88, 197-213)
-  const MITYANA_USER_IDS = [88, ...Array.from({ length: 17 }, (_, i) => 197 + i)];
+  // Define the user IDs for Mityana Project (88, 197-217, 226)
+  const MITYANA_USER_IDS = [88, ...Array.from({ length: 21 }, (_, i) => 197 + i), 226];
 
   useEffect(() => {
     fetchMityanaData();
@@ -21,7 +21,7 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 88, 197-213');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 88, 197-217, 226');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
@@ -48,7 +48,7 @@ const MityanaPage = () => {
         console.warn('Failed to fetch payments data:', paymentsResponse.status);
       }
 
-      // Filter users by the Mityana Project user IDs (197-213)
+      // Filter users by the Mityana Project user IDs (88, 197-217, 226)
       const mityanaUsers = allUsersData.filter(user => 
         MITYANA_USER_IDS.includes(user.id)
       );
@@ -177,7 +177,7 @@ const MityanaPage = () => {
           <FontAwesomeIcon icon={faUsers} className="mr-3 text-green-600" />
           MITYANA PROJECT
         </h1>
-        <p className="text-gray-600">Overview of Mityana Project users (IDs 197-213) and their patient assignments</p>
+        <p className="text-gray-600">Overview of Mityana Project users</p>
       </div>
 
       {/* Summary Cards */}
@@ -360,7 +360,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project users found (IDs 197-213)</p>
+            <p className="text-gray-500">No Mityana Project users found (IDs 88, 197-217, 226)</p>
           </div>
         )}
       </div>
