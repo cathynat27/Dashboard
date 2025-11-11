@@ -177,7 +177,7 @@ const MityanaPage = () => {
           <FontAwesomeIcon icon={faUsers} className="mr-3 text-green-600" />
           MITYANA PROJECT
         </h1>
-        <p className="text-gray-600">Overview of Mityana Project users</p>
+        <p className="text-gray-600">Overview of Mityana Project CHPs</p>
       </div>
 
       {/* Mityana Image Banner */}
@@ -195,7 +195,7 @@ const MityanaPage = () => {
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Users</p>
+              <p className="text-sm font-medium text-gray-600">Total CHPs</p>
               <p className="text-2xl font-bold text-gray-900">{users.length}</p>
             </div>
           </div>
@@ -245,7 +245,7 @@ const MityanaPage = () => {
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Users, Patient Counts, Vaccinations, and Diagnoses</h2>
+          <h2 className="text-xl font-semibold text-gray-900">CHPs, Patient Counts, Vaccinations, and Diagnoses</h2>
         </div>
         
         <div className="overflow-x-auto">
@@ -369,7 +369,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project users found (IDs 197-217, 226)</p>
+            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226)</p>
           </div>
         )}
       </div>
