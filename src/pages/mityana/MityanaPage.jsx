@@ -8,8 +8,8 @@ const MityanaPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Define the user IDs for Mityana Project (88, 197-217, 226)
-  const MITYANA_USER_IDS = [88, ...Array.from({ length: 21 }, (_, i) => 197 + i), 226];
+  // Define the user IDs for Mityana Project (197-217, 226)
+  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226];
 
   useEffect(() => {
     fetchMityanaData();
@@ -21,7 +21,7 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 88, 197-217, 226');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
@@ -48,7 +48,7 @@ const MityanaPage = () => {
         console.warn('Failed to fetch payments data:', paymentsResponse.status);
       }
 
-      // Filter users by the Mityana Project user IDs (88, 197-217, 226)
+      // Filter users by the Mityana Project user IDs (197-217, 226)
       const mityanaUsers = allUsersData.filter(user => 
         MITYANA_USER_IDS.includes(user.id)
       );
@@ -253,7 +253,7 @@ const MityanaPage = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User ID
+                  No.
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
@@ -276,10 +276,10 @@ const MityanaPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #{user.id}
+                    {index + 1}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -369,7 +369,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project users found (IDs 88, 197-217, 226)</p>
+            <p className="text-gray-500">No Mityana Project users found (IDs 197-217, 226)</p>
           </div>
         )}
       </div>
