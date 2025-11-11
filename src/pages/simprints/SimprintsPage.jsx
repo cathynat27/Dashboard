@@ -215,7 +215,7 @@ const SimprintsPage = () => {
           <FontAwesomeIcon icon={faUsers} className="mr-3 text-blue-600" />
           SIMPRINTS 2025
         </h1>
-        <p className="text-gray-600">Overview of users and their patient assignments</p>
+        <p className="text-gray-600">Overview of CHPs and their patient assignments</p>
       </div>
 
       {/* Summary Cards */}
@@ -224,7 +224,7 @@ const SimprintsPage = () => {
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-blue-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Users</p>
+              <p className="text-sm font-medium text-gray-600">Total CHPs</p>
               <p className="text-2xl font-bold text-gray-900">{users.length}</p>
             </div>
           </div>
@@ -288,7 +288,7 @@ const SimprintsPage = () => {
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Users, Patient Counts, Vaccinations, and Diagnoses</h2>
+          <h2 className="text-xl font-semibold text-gray-900">CHPs, Patient Counts, Vaccinations, and Diagnoses</h2>
         </div>
         
         <div className="overflow-x-auto">
@@ -394,7 +394,7 @@ const SimprintsPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No users found</p>
+            <p className="text-gray-500">No CHPs found</p>
           </div>
         )}
       </div>
