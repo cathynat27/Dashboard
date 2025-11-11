@@ -5,7 +5,7 @@ import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 import { testApiConnection } from '../../utils/apiTest';
 
 const SimprintsPage = () => {
-  const [users, setUsers] = useState([]);
+  const [data, setData] = useState({ users: [], doseCounts: { dose1: 0, dose2: 0, dose3: 0, dose4: 0 } });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -64,8 +64,9 @@ const SimprintsPage = () => {
           console.warn('Failed to fetch all-patients, will show users with 0 counts');
         }
 
-        // Process the data to count patients, vaccinations, and diagnoses per user
+        // Process the data to count patients, vaccinations, diagnoses and doses per user
         const userStats = {};
+        const doseCounts = { dose1: 0, dose2: 0, dose3: 0, dose4: 0 };
         
         if (Array.isArray(allPatientsData)) {
           allPatientsData.forEach((userWithPatients) => {
@@ -79,6 +80,28 @@ const SimprintsPage = () => {
               // Count vaccinations for this patient
               if (patient.vaccinations && Array.isArray(patient.vaccinations)) {
                 vaccinationCount += patient.vaccinations.length;
+                
+                // Count doses - check multiple possible fields
+                patient.vaccinations.forEach(vaccination => {
+                  // Check various possible field names for dose
+                  const dose = vaccination.dose || 
+                               vaccination.attributes?.dose || 
+                               vaccination.doseNumber ||
+                               vaccination.attributes?.doseNumber ||
+                               vaccination.dose_number ||
+                               vaccination.attributes?.dose_number;
+                  
+                  // Log first few vaccinations to understand structure
+                  if (doseCounts.dose1 === 0 && doseCounts.dose2 === 0 && doseCounts.dose3 === 0) {
+                    console.log('Sample vaccination:', vaccination);
+                  }
+                  
+                  const doseNum = parseInt(dose);
+                  if (doseNum === 1 || dose === '1' || dose === '1st') doseCounts.dose1++;
+                  else if (doseNum === 2 || dose === '2' || dose === '2nd') doseCounts.dose2++;
+                  else if (doseNum === 3 || dose === '3' || dose === '3rd') doseCounts.dose3++;
+                  else if (doseNum === 4 || dose === '4' || dose === '4th') doseCounts.dose4++;
+                });
               }
               
               // Count diagnoses for this patient
@@ -94,6 +117,8 @@ const SimprintsPage = () => {
             };
           });
         }
+        
+        console.log('💉 Vaccination Dose Counts:', doseCounts);
         
         console.log('📊 User statistics calculated:', userStats);
         
@@ -126,6 +151,7 @@ const SimprintsPage = () => {
         console.log(`- Total Patients: ${totalPatients}`);
         console.log(`- Total Vaccinations: ${totalVaccinations}`);
         console.log(`- Total Diagnoses: ${totalDiagnoses}`);
+        console.log(`- Dose Breakdown: 1st: ${doseCounts.dose1}, 2nd: ${doseCounts.dose2}, 3rd: ${doseCounts.dose3}, 4th: ${doseCounts.dose4}`);
         
         // Show top users
         console.log('🏆 Top 5 users by patient count:');
@@ -133,7 +159,7 @@ const SimprintsPage = () => {
           console.log(`${index + 1}. ${user.fullName}: ${user.patientCount} patients, ${user.vaccinationCount} vaccinations, ${user.diagnosisCount} diagnoses`);
         });
         
-        setUsers(enhancedUsers);
+        setData({ users: enhancedUsers, doseCounts });
         
       } catch (err) {
         console.error('Error fetching SIMPRINTS data:', err);
@@ -176,6 +202,8 @@ const SimprintsPage = () => {
     );
   }
 
+  const users = data.users;
+  const doseCounts = data.doseCounts;
   const totalPatients = users.reduce((sum, user) => sum + user.patientCount, 0);
   const totalVaccinations = users.reduce((sum, user) => sum + (user.vaccinationCount || 0), 0);
   const totalDiagnoses = users.reduce((sum, user) => sum + (user.diagnosisCount || 0), 0);
@@ -223,23 +251,35 @@ const SimprintsPage = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center">
-            <FontAwesomeIcon icon={faUser} className="text-3xl text-red-600 mr-4" />
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Diagnoses</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDiagnoses}</p>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-3">Vaccination Doses</p>
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">1st Dose:</span>
+                <span className="text-sm font-bold text-blue-600">{doseCounts.dose1}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">2nd Dose:</span>
+                <span className="text-sm font-bold text-green-600">{doseCounts.dose2}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">3rd Dose:</span>
+                <span className="text-sm font-bold text-orange-600">{doseCounts.dose3}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-600">4th Dose:</span>
+                <span className="text-sm font-bold text-purple-600">{doseCounts.dose4}</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faUsers} className="text-3xl text-purple-600 mr-4" />
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-red-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Avg Patients/User</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {users.length > 0 ? (totalPatients / users.length).toFixed(1) : '0'}
-              </p>
+              <p className="text-sm font-medium text-gray-600">Total Diagnoses</p>
+              <p className="text-2xl font-bold text-gray-900">{totalDiagnoses}</p>
             </div>
           </div>
         </div>
