@@ -13,6 +13,8 @@ const MityanaPage = () => {
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [showPatientsModal, setShowPatientsModal] = useState(false);
   const [selectedPatients, setSelectedPatients] = useState([]);
+  const [showReferralsModal, setShowReferralsModal] = useState(false);
+  const [selectedReferrals, setSelectedReferrals] = useState([]);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
   const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226, 88];
@@ -252,6 +254,22 @@ const MityanaPage = () => {
     setSelectedPatients([]);
   };
 
+  const handleReferralsClick = (user) => {
+    setSelectedUser(user);
+    // Filter patients who are referred
+    const referredPatients = (user.patients || []).filter(
+      patient => patient.isReferred === 'Yes' || patient.isReferred === 'yes' || patient.isReferred === true
+    );
+    setSelectedReferrals(referredPatients);
+    setShowReferralsModal(true);
+  };
+
+  const closeReferralsModal = () => {
+    setShowReferralsModal(false);
+    setSelectedUser(null);
+    setSelectedReferrals([]);
+  };
+
   const formatDateTime = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -373,7 +391,25 @@ const MityanaPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div 
+          className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            // Collect all referred patients from all users
+            const allReferrals = users.reduce((acc, user) => {
+              const referredPatients = (user.patients || [])
+                .filter(patient => patient.isReferred === 'Yes' || patient.isReferred === 'yes' || patient.isReferred === true)
+                .map(patient => ({
+                  ...patient,
+                  chpName: user.fullName || user.username,
+                  chpUsername: user.username
+                }));
+              return [...acc, ...referredPatients];
+            }, []);
+            setSelectedUser({ fullName: 'All CHPs', username: 'all-chps' });
+            setSelectedReferrals(allReferrals);
+            setShowReferralsModal(true);
+          }}
+        >
           <div className="flex items-center">
             <FontAwesomeIcon icon={faHandshake} className="text-3xl text-orange-600 mr-4" />
             <div>
@@ -825,6 +861,158 @@ const MityanaPage = () => {
             <div className="bg-gray-50 px-6 py-4 flex justify-end">
               <button
                 onClick={closePatientsModal}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Referrals Modal */}
+      {showReferralsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="bg-orange-600 text-white px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <FontAwesomeIcon icon={faHandshake} className="text-2xl mr-3" />
+                <div>
+                  <h2 className="text-xl font-bold">Referrals</h2>
+                  <p className="text-orange-100 text-sm">
+                    {selectedUser?.fullName || selectedUser?.username || 'User'} - {selectedReferrals.length} Referral{selectedReferrals.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={closeReferralsModal}
+                className="text-white hover:text-orange-200 transition-colors"
+              >
+                <FontAwesomeIcon icon={faTimes} className="text-2xl" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              {selectedReferrals.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          #
+                        </th>
+                        {selectedUser?.username === 'all-chps' && (
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            CHP
+                          </th>
+                        )}
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Patient Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Phone
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Village
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Gender
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Age
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Referred By
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <FontAwesomeIcon icon={faStethoscope} className="mr-1 text-blue-600" />
+                          Diabetes
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <FontAwesomeIcon icon={faHeartbeat} className="mr-1 text-red-600" />
+                          Hypertension
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {selectedReferrals.map((patient, index) => {
+                        const calculateAge = (dob) => {
+                          if (!dob) return 'N/A';
+                          const birthDate = new Date(dob);
+                          const today = new Date();
+                          let age = today.getFullYear() - birthDate.getFullYear();
+                          const monthDiff = today.getMonth() - birthDate.getMonth();
+                          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                          }
+                          return age;
+                        };
+
+                        const diabetesCount = (patient.diabetes_screenings || []).length;
+                        const hypertensionCount = (patient.hypertension_screenings || []).length;
+
+                        return (
+                          <tr key={patient.id || index} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              {index + 1}
+                            </td>
+                            {selectedUser?.username === 'all-chps' && (
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">
+                                {patient.chpName}
+                              </td>
+                            )}
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {patient.firstName} {patient.lastName}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.phoneNumber || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.village || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.sex || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {calculateAge(patient.dateOfBirth)}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-orange-600">
+                              {patient.referredBy || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                diabetesCount > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {diabetesCount}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                hypertensionCount > 0 ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {hypertensionCount}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FontAwesomeIcon icon={faHandshake} className="text-4xl text-gray-400 mb-4" />
+                  <p className="text-gray-500">No referrals found</p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex justify-end">
+              <button
+                onClick={closeReferralsModal}
                 className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
               >
                 Close
