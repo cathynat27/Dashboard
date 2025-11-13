@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt, faTimes, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt, faTimes, faClock, faHeartbeat, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 const MityanaPage = () => {
@@ -11,6 +11,8 @@ const MityanaPage = () => {
   const [userLoginLogs, setUserLoginLogs] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loadingLogs, setLoadingLogs] = useState(false);
+  const [showPatientsModal, setShowPatientsModal] = useState(false);
+  const [selectedPatients, setSelectedPatients] = useState([]);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
   const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226, 88];
@@ -203,6 +205,18 @@ const MityanaPage = () => {
     setUserLoginLogs([]);
   };
 
+  const handlePatientsClick = (user) => {
+    setSelectedUser(user);
+    setSelectedPatients(user.patients || []);
+    setShowPatientsModal(true);
+  };
+
+  const closePatientsModal = () => {
+    setShowPatientsModal(false);
+    setSelectedUser(null);
+    setSelectedPatients([]);
+  };
+
   const formatDateTime = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -361,7 +375,7 @@ const MityanaPage = () => {
                   Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Username
+                  Phone Number
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Patient Count
@@ -409,8 +423,12 @@ const MityanaPage = () => {
                     {user.username || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-900 mr-2">
+                    <div 
+                      className="flex items-center cursor-pointer hover:bg-green-50 rounded-lg p-2 -m-2 transition-colors"
+                      onClick={() => handlePatientsClick(user)}
+                      title="Click to view patients"
+                    >
+                      <span className="text-sm font-medium text-green-600 mr-2 hover:text-green-800">
                         {user.patientCount}
                       </span>
                       <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
@@ -614,6 +632,153 @@ const MityanaPage = () => {
             <div className="bg-gray-50 px-6 py-4 flex justify-end">
               <button
                 onClick={closeLoginModal}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Patients Details Modal */}
+      {showPatientsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="bg-green-600 text-white px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <FontAwesomeIcon icon={faUsers} className="text-2xl mr-3" />
+                <div>
+                  <h2 className="text-xl font-bold">Patients List</h2>
+                  <p className="text-green-100 text-sm">
+                    {selectedUser?.fullName || selectedUser?.username || 'User'} - {selectedPatients.length} Patient{selectedPatients.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={closePatientsModal}
+                className="text-white hover:text-green-200 transition-colors"
+              >
+                <FontAwesomeIcon icon={faTimes} className="text-2xl" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              {selectedPatients.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          #
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Phone
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Village
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Gender
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Age
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <FontAwesomeIcon icon={faStethoscope} className="mr-1 text-blue-600" />
+                          Diabetes
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <FontAwesomeIcon icon={faHeartbeat} className="mr-1 text-red-600" />
+                          Hypertension
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Follow-ups
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {selectedPatients.map((patient, index) => {
+                        const calculateAge = (dob) => {
+                          if (!dob) return 'N/A';
+                          const birthDate = new Date(dob);
+                          const today = new Date();
+                          let age = today.getFullYear() - birthDate.getFullYear();
+                          const monthDiff = today.getMonth() - birthDate.getMonth();
+                          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                          }
+                          return age;
+                        };
+
+                        const diabetesCount = (patient.diabetes_screenings || []).length;
+                        const hypertensionCount = (patient.hypertension_screenings || []).length;
+                        const followUpCount = (patient.monitoring_visits || []).length;
+
+                        return (
+                          <tr key={patient.id || index} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              {index + 1}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {patient.firstName} {patient.lastName}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.phoneNumber || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.village || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {patient.sex || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {calculateAge(patient.dateOfBirth)}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                diabetesCount > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {diabetesCount}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                hypertensionCount > 0 ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {hypertensionCount}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                followUpCount > 0 ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {followUpCount}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
+                  <p className="text-gray-500">No patients found for this user</p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex justify-end">
+              <button
+                onClick={closePatientsModal}
                 className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
               >
                 Close
