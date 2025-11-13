@@ -109,6 +109,9 @@ const MityanaPage = () => {
         let hypertensionCount = 0;
         let followUpCount = 0;
         let referralCount = 0;
+        let renalHistoryCount = 0;
+        let renalMonitoringCount = 0;
+        let rftCount = 0;
         
         patients.forEach(patient => {
           // Count diabetes screenings
@@ -123,6 +126,16 @@ const MityanaPage = () => {
           const monitoringVisits = patient.monitoring_visits || [];
           followUpCount += monitoringVisits.length;
           
+          // Count renal health records
+          const renalHistories = patient.renal_histories || [];
+          renalHistoryCount += renalHistories.length;
+          
+          const monitorings = patient.monitorings || [];
+          renalMonitoringCount += monitorings.length;
+          
+          const rfts = patient.rfts || [];
+          rftCount += rfts.length;
+          
           // Count referrals - check for 'Yes' in isReferred field
           if (patient.isReferred === 'Yes' || patient.isReferred === 'yes' || patient.isReferred === true) {
             referralCount++;
@@ -136,7 +149,7 @@ const MityanaPage = () => {
           }
         });
         
-        console.log(`User ${user.id} totals: Diabetes=${diabetesCount}, Hypertension=${hypertensionCount}, Follow-ups=${followUpCount}, Referrals=${referralCount}`);
+        console.log(`User ${user.id} totals: Diabetes=${diabetesCount}, Hypertension=${hypertensionCount}, Follow-ups=${followUpCount}, Referrals=${referralCount}, Renal=${renalHistoryCount}, Monitoring=${renalMonitoringCount}, RFT=${rftCount}`);
 
         // Calculate total payments for this user
         // Match payments by user_name with user's names or username
@@ -183,6 +196,9 @@ const MityanaPage = () => {
           hypertensionCount: hypertensionCount,
           followUpCount: followUpCount,
           referralCount: referralCount,
+          renalHistoryCount: renalHistoryCount,
+          renalMonitoringCount: renalMonitoringCount,
+          rftCount: rftCount,
           paymentCount: userPayments.length,
           totalPayments: totalPayments,
           loginCount: userLoginLogs.length,
@@ -472,6 +488,15 @@ const MityanaPage = () => {
                   Follow-ups
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Renal Screening
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Renal Monitoring
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  RFTs
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Total Logins
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -563,6 +588,51 @@ const MityanaPage = () => {
                           className="bg-purple-500 h-2 rounded-full"
                           style={{
                             width: totalFollowUps > 0 ? `${((user.followUpCount || 0) / Math.max(...users.map(u => u.followUpCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.renalHistoryCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-teal-500 h-2 rounded-full"
+                          style={{
+                            width: users.length > 0 ? `${((user.renalHistoryCount || 0) / Math.max(...users.map(u => u.renalHistoryCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.renalMonitoringCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-cyan-500 h-2 rounded-full"
+                          style={{
+                            width: users.length > 0 ? `${((user.renalMonitoringCount || 0) / Math.max(...users.map(u => u.renalMonitoringCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.rftCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-sky-500 h-2 rounded-full"
+                          style={{
+                            width: users.length > 0 ? `${((user.rftCount || 0) / Math.max(...users.map(u => u.rftCount || 0), 1)) * 100}%` : '0%'
                           }}
                         ></div>
                       </div>
