@@ -25,11 +25,12 @@ const MityanaPage = () => {
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
-      // Fetch patients and payments in parallel
+      // Fetch patients, payments, and user login logs in parallel
       // Note: Screening data (diabetes, hypertension, monitoring) is already nested in patient objects
-      const [patientsResponse, paymentsResponse] = await Promise.all([
+      const [patientsResponse, paymentsResponse, loginLogsResponse] = await Promise.all([
         fetch(API_ENDPOINTS.OLD.ALL_PATIENTS),
-        fetch(API_ENDPOINTS.OLD.PAYMENTS)
+        fetch(API_ENDPOINTS.OLD.PAYMENTS),
+        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/user-login-logs?pagination[limit]=10000`)
       ]);
       
       if (!patientsResponse.ok) {
@@ -47,6 +48,16 @@ const MityanaPage = () => {
         console.log('Total payments from backend:', allPayments.length);
       } else {
         console.warn('Failed to fetch payments data:', paymentsResponse.status);
+      }
+
+      // Process login logs data
+      let allLoginLogs = [];
+      if (loginLogsResponse.ok) {
+        const loginLogsData = await loginLogsResponse.json();
+        allLoginLogs = loginLogsData.data || loginLogsData || [];
+        console.log('Total login logs from backend:', allLoginLogs.length);
+      } else {
+        console.warn('Failed to fetch login logs:', loginLogsResponse.status);
       }
 
       // Filter users by the Mityana Project user IDs (197-217, 226, 88)
@@ -114,6 +125,12 @@ const MityanaPage = () => {
 
         console.log(`User ${userName} (${fullName}) has ${userPayments.length} payments totaling ${totalPayments} UGX`);
 
+        // Count login logs for this user
+        const userLoginLogs = allLoginLogs.filter(log => {
+          const logUserId = log.attributes?.user_id || log.user_id;
+          return logUserId === user.id;
+        });
+
         return {
           id: user.id,
           username: user.username,
@@ -127,6 +144,7 @@ const MityanaPage = () => {
           followUpCount: followUpCount,
           paymentCount: userPayments.length,
           totalPayments: totalPayments,
+          loginCount: userLoginLogs.length,
           patients: patients
         };
       });
@@ -298,6 +316,9 @@ const MityanaPage = () => {
                   Follow-ups
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Total Logins
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Payments (UGX)
                 </th>
               </tr>
@@ -382,6 +403,21 @@ const MityanaPage = () => {
                           className="bg-purple-500 h-2 rounded-full"
                           style={{
                             width: totalFollowUps > 0 ? `${((user.followUpCount || 0) / Math.max(...users.map(u => u.followUpCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.loginCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-indigo-500 h-2 rounded-full"
+                          style={{
+                            width: users.length > 0 ? `${((user.loginCount || 0) / Math.max(...users.map(u => u.loginCount || 0), 1)) * 100}%` : '0%'
                           }}
                         ></div>
                       </div>
