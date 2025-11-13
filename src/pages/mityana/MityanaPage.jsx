@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt, faTimes, faClock, faHeartbeat, faStethoscope } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt, faTimes, faClock, faHeartbeat, faStethoscope, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 const MityanaPage = () => {
@@ -31,20 +31,42 @@ const MityanaPage = () => {
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
-      // Fetch patients, payments, and user login logs in parallel
+      // Fetch patients, payments, and user login logs in parallel with timeout
       // Note: Screening data (diabetes, hypertension, monitoring) is already nested in patient objects
+      const fetchWithTimeout = (url, timeout = 30000) => {
+        return Promise.race([
+          fetch(url),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
       const [patientsResponse, paymentsResponse, loginLogsResponse] = await Promise.all([
-        fetch(API_ENDPOINTS.OLD.ALL_PATIENTS),
-        fetch(API_ENDPOINTS.OLD.PAYMENTS),
-        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/user-login-logs?pagination[limit]=10000`)
+        fetchWithTimeout(API_ENDPOINTS.OLD.ALL_PATIENTS, 60000).catch(err => {
+          console.error('Patients fetch error:', err);
+          return null;
+        }),
+        fetchWithTimeout(API_ENDPOINTS.OLD.PAYMENTS).catch(err => {
+          console.error('Payments fetch error:', err);
+          return null;
+        }),
+        fetchWithTimeout(`${API_CONFIG.BACKEND_URL_OLD}/api/user-login-logs?pagination[limit]=10000`).catch(err => {
+          console.error('Login logs fetch error:', err);
+          return null;
+        })
       ]);
       
-      if (!patientsResponse.ok) {
-        throw new Error(`Failed to fetch patients: ${patientsResponse.status}`);
+      if (!patientsResponse || !patientsResponse.ok) {
+        throw new Error(`Failed to fetch patients: ${patientsResponse ? patientsResponse.status : 'Network error or timeout'}`);
       }
 
       const allUsersData = await patientsResponse.json();
       console.log('Total users from backend:', allUsersData.length);
+      console.log('Sample user structure:', allUsersData[0]);
+      if (allUsersData[0]?.patients?.length > 0) {
+        console.log('Sample patient structure:', allUsersData[0].patients[0]);
+      }
 
       // Process payments data
       let allPayments = [];
@@ -72,6 +94,7 @@ const MityanaPage = () => {
       );
 
       console.log('Filtered Mityana users:', mityanaUsers.length);
+      console.log('Starting to process users...');
 
       // Process each user to get patient counts, diabetes, hypertension, follow-ups, and payments
       const processedUsers = mityanaUsers.map(user => {
@@ -83,6 +106,7 @@ const MityanaPage = () => {
         let diabetesCount = 0;
         let hypertensionCount = 0;
         let followUpCount = 0;
+        let referralCount = 0;
         
         patients.forEach(patient => {
           // Count diabetes screenings
@@ -97,12 +121,20 @@ const MityanaPage = () => {
           const monitoringVisits = patient.monitoring_visits || [];
           followUpCount += monitoringVisits.length;
           
+          // Count referrals - check for 'Yes' in isReferred field
+          if (patient.isReferred === 'Yes' || patient.isReferred === 'yes' || patient.isReferred === true) {
+            referralCount++;
+            if (user.id === 88) {
+              console.log(`User 88 - Referral found: Patient ${patient.id} (${patient.firstName} ${patient.lastName}), isReferred: ${patient.isReferred}`);
+            }
+          }
+          
           if (user.id === 88 && (diabetesScreenings.length > 0 || hypertensionScreenings.length > 0 || monitoringVisits.length > 0)) {
-            console.log(`User 88 - Patient ${patient.id}: Diabetes=${diabetesScreenings.length}, Hypertension=${hypertensionScreenings.length}, Follow-ups=${monitoringVisits.length}`);
+            console.log(`User 88 - Patient ${patient.id}: Diabetes=${diabetesScreenings.length}, Hypertension=${hypertensionScreenings.length}, Follow-ups=${monitoringVisits.length}, isReferred=${patient.isReferred}`);
           }
         });
         
-        console.log(`User ${user.id} totals: Diabetes=${diabetesCount}, Hypertension=${hypertensionCount}, Follow-ups=${followUpCount}`);
+        console.log(`User ${user.id} totals: Diabetes=${diabetesCount}, Hypertension=${hypertensionCount}, Follow-ups=${followUpCount}, Referrals=${referralCount}`);
 
         // Calculate total payments for this user
         // Match payments by user_name with user's names or username
@@ -148,6 +180,7 @@ const MityanaPage = () => {
           diabetesCount: diabetesCount,
           hypertensionCount: hypertensionCount,
           followUpCount: followUpCount,
+          referralCount: referralCount,
           paymentCount: userPayments.length,
           totalPayments: totalPayments,
           loginCount: userLoginLogs.length,
@@ -158,16 +191,18 @@ const MityanaPage = () => {
       // Sort by patient count (descending)
       processedUsers.sort((a, b) => b.patientCount - a.patientCount);
 
+      console.log('Finished processing users, setting state...');
       setUsers(processedUsers);
       
       const endTime = performance.now();
       console.log(`✅ MITYANA PROJECT data loaded successfully in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
-      console.log('Final processed users:', processedUsers);
+      console.log('Final processed users:', processedUsers.length);
       
     } catch (err) {
       console.error('Error fetching Mityana data:', err);
       setError(err.message);
     } finally {
+      console.log('Setting loading to false...');
       setLoading(false);
     }
   };
@@ -262,6 +297,7 @@ const MityanaPage = () => {
   const totalDiabetes = users.reduce((sum, user) => sum + (user.diabetesCount || 0), 0);
   const totalHypertension = users.reduce((sum, user) => sum + (user.hypertensionCount || 0), 0);
   const totalFollowUps = users.reduce((sum, user) => sum + (user.followUpCount || 0), 0);
+  const totalReferrals = users.reduce((sum, user) => sum + (user.referralCount || 0), 0);
   const totalLogins = users.reduce((sum, user) => sum + (user.loginCount || 0), 0);
   const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
 
@@ -333,6 +369,16 @@ const MityanaPage = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Follow ups</p>
               <p className="text-2xl font-bold text-gray-900">{totalFollowUps}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faHandshake} className="text-3xl text-orange-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Referrals</p>
+              <p className="text-2xl font-bold text-gray-900">{totalReferrals}</p>
             </div>
           </div>
         </div>
