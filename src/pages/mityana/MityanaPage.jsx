@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt, faTimes, faClock } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 const MityanaPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userLoginLogs, setUserLoginLogs] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loadingLogs, setLoadingLogs] = useState(false);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
   const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226, 88];
@@ -164,6 +168,52 @@ const MityanaPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLoginClick = async (user) => {
+    setSelectedUser(user);
+    setShowLoginModal(true);
+    setLoadingLogs(true);
+    
+    try {
+      // Fetch login logs for this specific user
+      const response = await fetch(
+        `${API_CONFIG.BACKEND_URL_OLD}/api/user-login-logs?filters[user_id][$eq]=${user.id}&sort=login_time:desc&pagination[limit]=1000`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        const logs = data.data || [];
+        setUserLoginLogs(logs);
+      } else {
+        console.error('Failed to fetch login logs');
+        setUserLoginLogs([]);
+      }
+    } catch (err) {
+      console.error('Error fetching login logs:', err);
+      setUserLoginLogs([]);
+    } finally {
+      setLoadingLogs(false);
+    }
+  };
+
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
+    setSelectedUser(null);
+    setUserLoginLogs([]);
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   };
 
   if (loading) {
@@ -420,8 +470,12 @@ const MityanaPage = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-900 mr-2">
+                    <div 
+                      className="flex items-center cursor-pointer hover:bg-indigo-50 rounded-lg p-2 -m-2 transition-colors"
+                      onClick={() => handleLoginClick(user)}
+                      title="Click to view login details"
+                    >
+                      <span className="text-sm font-medium text-indigo-600 mr-2 hover:text-indigo-800">
                         {user.loginCount || 0}
                       </span>
                       <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
@@ -462,6 +516,118 @@ const MityanaPage = () => {
           </div>
         )}
       </div>
+
+      {/* Login Details Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="bg-indigo-600 text-white px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <FontAwesomeIcon icon={faSignInAlt} className="text-2xl mr-3" />
+                <div>
+                  <h2 className="text-xl font-bold">Login History</h2>
+                  <p className="text-indigo-100 text-sm">
+                    {selectedUser?.fullName || selectedUser?.username || 'User'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={closeLoginModal}
+                className="text-white hover:text-indigo-200 transition-colors"
+              >
+                <FontAwesomeIcon icon={faTimes} className="text-2xl" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              {loadingLogs ? (
+                <div className="text-center py-8">
+                  <FontAwesomeIcon icon={faSpinner} className="text-3xl text-indigo-600 animate-spin mb-4" />
+                  <p className="text-gray-600">Loading login history...</p>
+                </div>
+              ) : userLoginLogs.length > 0 ? (
+                <div>
+                  <div className="mb-4 p-4 bg-indigo-50 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      <strong>Total Logins:</strong> {userLoginLogs.length}
+                    </p>
+                    <p className="text-sm text-gray-700 mt-1">
+                      <strong>Username:</strong> {selectedUser?.username}
+                    </p>
+                    {selectedUser?.email && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        <strong>Email:</strong> {selectedUser?.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            #
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Login Time
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Username
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {userLoginLogs.map((log, index) => {
+                          const logData = log.attributes || log;
+                          return (
+                            <tr key={log.id || index} className="hover:bg-gray-50">
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                {index + 1}
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                <div className="flex items-center">
+                                  <FontAwesomeIcon icon={faClock} className="text-indigo-600 mr-2" />
+                                  {formatDateTime(logData.login_time)}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                                {logData.username || 'N/A'}
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                                {logData.user_name || 'N/A'}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FontAwesomeIcon icon={faSignInAlt} className="text-4xl text-gray-400 mb-4" />
+                  <p className="text-gray-500">No login history found for this user</p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 flex justify-end">
+              <button
+                onClick={closeLoginModal}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
