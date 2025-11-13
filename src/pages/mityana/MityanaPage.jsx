@@ -8,8 +8,8 @@ const MityanaPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Define the user IDs for Mityana Project (197-217, 226)
-  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226];
+  // Define the user IDs for Mityana Project (197-217, 226, 88)
+  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226, 88];
 
   useEffect(() => {
     fetchMityanaData();
@@ -21,17 +21,15 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226, 88');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
-      // Fetch patients, payments, screenings, and monitoring data in parallel
-      const [patientsResponse, paymentsResponse, diabetesResponse, hypertensionResponse, monitoringResponse] = await Promise.all([
+      // Fetch patients and payments in parallel
+      // Note: Screening data (diabetes, hypertension, monitoring) is already nested in patient objects
+      const [patientsResponse, paymentsResponse] = await Promise.all([
         fetch(API_ENDPOINTS.OLD.ALL_PATIENTS),
-        fetch(API_ENDPOINTS.OLD.PAYMENTS),
-        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/diabetes-screenings?populate=*`),
-        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/hypertension-screenings?populate=*`),
-        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/monitoring-visits?populate=*`)
+        fetch(API_ENDPOINTS.OLD.PAYMENTS)
       ]);
       
       if (!patientsResponse.ok) {
@@ -51,37 +49,7 @@ const MityanaPage = () => {
         console.warn('Failed to fetch payments data:', paymentsResponse.status);
       }
 
-      // Process diabetes screenings data
-      let allDiabetesScreenings = [];
-      if (diabetesResponse.ok) {
-        const diabetesData = await diabetesResponse.json();
-        allDiabetesScreenings = diabetesData.data || diabetesData || [];
-        console.log('Total diabetes screenings from backend:', allDiabetesScreenings.length);
-      } else {
-        console.warn('Failed to fetch diabetes screenings:', diabetesResponse.status);
-      }
-
-      // Process hypertension screenings data
-      let allHypertensionScreenings = [];
-      if (hypertensionResponse.ok) {
-        const hypertensionData = await hypertensionResponse.json();
-        allHypertensionScreenings = hypertensionData.data || hypertensionData || [];
-        console.log('Total hypertension screenings from backend:', allHypertensionScreenings.length);
-      } else {
-        console.warn('Failed to fetch hypertension screenings:', hypertensionResponse.status);
-      }
-
-      // Process monitoring visits (follow-ups) data
-      let allMonitoringVisits = [];
-      if (monitoringResponse.ok) {
-        const monitoringData = await monitoringResponse.json();
-        allMonitoringVisits = monitoringData.data || monitoringData || [];
-        console.log('Total follow-ups from backend:', allMonitoringVisits.length);
-      } else {
-        console.warn('Failed to fetch monitoring visits:', monitoringResponse.status);
-      }
-
-      // Filter users by the Mityana Project user IDs (197-217, 226)
+      // Filter users by the Mityana Project user IDs (197-217, 226, 88)
       const mityanaUsers = allUsersData.filter(user => 
         MITYANA_USER_IDS.includes(user.id)
       );
@@ -92,26 +60,32 @@ const MityanaPage = () => {
       const processedUsers = mityanaUsers.map(user => {
         const patients = user.patients || [];
         
-        // Get patient IDs for this user
-        const patientIds = patients.map(p => p.id);
+        console.log(`Processing user ${user.id} (${user.username}) with ${patients.length} patients`);
         
-        // Count diabetes screenings for this user's patients
-        const userDiabetesScreenings = allDiabetesScreenings.filter(screening => {
-          const patientId = screening.attributes?.patient?.data?.id || screening.patient?.id;
-          return patientIds.includes(patientId);
+        // Count screenings directly from patients (they're nested in patient objects)
+        let diabetesCount = 0;
+        let hypertensionCount = 0;
+        let followUpCount = 0;
+        
+        patients.forEach(patient => {
+          // Count diabetes screenings
+          const diabetesScreenings = patient.diabetes_screenings || [];
+          diabetesCount += diabetesScreenings.length;
+          
+          // Count hypertension screenings
+          const hypertensionScreenings = patient.hypertension_screenings || [];
+          hypertensionCount += hypertensionScreenings.length;
+          
+          // Count monitoring visits (follow-ups)
+          const monitoringVisits = patient.monitoring_visits || [];
+          followUpCount += monitoringVisits.length;
+          
+          if (user.id === 88 && (diabetesScreenings.length > 0 || hypertensionScreenings.length > 0 || monitoringVisits.length > 0)) {
+            console.log(`User 88 - Patient ${patient.id}: Diabetes=${diabetesScreenings.length}, Hypertension=${hypertensionScreenings.length}, Follow-ups=${monitoringVisits.length}`);
+          }
         });
         
-        // Count hypertension screenings for this user's patients
-        const userHypertensionScreenings = allHypertensionScreenings.filter(screening => {
-          const patientId = screening.attributes?.patient?.data?.id || screening.patient?.id;
-          return patientIds.includes(patientId);
-        });
-        
-        // Count monitoring visits (follow-ups) for this user's patients
-        const userMonitoringVisits = allMonitoringVisits.filter(visit => {
-          const patientId = visit.attributes?.patient?.data?.id || visit.patient?.id;
-          return patientIds.includes(patientId);
-        });
+        console.log(`User ${user.id} totals: Diabetes=${diabetesCount}, Hypertension=${hypertensionCount}, Follow-ups=${followUpCount}`);
 
         // Calculate total payments for this user
         // Match payments by user_name with user's names or username
@@ -148,9 +122,9 @@ const MityanaPage = () => {
           lastName: user.lastName,
           fullName: fullName || user.username || 'N/A',
           patientCount: patients.length,
-          diabetesCount: userDiabetesScreenings.length,
-          hypertensionCount: userHypertensionScreenings.length,
-          followUpCount: userMonitoringVisits.length,
+          diabetesCount: diabetesCount,
+          hypertensionCount: hypertensionCount,
+          followUpCount: followUpCount,
           paymentCount: userPayments.length,
           totalPayments: totalPayments,
           patients: patients
@@ -437,7 +411,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226)</p>
+            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226, 88)</p>
           </div>
         )}
       </div>
