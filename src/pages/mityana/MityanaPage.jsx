@@ -17,7 +17,7 @@ const MityanaPage = () => {
   const [selectedReferrals, setSelectedReferrals] = useState([]);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
-  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226, 88];
+  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226,];
 
   useEffect(() => {
     fetchMityanaData();
@@ -29,7 +29,7 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226, 88');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226,');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
@@ -714,7 +714,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226, 88)</p>
+            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226,)</p>
           </div>
         )}
       </div>
