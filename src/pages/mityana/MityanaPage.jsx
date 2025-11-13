@@ -25,10 +25,13 @@ const MityanaPage = () => {
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
-      // Fetch patients and payments data in parallel
-      const [patientsResponse, paymentsResponse] = await Promise.all([
+      // Fetch patients, payments, screenings, and monitoring data in parallel
+      const [patientsResponse, paymentsResponse, diabetesResponse, hypertensionResponse, monitoringResponse] = await Promise.all([
         fetch(API_ENDPOINTS.OLD.ALL_PATIENTS),
-        fetch(API_ENDPOINTS.OLD.PAYMENTS)
+        fetch(API_ENDPOINTS.OLD.PAYMENTS),
+        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/diabetes-screenings?populate=*`),
+        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/hypertension-screenings?populate=*`),
+        fetch(`${API_CONFIG.BACKEND_URL_OLD}/api/monitoring-visits?populate=*`)
       ]);
       
       if (!patientsResponse.ok) {
@@ -48,6 +51,36 @@ const MityanaPage = () => {
         console.warn('Failed to fetch payments data:', paymentsResponse.status);
       }
 
+      // Process diabetes screenings data
+      let allDiabetesScreenings = [];
+      if (diabetesResponse.ok) {
+        const diabetesData = await diabetesResponse.json();
+        allDiabetesScreenings = diabetesData.data || diabetesData || [];
+        console.log('Total diabetes screenings from backend:', allDiabetesScreenings.length);
+      } else {
+        console.warn('Failed to fetch diabetes screenings:', diabetesResponse.status);
+      }
+
+      // Process hypertension screenings data
+      let allHypertensionScreenings = [];
+      if (hypertensionResponse.ok) {
+        const hypertensionData = await hypertensionResponse.json();
+        allHypertensionScreenings = hypertensionData.data || hypertensionData || [];
+        console.log('Total hypertension screenings from backend:', allHypertensionScreenings.length);
+      } else {
+        console.warn('Failed to fetch hypertension screenings:', hypertensionResponse.status);
+      }
+
+      // Process monitoring visits (follow-ups) data
+      let allMonitoringVisits = [];
+      if (monitoringResponse.ok) {
+        const monitoringData = await monitoringResponse.json();
+        allMonitoringVisits = monitoringData.data || monitoringData || [];
+        console.log('Total follow-ups from backend:', allMonitoringVisits.length);
+      } else {
+        console.warn('Failed to fetch monitoring visits:', monitoringResponse.status);
+      }
+
       // Filter users by the Mityana Project user IDs (197-217, 226)
       const mityanaUsers = allUsersData.filter(user => 
         MITYANA_USER_IDS.includes(user.id)
@@ -55,24 +88,29 @@ const MityanaPage = () => {
 
       console.log('Filtered Mityana users:', mityanaUsers.length);
 
-      // Process each user to get patient counts, vaccinations, diagnoses, and payments
+      // Process each user to get patient counts, diabetes, hypertension, follow-ups, and payments
       const processedUsers = mityanaUsers.map(user => {
         const patients = user.patients || [];
         
-        // Count vaccinations across all patients for this user
-        let totalVaccinations = 0;
-        let totalDiagnoses = 0;
-
-        patients.forEach(patient => {
-          // Count vaccinations for this patient
-          if (patient.vaccinations && Array.isArray(patient.vaccinations)) {
-            totalVaccinations += patient.vaccinations.length;
-          }
-          
-          // Count diagnoses for this patient  
-          if (patient.diagnoses && Array.isArray(patient.diagnoses)) {
-            totalDiagnoses += patient.diagnoses.length;
-          }
+        // Get patient IDs for this user
+        const patientIds = patients.map(p => p.id);
+        
+        // Count diabetes screenings for this user's patients
+        const userDiabetesScreenings = allDiabetesScreenings.filter(screening => {
+          const patientId = screening.attributes?.patient?.data?.id || screening.patient?.id;
+          return patientIds.includes(patientId);
+        });
+        
+        // Count hypertension screenings for this user's patients
+        const userHypertensionScreenings = allHypertensionScreenings.filter(screening => {
+          const patientId = screening.attributes?.patient?.data?.id || screening.patient?.id;
+          return patientIds.includes(patientId);
+        });
+        
+        // Count monitoring visits (follow-ups) for this user's patients
+        const userMonitoringVisits = allMonitoringVisits.filter(visit => {
+          const patientId = visit.attributes?.patient?.data?.id || visit.patient?.id;
+          return patientIds.includes(patientId);
         });
 
         // Calculate total payments for this user
@@ -110,8 +148,9 @@ const MityanaPage = () => {
           lastName: user.lastName,
           fullName: fullName || user.username || 'N/A',
           patientCount: patients.length,
-          vaccinationCount: totalVaccinations,
-          diagnosisCount: totalDiagnoses,
+          diabetesCount: userDiabetesScreenings.length,
+          hypertensionCount: userHypertensionScreenings.length,
+          followUpCount: userMonitoringVisits.length,
           paymentCount: userPayments.length,
           totalPayments: totalPayments,
           patients: patients
@@ -165,8 +204,9 @@ const MityanaPage = () => {
   }
 
   const totalPatients = users.reduce((sum, user) => sum + user.patientCount, 0);
-  const totalVaccinations = users.reduce((sum, user) => sum + (user.vaccinationCount || 0), 0);
-  const totalDiagnoses = users.reduce((sum, user) => sum + (user.diagnosisCount || 0), 0);
+  const totalDiabetes = users.reduce((sum, user) => sum + (user.diabetesCount || 0), 0);
+  const totalHypertension = users.reduce((sum, user) => sum + (user.hypertensionCount || 0), 0);
+  const totalFollowUps = users.reduce((sum, user) => sum + (user.followUpCount || 0), 0);
   const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
 
   return (
@@ -213,10 +253,10 @@ const MityanaPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faUser} className="text-3xl text-orange-600 mr-4" />
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-blue-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Vaccinations</p>
-              <p className="text-2xl font-bold text-gray-900">{totalVaccinations}</p>
+              <p className="text-sm font-medium text-gray-600">Total Diabetes</p>
+              <p className="text-2xl font-bold text-gray-900">{totalDiabetes}</p>
             </div>
           </div>
         </div>
@@ -225,8 +265,18 @@ const MityanaPage = () => {
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUser} className="text-3xl text-red-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Diagnoses</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDiagnoses}</p>
+              <p className="text-sm font-medium text-gray-600">Total Hypertension</p>
+              <p className="text-2xl font-bold text-gray-900">{totalHypertension}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-purple-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Follow ups</p>
+              <p className="text-2xl font-bold text-gray-900">{totalFollowUps}</p>
             </div>
           </div>
         </div>
@@ -245,7 +295,7 @@ const MityanaPage = () => {
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">CHPs, Patient Counts, Vaccinations, and Diagnoses</h2>
+          <h2 className="text-xl font-semibold text-gray-900">CHPs, Patient Counts, Diabetes, Hypertension, and Follow-ups</h2>
         </div>
         
         <div className="overflow-x-auto">
@@ -265,10 +315,13 @@ const MityanaPage = () => {
                   Patient Count
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vaccinations
+                  Diabetes
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Diagnoses
+                  Hypertension
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Follow-ups
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Payments (UGX)
@@ -318,13 +371,13 @@ const MityanaPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <span className="text-sm font-medium text-gray-900 mr-2">
-                        {user.vaccinationCount || 0}
+                        {user.diabetesCount || 0}
                       </span>
                       <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
                         <div
-                          className="bg-orange-500 h-2 rounded-full"
+                          className="bg-blue-500 h-2 rounded-full"
                           style={{
-                            width: totalVaccinations > 0 ? `${((user.vaccinationCount || 0) / Math.max(...users.map(u => u.vaccinationCount || 0), 1)) * 100}%` : '0%'
+                            width: totalDiabetes > 0 ? `${((user.diabetesCount || 0) / Math.max(...users.map(u => u.diabetesCount || 0), 1)) * 100}%` : '0%'
                           }}
                         ></div>
                       </div>
@@ -333,13 +386,28 @@ const MityanaPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <span className="text-sm font-medium text-gray-900 mr-2">
-                        {user.diagnosisCount || 0}
+                        {user.hypertensionCount || 0}
                       </span>
                       <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
                         <div
                           className="bg-red-500 h-2 rounded-full"
                           style={{
-                            width: totalDiagnoses > 0 ? `${((user.diagnosisCount || 0) / Math.max(...users.map(u => u.diagnosisCount || 0), 1)) * 100}%` : '0%'
+                            width: totalHypertension > 0 ? `${((user.hypertensionCount || 0) / Math.max(...users.map(u => u.hypertensionCount || 0), 1)) * 100}%` : '0%'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900 mr-2">
+                        {user.followUpCount || 0}
+                      </span>
+                      <div className="w-full bg-gray-200 rounded-full h-2 max-w-[100px]">
+                        <div
+                          className="bg-purple-500 h-2 rounded-full"
+                          style={{
+                            width: totalFollowUps > 0 ? `${((user.followUpCount || 0) / Math.max(...users.map(u => u.followUpCount || 0), 1)) * 100}%` : '0%'
                           }}
                         ></div>
                       </div>
