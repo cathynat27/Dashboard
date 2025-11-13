@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faSpinner, faExclamationTriangle, faCreditCard, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 const MityanaPage = () => {
@@ -199,6 +199,7 @@ const MityanaPage = () => {
   const totalDiabetes = users.reduce((sum, user) => sum + (user.diabetesCount || 0), 0);
   const totalHypertension = users.reduce((sum, user) => sum + (user.hypertensionCount || 0), 0);
   const totalFollowUps = users.reduce((sum, user) => sum + (user.followUpCount || 0), 0);
+  const totalLogins = users.reduce((sum, user) => sum + (user.loginCount || 0), 0);
   const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
 
   return (
@@ -222,7 +223,7 @@ const MityanaPage = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
@@ -269,6 +270,16 @@ const MityanaPage = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Follow ups</p>
               <p className="text-2xl font-bold text-gray-900">{totalFollowUps}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faSignInAlt} className="text-3xl text-indigo-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Logins</p>
+              <p className="text-2xl font-bold text-gray-900">{totalLogins}</p>
             </div>
           </div>
         </div>
