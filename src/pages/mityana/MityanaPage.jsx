@@ -211,8 +211,7 @@ const MityanaPage = () => {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      minute: '2-digit'
     });
   };
 
@@ -554,13 +553,8 @@ const MityanaPage = () => {
                       <strong>Total Logins:</strong> {userLoginLogs.length}
                     </p>
                     <p className="text-sm text-gray-700 mt-1">
-                      <strong>Username:</strong> {selectedUser?.username}
+                      <strong>Phone Number:</strong> {selectedUser?.username}
                     </p>
-                    {selectedUser?.email && (
-                      <p className="text-sm text-gray-700 mt-1">
-                        <strong>Email:</strong> {selectedUser?.email}
-                      </p>
-                    )}
                   </div>
 
                   <div className="overflow-x-auto">
@@ -574,7 +568,7 @@ const MityanaPage = () => {
                             Login Time
                           </th>
                           <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Username
+                            Phone Number
                           </th>
                           <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Name
