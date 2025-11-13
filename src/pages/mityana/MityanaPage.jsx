@@ -332,6 +332,9 @@ const MityanaPage = () => {
   const totalHypertension = users.reduce((sum, user) => sum + (user.hypertensionCount || 0), 0);
   const totalFollowUps = users.reduce((sum, user) => sum + (user.followUpCount || 0), 0);
   const totalReferrals = users.reduce((sum, user) => sum + (user.referralCount || 0), 0);
+  const totalRenalScreening = users.reduce((sum, user) => sum + (user.renalHistoryCount || 0), 0);
+  const totalRenalMonitoring = users.reduce((sum, user) => sum + (user.renalMonitoringCount || 0), 0);
+  const totalRFTs = users.reduce((sum, user) => sum + (user.rftCount || 0), 0);
   const totalLogins = users.reduce((sum, user) => sum + (user.loginCount || 0), 0);
   const totalPayments = users.reduce((sum, user) => sum + (user.totalPayments || 0), 0);
 
@@ -403,6 +406,36 @@ const MityanaPage = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Follow ups</p>
               <p className="text-2xl font-bold text-gray-900">{totalFollowUps}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-teal-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Renal Screening</p>
+              <p className="text-2xl font-bold text-gray-900">{totalRenalScreening}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-cyan-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Renal Monitoring</p>
+              <p className="text-2xl font-bold text-gray-900">{totalRenalMonitoring}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-sky-600 mr-4" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total RFTs</p>
+              <p className="text-2xl font-bold text-gray-900">{totalRFTs}</p>
             </div>
           </div>
         </div>
