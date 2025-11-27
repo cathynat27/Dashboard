@@ -382,10 +382,10 @@ const MityanaPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faUser} className="text-3xl text-blue-600 mr-4" />
+            <FontAwesomeIcon icon={faCreditCard} className="text-3xl text-green-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Diabetes</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDiabetes}</p>
+              <p className="text-sm font-medium text-gray-600">Total Payments</p>
+              <p className="text-2xl font-bold text-gray-900">{totalPayments.toLocaleString()} UGX</p>
             </div>
           </div>
         </div>
@@ -480,10 +480,10 @@ const MityanaPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faCreditCard} className="text-3xl text-green-600 mr-4" />
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-blue-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Payments</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPayments.toLocaleString()} UGX</p>
+              <p className="text-sm font-medium text-gray-600">Total Diabetes</p>
+              <p className="text-2xl font-bold text-gray-900">{totalDiabetes}</p>
             </div>
           </div>
         </div>
