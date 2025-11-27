@@ -17,7 +17,7 @@ const MityanaPage = () => {
   const [selectedReferrals, setSelectedReferrals] = useState([]);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
-  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i),173, 226, 228, 229, ];
+  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i),173, 226, 228, 229, 88];
 
   useEffect(() => {
     fetchMityanaData();
