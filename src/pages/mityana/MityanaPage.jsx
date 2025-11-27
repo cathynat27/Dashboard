@@ -364,7 +364,7 @@ const MityanaPage = () => {
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total CHPs</p>
+              <p className="text-sm font-medium text-gray-600">Total CHWs</p>
               <p className="text-2xl font-bold text-gray-900">{users.length}</p>
             </div>
           </div>
