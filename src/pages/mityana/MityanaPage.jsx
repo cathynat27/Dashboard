@@ -17,7 +17,7 @@ const MityanaPage = () => {
   const [selectedReferrals, setSelectedReferrals] = useState([]);
 
   // Define the user IDs for Mityana Project (197-217, 226, 88)
-  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i), 226,];
+  const MITYANA_USER_IDS = [...Array.from({ length: 21 }, (_, i) => 197 + i),173, 226, 228, 229, 88];
 
   useEffect(() => {
     fetchMityanaData();
@@ -29,7 +29,7 @@ const MityanaPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226,');
+      console.log('🏥 MITYANA PROJECT - Fetching data for users 197-217, 226,88');
       console.log('Using OLD Backend URL:', API_CONFIG.BACKEND_URL_OLD);
       console.log('Target User IDs:', MITYANA_USER_IDS);
 
@@ -364,7 +364,7 @@ const MityanaPage = () => {
           <div className="flex items-center">
             <FontAwesomeIcon icon={faUsers} className="text-3xl text-green-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total CHPs</p>
+              <p className="text-sm font-medium text-gray-600">Total CHWs</p>
               <p className="text-2xl font-bold text-gray-900">{users.length}</p>
             </div>
           </div>
@@ -382,10 +382,10 @@ const MityanaPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faUser} className="text-3xl text-blue-600 mr-4" />
+            <FontAwesomeIcon icon={faCreditCard} className="text-3xl text-green-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Diabetes</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDiabetes}</p>
+              <p className="text-sm font-medium text-gray-600">Total Payments</p>
+              <p className="text-2xl font-bold text-gray-900">{totalPayments.toLocaleString()} UGX</p>
             </div>
           </div>
         </div>
@@ -480,10 +480,10 @@ const MityanaPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center">
-            <FontAwesomeIcon icon={faCreditCard} className="text-3xl text-green-600 mr-4" />
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-blue-600 mr-4" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Payments</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPayments.toLocaleString()} UGX</p>
+              <p className="text-sm font-medium text-gray-600">Total Diabetes</p>
+              <p className="text-2xl font-bold text-gray-900">{totalDiabetes}</p>
             </div>
           </div>
         </div>
@@ -714,7 +714,7 @@ const MityanaPage = () => {
         {users.length === 0 && (
           <div className="text-center py-8">
             <FontAwesomeIcon icon={faUsers} className="text-4xl text-gray-400 mb-4" />
-            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226,)</p>
+            <p className="text-gray-500">No Mityana Project CHPs found (IDs 197-217, 226,88)</p>
           </div>
         )}
       </div>
