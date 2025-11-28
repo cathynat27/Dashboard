@@ -71,6 +71,7 @@ const Portfolio = () => {
   ];
 
   // Activities/Events data
+  
   const activities = [
     {
       id: 1,
