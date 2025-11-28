@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 function LoginIndex() {
+  
   const navigate = useNavigate();
   const [setError] = useState(null);
   const [loading, setLoading] = useState(false);
