@@ -49,7 +49,7 @@ function App() {
           {/* <Route path="/auth/register" element={<RegisterIndex />}></Route> */}
         </Route>
         <Route path="/portfolio" element={<Portfolio />}></Route>
-        <Route path="/" element={<Navigate replace to="/portfolio" />}></Route>
+        <Route path="/" element={<Navigate replace to="/auth/login" />}></Route>
         <Route
           path="/"
           element={
