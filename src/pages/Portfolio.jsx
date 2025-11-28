@@ -26,7 +26,7 @@ const Portfolio = () => {
       title: "Yoklinic App",
       category: "Mobile",
       description: "Explore a wide range of medical facilities and specialities ranging from paediatricians, gynaecologists, infectious diseases, dentists and more others.",
-      image: "images/app.png",
+      image: "images/app.PNG",
       features: ["Video Consultations", "Medical Records", "Prescriptions"],
       learnMore: "https://play.google.com/store/apps/details?id=com.yourcompany.yoklinic&pcampaignid=web_share"
     },
@@ -35,7 +35,7 @@ const Portfolio = () => {
       title: "Yoklinic Web",
       category: "Web",
       description: "Web-based interface for telemedicine services with advanced patient management features,different facilities and diverse Doctors",
-      image: "images/yoklinic.png",
+      image: "images/yoklinic.PNG",
       features: ["Facilities", "Health Products", "Doctors"],
       learnMore: "https://www.yoklinic.com/"
     },
@@ -44,7 +44,7 @@ const Portfolio = () => {
       title: "Mobi CHP Biometric Tool",
       category: "Mobile",
       description: "We build technology to radically increase transparency and effectiveness in global development, making sure that every vaccine, every dollar, every public good reaches the people who need them most.",
-      image: "images/buikwe10.png",
+      image: "images/Buikwe10.png",
       features: [ "Face biometrics", "Health Records"],
       learnMore: "https://www.simprints.com/"
     }, 
@@ -64,13 +64,14 @@ const Portfolio = () => {
       title: "Mobi CHP Tool",
       category: "Mobile",
       description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
-      image: "images/chp.png",
+      image: "images/chp.PNG",
       features: ["Data Collection", "Health Monitoring", "Analytics"],
       learnMore: "https://play.google.com/store/apps/details?id=com.mobiklinicapp"
     },
   ];
 
   // Activities/Events data
+  
   const activities = [
     {
       id: 1,
@@ -86,31 +87,31 @@ const Portfolio = () => {
       title: "Immunisation",
       description: "Comprehensive Immunisation program for the children by our healthcare workers with aid of the MobiCHP Biometric Tool.",
       image: "images/buikwe.png",
-      galleryImages: ["/images/buikwe.png", "/images/buikwe3.png", "/images/buikwe4.png"],
+      galleryImages: ["/images/Buikwe.png", "/images/Buikwe3.png", "/images/Buikwe4.png"],
       
     },
     {
       id: 3,
       title: "Telemedicine Workshop",
       description: "Interactive workshop introducing telemedicine benefits to healthcare providers and patients",
-      image: "images/buikwe3.png",
-      galleryImages: ["/images/buikwe3.png", "/images/buikwe11.png", "/images/buikwe14.png"],
+      image: "images/Buikwe3.png",
+      galleryImages: ["/images/Buikwe3.png", "/images/Buikwe11.png", "/images/Buikwe14.png"],
     
     },
     {
       id: 4,
       title: "Team Sensitization before Kicking off Community Work",
       description: "Digital awareness campaign educating patients about remote healthcare services and benefits",
-      image: "images/buikwe14.png",
-      galleryImages: ["/images/buikwe14.png", "/images/buikwe.png", "/images/buikwe3.png"],
+      image: "images/Buikwe14.png",
+      galleryImages: ["/images/Buikwe14.png", "/images/Buikwe.png", "/images/Buikwe3.png"],
      
     },
     {
       id: 5,
       title: " Vitendo Health Technology Summit",
       description: "During the annual Vitendo Digital Health Symposium Africa (VIDHSA), a major event that focuses on digital health innovation",
-      image: "images/vitendo5.png",
-      galleryImages: ["/images/vitendo5.png", "/images/Vitendo2.png", "/images/Vitendo4.png","/images/Vitendo7.png","/images/Vitendo3.png"],
+      image: "images/Vitendo5.png",
+      galleryImages: ["/images/Vitendo5.png", "/images/Vitendo2.png", "/images/Vitendo4.png","/images/Vitendo7.png","/images/Vitendo3.png"],
      
     },
   
@@ -118,8 +119,8 @@ const Portfolio = () => {
       id: 7,
       title: "Community Health Outreach",
       description: "Mobiklinic CHP officials together with the community members of Buikwe.",
-      image: "images/buikwe11.png",
-      galleryImages: ["/images/buikwe11.png", "/images/buikwe.png", "/images/buikwe14.png"],
+      image: "images/Buikwe11.png",
+      galleryImages: ["/images/Buikwe11.png", "/images/Buikwe.png", "/images/Buikwe14.png"],
      
     }
     
