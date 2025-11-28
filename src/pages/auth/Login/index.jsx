@@ -105,6 +105,16 @@ function LoginIndex() {
           {/* Login Section */}
           <div className="flex flex-col md:flex-1 items-center justify-center">
             <div className="loginWrapper flex flex-col w-full lg:px-36 md:px-8 px-8 md:py-8">
+              {/* Our Portfolio Link */}
+              <div className="flex justify-end mb-4">
+                <Link
+                  to="/portfolio"
+                  className="inline-flex items-center font-semibold text-sm text-sky-500 hover:text-sky-700 transition-colors"
+                >
+                  Our Portfolio
+                </Link>
+              </div>
+              
               {/* Login Header */}
               <div className="hidden md:block font-medium self-center text-xl sm:text-3xl text-gray-800">
                 Mobiklinic Projects Dashboard!
