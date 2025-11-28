@@ -24,6 +24,7 @@ import Chat from "./components/Other/ChatFeature";
 import Notifications from "./components/Other/Notification.Table";
 import SimprintsPage from "./pages/simprints/SimprintsPage";
 import MityanaPage from "./pages/mityana/MityanaPage";
+import Portfolio from "./pages/Portfolio";
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
@@ -47,36 +48,37 @@ function App() {
           <Route path="/auth/login" element={<Login />}></Route>
           {/* <Route path="/auth/register" element={<RegisterIndex />}></Route> */}
         </Route>
+        <Route path="/portfolio" element={<Portfolio />}></Route>
+        <Route path="/" element={<Navigate replace to="/auth/login" />}></Route>
         <Route
           path="/"
           element={
             isLoggedIn ? <AuthLayout /> : <Navigate replace to="/auth/login" />
           }
         >
-          <Route path="/" element={<Navigate to="/auth/login" />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
-          <Route path="/chat" element={<Chat />}></Route>
-          <Route path="/notifcations" element={<Notifications />}></Route>
-          <Route path="/table" element={<Table />}></Route>
-          <Route path="/renal" element={<RenalTable />}></Route>
-          <Route path="/vaccination" element={<VaccinationTable />}></Route>
-          <Route path="/diagnosis" element={<DiagnosisTable />}></Route>
-          <Route path="/antenantal" element={<AntenatalTable />}></Route>
-          <Route path="/screening" element={<RenalScreening />}></Route>
+          <Route path="dashboard" element={<Dashboard />}></Route>
+          <Route path="chat" element={<Chat />}></Route>
+          <Route path="notifcations" element={<Notifications />}></Route>
+          <Route path="table" element={<Table />}></Route>
+          <Route path="renal" element={<RenalTable />}></Route>
+          <Route path="vaccination" element={<VaccinationTable />}></Route>
+          <Route path="diagnosis" element={<DiagnosisTable />}></Route>
+          <Route path="antenantal" element={<AntenatalTable />}></Route>
+          <Route path="screening" element={<RenalScreening />}></Route>
           <Route
-            path="/patient/:patientId"
+            path="patient/:patientId"
             element={<ScreeningDetails />}
           ></Route>
-          <Route path="/monitoring" element={<RenalMonitoring />}></Route>
-          <Route path="/chpactivity" element={<UserActivity />}></Route>
-          <Route path="/nafschpactivity" element={<NafsUserActivity />}></Route>
-          <Route path="/simprints" element={<SimprintsPage />}></Route>
-          <Route path="/mityana" element={<MityanaPage />}></Route>
+          <Route path="monitoring" element={<RenalMonitoring />}></Route>
+          <Route path="chpactivity" element={<UserActivity />}></Route>
+          <Route path="nafschpactivity" element={<NafsUserActivity />}></Route>
+          <Route path="simprints" element={<SimprintsPage />}></Route>
+          <Route path="mityana" element={<MityanaPage />}></Route>
         
-          <Route path="/blank" element={<Blank />}></Route>
-          <Route path="/404" element={<NotFound />}></Route>
-          <Route path="/form" element={<Form />}></Route>
-          <Route path="/profile" element={<Blank />}></Route>
+          <Route path="blank" element={<Blank />}></Route>
+          <Route path="404" element={<NotFound />}></Route>
+          <Route path="form" element={<Form />}></Route>
+          <Route path="profile" element={<Blank />}></Route>
         </Route>
       </Routes>
       <Footer />
