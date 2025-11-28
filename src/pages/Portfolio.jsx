@@ -16,7 +16,7 @@ const Portfolio = () => {
       title: "Vitedo",
       category: "",
       description: " Bringing together health and tech change makers to explore the transformative power of digital innovation in the health sector..",
-      image: "/images/Vitendo.png",
+      image: "images/Vitendo.png",
       features: ["Vitendo Summit"],
       learnMore: "https://vitendosymposium.com/"
     },
@@ -26,7 +26,7 @@ const Portfolio = () => {
       title: "Yoklinic App",
       category: "Mobile",
       description: "Explore a wide range of medical facilities and specialities ranging from paediatricians, gynaecologists, infectious diseases, dentists and more others.",
-      image: "/images/app.png",
+      image: "images/app.png",
       features: ["Video Consultations", "Medical Records", "Prescriptions"],
       learnMore: "https://play.google.com/store/apps/details?id=com.yourcompany.yoklinic&pcampaignid=web_share"
     },
@@ -35,7 +35,7 @@ const Portfolio = () => {
       title: "Yoklinic Web",
       category: "Web",
       description: "Web-based interface for telemedicine services with advanced patient management features,different facilities and diverse Doctors",
-      image: "/images/yoklinic.png",
+      image: "images/yoklinic.png",
       features: ["Facilities", "Health Products", "Doctors"],
       learnMore: "https://www.yoklinic.com/"
     },
@@ -44,7 +44,7 @@ const Portfolio = () => {
       title: "Mobi CHP Biometric Tool",
       category: "Mobile",
       description: "We build technology to radically increase transparency and effectiveness in global development, making sure that every vaccine, every dollar, every public good reaches the people who need them most.",
-      image: "/images/buikwe10.png",
+      image: "images/buikwe10.png",
       features: [ "Face biometrics", "Health Records"],
       learnMore: "https://www.simprints.com/"
     }, 
@@ -53,7 +53,7 @@ const Portfolio = () => {
       title: "MobiKlearn",
       category: "Mobile",
       description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
-      image: "/images/e-learning.png",
+      image: "images/e-learning.png",
       features: ["Online Courses", "Interactive Content", "Certifications"],
       learnMore: "https://play.google.com/store/apps/details?id=com.melimu.mobiklinic"
     },
@@ -64,7 +64,7 @@ const Portfolio = () => {
       title: "Mobi CHP Tool",
       category: "Mobile",
       description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
-      image: "/images/chp.png",
+      image: "images/chp.png",
       features: ["Data Collection", "Health Monitoring", "Analytics"],
       learnMore: "https://play.google.com/store/apps/details?id=com.mobiklinicapp"
     },
@@ -76,7 +76,7 @@ const Portfolio = () => {
       id: 1,
       title: "Mityana NCDs Fight",
       description: "In Mityana fighting the Non-Communicable Diseases with our MobiCHP Biometric Tool for community Health Providers thats streamlines their interactions with community members.",
-      image: "/images/Mityana6.png",
+      image: "images/Mityana6.png",
       galleryImages: ["/images/Mityana.png", "/images/Mityana1.png", "/images/Mityana2.png","/images/Mityana3.png","/images/Mityana4.png","/images/Mityana5.png","/images/Mityana7.png","/images/Mityana8.png","/images/Mityana9.png","/images/Mityana10.png","/images/Mityana11.png","/images/Mityana12.png","/images/Mityana13.png","/images/Mityana14.png",],
      
     },
@@ -85,7 +85,7 @@ const Portfolio = () => {
       id: 2,
       title: "Immunisation",
       description: "Comprehensive Immunisation program for the children by our healthcare workers with aid of the MobiCHP Biometric Tool.",
-      image: "/images/buikwe.png",
+      image: "images/buikwe.png",
       galleryImages: ["/images/buikwe.png", "/images/buikwe3.png", "/images/buikwe4.png"],
       
     },
@@ -93,7 +93,7 @@ const Portfolio = () => {
       id: 3,
       title: "Telemedicine Workshop",
       description: "Interactive workshop introducing telemedicine benefits to healthcare providers and patients",
-      image: "/images/buikwe3.png",
+      image: "images/buikwe3.png",
       galleryImages: ["/images/buikwe3.png", "/images/buikwe11.png", "/images/buikwe14.png"],
     
     },
@@ -101,7 +101,7 @@ const Portfolio = () => {
       id: 4,
       title: "Team Sensitization before Kicking off Community Work",
       description: "Digital awareness campaign educating patients about remote healthcare services and benefits",
-      image: "/images/buikwe14.png",
+      image: "images/buikwe14.png",
       galleryImages: ["/images/buikwe14.png", "/images/buikwe.png", "/images/buikwe3.png"],
      
     },
@@ -109,7 +109,7 @@ const Portfolio = () => {
       id: 5,
       title: " Vitendo Health Technology Summit",
       description: "During the annual Vitendo Digital Health Symposium Africa (VIDHSA), a major event that focuses on digital health innovation",
-      image: "/images/vitendo5.png",
+      image: "images/vitendo5.png",
       galleryImages: ["/images/vitendo5.png", "/images/Vitendo2.png", "/images/Vitendo4.png","/images/Vitendo7.png","/images/Vitendo3.png"],
      
     },
@@ -118,7 +118,7 @@ const Portfolio = () => {
       id: 7,
       title: "Community Health Outreach",
       description: "Mobiklinic CHP officials together with the community members of Buikwe.",
-      image: "/images/buikwe11.png",
+      image: "images/buikwe11.png",
       galleryImages: ["/images/buikwe11.png", "/images/buikwe.png", "/images/buikwe14.png"],
      
     }
