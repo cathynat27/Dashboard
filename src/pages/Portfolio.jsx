@@ -2,109 +2,127 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PortfolioNavbar from "../components/Portfolio/PortfolioNavbar";
 import AnimatedCounter from "../components/Portfolio/AnimatedCounter";
+import ActivityGalleryModal from "../components/ActivityGalleryModal/ActivityGalleryModal";
 
 const Portfolio = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   // Project data
   const projects = [
     {
       id: 1,
-      title: "CHP Tool",
-      category: "Mobile",
-      description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
-      image: "/images/mother.png",
-      features: ["Data Collection", "Health Monitoring", "Analytics"],
-      learnMore: "#"
+      title: "Vitedo",
+      category: "",
+      description: " Bringing together health and tech change makers to explore the transformative power of digital innovation in the health sector..",
+      image: "/images/Vitendo.png",
+      features: ["Vitendo Summit"],
+      learnMore: "https://vitendosymposium.com/"
     },
+   
     {
       id: 2,
-      title: "Yoklinic Platform",
+      title: "Yoklinic App",
       category: "Mobile",
-      description: "Explore a wide range of medical specialities ranging from paediatricians, gynaecologists, infectious diseases, dentists and others.",
-      image: "/images/hello.png",
+      description: "Explore a wide range of medical facilities and specialities ranging from paediatricians, gynaecologists, infectious diseases, dentists and more others.",
+      image: "/images/app.png",
       features: ["Video Consultations", "Medical Records", "Prescriptions"],
-      learnMore: "#"
+      learnMore: "https://play.google.com/store/apps/details?id=com.yourcompany.yoklinic&pcampaignid=web_share"
     },
-    {
+     {
       id: 3,
+      title: "Yoklinic Web",
+      category: "Web",
+      description: "Web-based interface for telemedicine services with advanced patient management features,different facilities and diverse Doctors",
+      image: "/images/yoklinic.png",
+      features: ["Facilities", "Health Products", "Doctors"],
+      learnMore: "https://www.yoklinic.com/"
+    },
+     {
+      id: 4,
+      title: "Mobi CHP Biometric Tool",
+      category: "Mobile",
+      description: "We build technology to radically increase transparency and effectiveness in global development, making sure that every vaccine, every dollar, every public good reaches the people who need them most.",
+      image: "/images/buikwe10.png",
+      features: [ "Face biometrics", "Health Records"],
+      learnMore: "https://www.simprints.com/"
+    }, 
+    {
+      id: 5,
       title: "MobiKlearn",
       category: "Mobile",
       description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
-      image: "/images/hello.png",
+      image: "/images/e-learning.png",
       features: ["Online Courses", "Interactive Content", "Certifications"],
-      learnMore: "#"
+      learnMore: "https://play.google.com/store/apps/details?id=com.melimu.mobiklinic"
     },
+   
+   
     {
-      id: 4,
-      title: "Yoklinic Web",
-      category: "Web",
-      description: "Web-based interface for telemedicine services with advanced patient management features",
-      image: "/images/hello.png",
-      features: ["Patient Portal", "Appointment Scheduling", "Health Products"],
-      learnMore: "#"
-    },
-    {
-      id: 4,
-      title: "Simprints",
+      id: 6,
+      title: "Mobi CHP Tool",
       category: "Mobile",
-      description: "We build technology to radically increase transparency and effectiveness in global development, making sure that every vaccine, every dollar, every public good reaches the people who need them most.",
-      image: "/images/hello.png",
-      features: ["Biometric tools", "Appointment Scheduling", "Health Records"],
-      learnMore: "#"
-    }
+      description: "A digital health tool developed for Community Health Providers (CHPs) to store patient data for easy identification and follow-up. CHPs are able to chat, share media with doctors on the platform to enhance decisions about patient treatment and referrals.",
+      image: "/images/chp.png",
+      features: ["Data Collection", "Health Monitoring", "Analytics"],
+      learnMore: "https://play.google.com/store/apps/details?id=com.mobiklinicapp"
+    },
   ];
 
   // Activities/Events data
   const activities = [
     {
       id: 1,
-      title: "Community Health Outreach",
-      description: "Organized free health screening camps across rural communities, reaching over 500 individuals",
-      image: "https://via.placeholder.com/300x250?text=Community+Outreach",
-      date: "March 2024",
-      location: "Rural Communities"
+      title: "Mityana NCDs Fight",
+      description: "In Mityana fighting the Non-Communicable Diseases with our MobiCHP Biometric Tool for community Health Providers thats streamlines their interactions with community members.",
+      image: "/images/Mityana6.png",
+      galleryImages: ["/images/Mityana.png", "/images/Mityana1.png", "/images/Mityana2.png","/images/Mityana3.png","/images/Mityana4.png","/images/Mityana5.png","/images/Mityana7.png","/images/Mityana8.png","/images/Mityana9.png","/images/Mityana10.png","/images/Mityana11.png","/images/Mityana12.png","/images/Mityana13.png","/images/Mityana14.png",],
+     
     },
+    
     {
       id: 2,
-      title: "Healthcare Worker Training",
-      description: "Comprehensive training program for 200+ healthcare workers on digital health solutions",
-      image: "https://via.placeholder.com/300x250?text=Training+Program",
-      date: "February 2024",
-      location: "Training Centers"
+      title: "Immunisation",
+      description: "Comprehensive Immunisation program for the children by our healthcare workers with aid of the MobiCHP Biometric Tool.",
+      image: "/images/buikwe.png",
+      galleryImages: ["/images/buikwe.png", "/images/buikwe3.png", "/images/buikwe4.png"],
+      
     },
     {
       id: 3,
       title: "Telemedicine Workshop",
       description: "Interactive workshop introducing telemedicine benefits to healthcare providers and patients",
-      image: "https://via.placeholder.com/300x250?text=Telemedicine+Workshop",
-      date: "January 2024",
-      location: "Medical Institutions"
+      image: "/images/buikwe3.png",
+      galleryImages: ["/images/buikwe3.png", "/images/buikwe11.png", "/images/buikwe14.png"],
+    
     },
     {
       id: 4,
-      title: "Patient Awareness Campaign",
+      title: "Team Sensitization before Kicking off Community Work",
       description: "Digital awareness campaign educating patients about remote healthcare services and benefits",
-      image: "https://via.placeholder.com/300x250?text=Awareness+Campaign",
-      date: "December 2023",
-      location: "Online & On-ground"
+      image: "/images/buikwe14.png",
+      galleryImages: ["/images/buikwe14.png", "/images/buikwe.png", "/images/buikwe3.png"],
+     
     },
     {
       id: 5,
-      title: "Health Technology Summit",
-      description: "Annual summit bringing together healthcare professionals and tech innovators for collaboration",
-      image: "https://via.placeholder.com/300x250?text=Health+Summit",
-      date: "November 2023",
-      location: "Conference Center"
+      title: " Vitendo Health Technology Summit",
+      description: "During the annual Vitendo Digital Health Symposium Africa (VIDHSA), a major event that focuses on digital health innovation",
+      image: "/images/vitendo5.png",
+      galleryImages: ["/images/vitendo5.png", "/images/Vitendo2.png", "/images/Vitendo4.png","/images/Vitendo7.png","/images/Vitendo3.png"],
+     
     },
+  
     {
-      id: 6,
-      title: "Mobile Clinic Launch",
-      description: "Launch of mobile clinics equipped with telemedicine technology for underserved areas",
-      image: "https://via.placeholder.com/300x250?text=Mobile+Clinic",
-      date: "October 2023",
-      location: "Urban & Rural Areas"
+      id: 7,
+      title: "Community Health Outreach",
+      description: "Mobiklinic CHP officials together with the community members of Buikwe.",
+      image: "/images/buikwe11.png",
+      galleryImages: ["/images/buikwe11.png", "/images/buikwe.png", "/images/buikwe14.png"],
+     
     }
+    
   ];
 
   // Filter projects based on category
@@ -161,6 +179,7 @@ const Portfolio = () => {
               health tools
             </p>
             <div className="mt-10 w-auto">
+              <a href="https://mobiklinic.com/" target="_blank" rel="noopener noreferrer">
                 <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -168,6 +187,7 @@ const Portfolio = () => {
               >
                 Learn More
               </motion.button>
+              </a>
             </div>            
             
           </motion.div>
@@ -260,6 +280,8 @@ const Portfolio = () => {
                   {/* Learn More Button */}
                   <motion.a
                     href={project.learnMore}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ x: 5 }}
                     className="inline-block text-sky-600 font-semibold hover:text-blue-800 transition-colors mt-auto"
                   >
@@ -312,9 +334,7 @@ const Portfolio = () => {
                     alt={activity.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 right-4 bg-sky-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                    {activity.date}
-                  </div>
+                  
                 </div>
 
                 {/* Activity Info */}
@@ -326,27 +346,47 @@ const Portfolio = () => {
                     {activity.description}
                   </p>
 
-                  {/* Location */}
-                  <div className="flex items-center gap-2 text-gray-700 text-sm">
+                  {/* Gallery Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setSelectedActivity(activity);
+                      setIsGalleryOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors mt-auto"
+                  >
                     <svg
                       className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
                       <path
-                        fillRule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clipRule="evenodd"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <span>{activity.location}</span>
-                  </div>
+                    View Gallery
+                  </motion.button>
+
                 </div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
+
+      {/* Gallery Modal */}
+      {selectedActivity && (
+        <ActivityGalleryModal
+          activity={selectedActivity}
+          isOpen={isGalleryOpen}
+          onClose={() => setIsGalleryOpen(false)}
+        />
+      )}
 
       {/* Impact Section */}
       <section className="py-16 md:py-24 bg-gradient-to-r from-blue-50 to-blue-100 mainCard">
@@ -410,13 +450,15 @@ const Portfolio = () => {
               Partner with us to expand access to quality healthcare through
               innovative telemedicine solutions
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-sky-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-            >
-              Get In Touch
-            </motion.button>
+            <a href="https://mobiklinic.com/" target="_blank" rel="noopener noreferrer">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-sky-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Get In Touch
+              </motion.button>
+            </a>
           </motion.div>
         </div>
       </section>

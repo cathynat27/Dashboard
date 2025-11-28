@@ -27,7 +27,7 @@ const PortfolioNavbar = () => {
       className="fixed top-0 left-0 right-0 bg-white shadow-lg z-50"
     >
       <div className="max-w-6xl mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-around h-16 md:h-20">
           {/* Logo and Brand */}
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -65,19 +65,19 @@ const PortfolioNavbar = () => {
             ))}
           </div>
 
-          {/* Right Side CTA */}
+          {/* Right Side CTA
           <div className="hidden md:flex items-center gap-4">
             
-          <Link
+          {/* <Link
             to="/auth/login"
             className="px-4 py-2 bg-sky-500 text-white rounded-md font-medium hover:bg-sky-600 transition-colors"
           >
             Sign In
-          </Link>
+          </Link> 
 
             
             
-          </div>
+          </div> */}
 
           {/* Mobile Menu Button */}
           <motion.button
