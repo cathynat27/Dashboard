@@ -86,7 +86,7 @@ const Portfolio = () => {
       id: 2,
       title: "Immunisation",
       description: "Comprehensive Immunisation program for the children by our healthcare workers with aid of the MobiCHP Biometric Tool.",
-      image: "images/buikwe.png",
+      image: "images/Buikwe.png",
       galleryImages: ["/images/Buikwe.png", "/images/Buikwe3.png", "/images/Buikwe4.png"],
       
     },
